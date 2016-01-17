@@ -184,7 +184,7 @@
 (use-package saveplace
   :config
   (setq-default save-place t
-                save-place-file (concat user-emacs-directory "places")))
+                save-place-file (concat user-emacs-directory "place")))
 
 ;;; Mac
 
@@ -475,18 +475,21 @@
   (paren-activate))
 
 ;;; git
+
 (use-package magit
   :bind
   ("C-x g" . magit-status))
 
 
 ;;; Languages
+
 (defsubst hook-into-modes (func &rest modes)
   "Hook into modes FUNC MODES."
   (dolist (mode-hook modes) (add-hook mode-hook func)))
 
 
 ;; Lisp
+
 (use-package lisp-mode
   :defer t
   :ensure nil
@@ -615,6 +618,7 @@
 
 
 ;; C-c++
+
 (use-package google-c-style
   :mode (("\\.h\\(h?\\|xx\\|pp\\)\\'" . c++-mode)
          ("\\.c\\'"                   . c-mode)
@@ -625,6 +629,7 @@
 
 
 ;; Markdown
+
 (use-package markdown-mode
   :mode (("\\`README\\.md\\'" . gfm-mode)
          ("\\.md\\'"          . markdown-mode)
@@ -632,6 +637,7 @@
 
 
 ;; Clojure
+
 (use-package clojure-mode
   :mode ("\\.clj\\'" "\\.cljs\\'" "\\.cljc\\'")
   :config
@@ -667,6 +673,7 @@
 
 
 ;;; Elapsed time
+
 (add-hook 'after-init-hook
           `(lambda ()
              (let ((elapsed (float-time (time-subtract (current-time)
