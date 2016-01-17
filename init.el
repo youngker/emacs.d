@@ -265,9 +265,10 @@
   :init
   (global-unset-key (kbd "C-x c"))
   :config
+  (use-package helm-command)
+  (use-package helm-semantic)
   (setq helm-idle-delay 0.0
         helm-input-idle-delay 0.01
-        helm-yas-display-key-on-candidate t
         helm-quick-update           t
         helm-M-x-requires-pattern   nil
         helm-ff-skip-boring-files   t
@@ -374,7 +375,7 @@
 (use-package google-translate
   :bind ("C-c t" . google-translate-smooth-translate)
   :config
-  (require 'google-translate-smooth-ui)
+  (use-package google-translate-smooth-ui)
   ;; (setq google-translate-output-destination 'popup)
   (setq google-translate-translation-directions-alist
         '(("en" . "ko") ("ko" . "en"))))
