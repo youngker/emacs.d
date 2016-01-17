@@ -1,10 +1,8 @@
-# emacs.d
-
-youngker's Emacs configuration
+# youngker's Emacs configuration
 
 ## Installation
 
-git clone https://github.com/youngker/emacs.d.git ~/.emacs.d
+    git clone https://github.com/youngker/emacs.d.git ~/.emacs.d
 
 ## License
 
