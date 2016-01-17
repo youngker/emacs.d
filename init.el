@@ -41,24 +41,25 @@
  'default-black
  '(default ((t (:inherit nil :stipple nil :background "Black" :foreground "White" :inverse-video nil :box nil :strike-t*hrough nil :overline nil :underline nil :slant normal :weight normal :width normal :height 105))))
  '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#111111"))))
- '(region ((nil (:background "#464740"))))
+ '(region ((nil (:background "#008b8b"))))
  '(hl-line ((nil (:background "#222222"))))
  '(yas-field-highlight-face ((nil (:background "#333399"))))
  '(js2-function-param-face ((t (:foreground "LightGoldenrod"))))
  '(font-lock-warning-face ((nil (:foreground "#ff6666"))))
  '(show-paren-match ((nil (:background "deep pink"))))
  '(show-paren-mismatch ((((class color)) (:background "red"))))
- '(eval-sexp-fu-flash ((t (:background "#111111" :foreground "deep pink"))))
+ '(eval-sexp-fu-flash ((t (:background "#111111" :foreground "#9bcd9b"))))
  '(helm-source-header ((t (:background "Black" :foreground "Orange" :bold nil))))
- '(helm-candidate-number ((t (:background nil :foreground "Sky Blue" :bold t))))
+ '(helm-candidate-number ((t (:background nil :foreground "cyan" :bold t))))
  '(helm-selection ((t (:background "#222222"))))
  '(helm-visible-mark ((t (:background "#444444" :forground "White"))))
+ '(helm-match ((t (:background "Black" :foreground "#008b8b"))))
  '(ac-candidate-face ((t (:background "#1a1a1a" :foreground "#a6a6a6"))))
  '(ac-selection-face ((t (:background "#2e2e2e" :foreground "#a6a6a6"))))
- '(popup-isearch-match ((t (:background "black" :foreground "deep pink"))))
+ '(popup-isearch-match ((t (:background "Black" :foreground "deep pink"))))
  '(popup-tip-face ((t (:background "#1a1a1a" :foreground "#a6a6a6"))))
- '(popup-scroll-bar-foreground-face ((t (:background "Gray43"))))
- '(popup-scroll-bar-background-face ((t (:background "Gray22")))))
+ '(popup-scroll-bar-foreground-face ((t (:background "#6e6e6e"))))
+ '(popup-scroll-bar-background-face ((t (:background "#383838")))))
 
 (when window-system
   (tooltip-mode -1)
@@ -93,10 +94,11 @@
  truncate-partial-width-windows nil
  visible-bell nil)
 
-(blink-cursor-mode -1)
 (auto-compression-mode t)
-(show-paren-mode 1)
+(blink-cursor-mode -1)
+(global-hl-line-mode 1)
 (savehist-mode t)
+(show-paren-mode 1)
 (defalias 'yes-or-no-p 'y-or-n-p)
 (when (fboundp 'winner-mode)
   (winner-mode 1))
@@ -196,8 +198,7 @@
   (use-package flx-ido
     :config
     (require 'flx-ido)
-    (flx-ido-mode t)
-    (setq flx-ido-use-face nil))
+    (flx-ido-mode t))
 
   (use-package ido-vertical-mode
     :config
@@ -206,11 +207,17 @@
 
   (ido-mode t)
   (icomplete-mode 1)
-  (setq ido-enable-prefix nil
+  (setq ido-auto-merge-work-directories-length -1
         ido-create-new-buffer 'always
-        ido-max-prospects 10
         ido-default-file-method 'selected-window
-        ido-everywhere 1)
+        ido-case-fold nil
+        ido-enable-prefix nil
+        ido-enable-flex-matching t
+        ido-everywhere 1
+        ido-max-prospects 10
+        ido-use-faces nil
+        ido-use-filename-at-point nil
+        ido-enable-prefix nil)
   (define-key ido-file-completion-map (kbd "C-\\") 'backward-kill-word))
 
 
