@@ -68,6 +68,7 @@
   (scroll-bar-mode -1))
 
 (setq-default
+ auto-revert-verbose nil
  column-number-mode t
  confirm-nonexistent-file-or-buffer nil
  delete-by-moving-to-trash nil
@@ -75,7 +76,9 @@
  echo-keystrokes 0.02
  ediff-split-window-function 'split-window-horizontally
  ediff-window-setup-function 'ediff-setup-windows-plain
- fill-column 79
+ fill-column 80
+ gc-cons-threshold 20000000
+ global-auto-revert-non-file-buffers t
  history-length 1000
  indent-tabs-mode nil
  inhibit-startup-message t
@@ -84,24 +87,27 @@
  next-error-highlight t
  next-error-highlight-no-select t
  query-replace-highlight t
+ recentf-max-saved-items 100
  require-final-newline t
  ring-bell-function #'ignore
- save-place t
- save-place-file (concat user-emacs-directory "place")
+ sentence-end-double-space nil
  shift-select-mode nil
  transient-mark-mode t
  truncate-lines t
  truncate-partial-width-windows nil
- visible-bell nil)
+ visible-bell nil
+ x-select-enable-clipboard t)
 
-(auto-compression-mode t)
+(auto-compression-mode 1)
 (blink-cursor-mode -1)
+(global-auto-revert-mode 1)
+(global-font-lock-mode 1)
 (global-hl-line-mode 1)
-(savehist-mode t)
+(recentf-mode 1)
+(savehist-mode 1)
 (show-paren-mode 1)
+(winner-mode 1)
 (defalias 'yes-or-no-p 'y-or-n-p)
-(when (fboundp 'winner-mode)
-  (winner-mode 1))
 
 ;; font
 (cond
@@ -169,6 +175,11 @@
 
 (use-package smooth-scrolling
   :disabled t)
+
+(use-package subword
+  :diminish subword-mode
+  :config
+  (global-subword-mode 1))
 
 (use-package saveplace
   :config
@@ -316,6 +327,7 @@
 
 (use-package aggressive-indent
   :after ido
+  :diminish aggressive-indent-mode
   :config
   (global-aggressive-indent-mode t))
 
@@ -389,7 +401,7 @@
   (add-hook 'css-mode-hook 'paredit-everywhere-mode))
 
 (use-package paredit
-  :defer t
+  :diminish paredit-mode
   :commands paredit-mode
   :config
   (eval-after-load 'paredit
@@ -411,7 +423,6 @@
       ad-do-it)))
 
 (use-package auto-complete
-  :defer t
   :diminish auto-complete-mode
   :after ido
   :config
@@ -454,13 +465,11 @@
 
 
 (use-package eval-sexp-fu
-  :defer t
   :commands turn-on-eval-sexp-fu-flash-mode
   :config
   (setq eval-sexp-fu-flash-duration 0.5))
 
 (use-package mic-paren
-  :defer t
   :after ido
   :config
   (paren-activate))
@@ -498,9 +507,11 @@
             lisp-modes))
 
   (use-package redshank
+    :diminish redshank-mode
     :commands redshank-mode)
 
   (use-package elisp-slime-nav
+    :diminish elisp-slime-nav-mode
     :commands elisp-slime-nav-mode)
 
   (defvar slime-mode nil)
