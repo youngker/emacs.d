@@ -65,7 +65,8 @@
   (tooltip-mode -1)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
-  (scroll-bar-mode -1))
+  (scroll-bar-mode -1)
+  (setq frame-title-format '(buffer-file-name "%f" ("%b"))))
 
 (setq-default
  auto-revert-verbose nil
@@ -103,7 +104,6 @@
 (global-auto-revert-mode 1)
 (global-font-lock-mode 1)
 (global-hl-line-mode 1)
-(recentf-mode 1)
 (savehist-mode 1)
 (show-paren-mode 1)
 (winner-mode 1)
@@ -178,10 +178,17 @@
 
 (use-package subword
   :diminish subword-mode
+  :after ido
   :config
   (global-subword-mode 1))
 
+(use-package recentf
+  :after ido
+  :config
+  (recentf-mode 1))
+
 (use-package saveplace
+  :after ido
   :config
   (setq-default save-place t
                 save-place-file (concat user-emacs-directory "place")))
@@ -265,8 +272,8 @@
   :init
   (global-unset-key (kbd "C-x c"))
   :config
-  (use-package helm-command)
-  (use-package helm-semantic)
+  (use-package helm-command :ensure nil)
+  (use-package helm-semantic :ensure nil)
   (setq helm-idle-delay 0.0
         helm-input-idle-delay 0.01
         helm-quick-update           t
@@ -317,6 +324,7 @@
   (win-switch-set-keys '("p") 'previous-window))
 
 (use-package popwin
+  :after ido
   :config
   (popwin-mode 1))
 
@@ -375,7 +383,7 @@
 (use-package google-translate
   :bind ("C-c t" . google-translate-smooth-translate)
   :config
-  (use-package google-translate-smooth-ui)
+  (use-package google-translate-smooth-ui :ensure nil)
   ;; (setq google-translate-output-destination 'popup)
   (setq google-translate-translation-directions-alist
         '(("en" . "ko") ("ko" . "en"))))

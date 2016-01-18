@@ -1,7 +1,10 @@
+*.elc
+/ac-comphist.dat
+/auto-save-list
 /elpa
+/eshell
 /history
+/ido.last
 /place
 /recentf
-/ido.last
-/auto-save-list
-/ac-comphist.dat
+/smex-items
