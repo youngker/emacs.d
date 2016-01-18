@@ -215,7 +215,6 @@
   :config
   (use-package flx-ido
     :config
-    (require 'flx-ido)
     (flx-ido-mode t))
 
   (use-package ido-vertical-mode
@@ -435,8 +434,6 @@
   :diminish auto-complete-mode
   :after ido
   :config
-  (require 'auto-complete-config)
-                                        ;  (setq ac-comphist-file (concat live-tmp-dir "ac-comphist.dat"))
   (setq ac-auto-show-menu t)
   (setq ac-dwim t)
   (setq ac-use-menu-map t)
@@ -446,7 +443,6 @@
   (setq ac-show-menu-immediately-on-auto-complete t)
   (setq ac-auto-start 2)
   (setq ac-candidate-menu-min 0)
-
   (set-default 'ac-sources
                '(ac-source-dictionary
                  ac-source-words-in-buffer
@@ -456,13 +452,13 @@
   (ac-config-default)
   (ac-flyspell-workaround)
   (global-auto-complete-mode t)
-                                        ;  (add-to-list 'ac-dictionary-directories (concat (live-pack-lib-dir) "auto-complete/dict"))
+  (add-to-list 'ac-dictionary-directories (concat user-emacs-directory "dict"))
   (dolist (mode '(magit-log-edit-mode log-edit-mode org-mode text-mode haml-mode
-                                      sass-mode yaml-mode csv-mode espresso-mode haskell-mode
-                                      html-mode nxml-mode sh-mode smarty-mode clojure-mode
-                                      lisp-mode textile-mode markdown-mode tuareg-mode))
+                                      sass-mode yaml-mode csv-mode espresso-mode
+                                      haskell-mode html-mode nxml-mode sh-mode
+                                      smarty-mode clojure-mode lisp-mode
+                                      textile-mode markdown-mode tuareg-mode))
     (add-to-list 'ac-modes mode))
-
   ;;Key triggers
   (define-key ac-completing-map (kbd "C-M-n") 'ac-next)
   (define-key ac-completing-map (kbd "C-M-p") 'ac-previous)
@@ -604,9 +600,7 @@
 
     (unless (memq major-mode
                   '(emacs-lisp-mode inferior-emacs-lisp-mode ielm-mode))
-                                        ;      (turn-on-cldoc-mode)
-      (bind-key "M-q" #'slime-reindent-defun lisp-mode-map)
-      (bind-key "M-l" #'slime-selector lisp-mode-map)))
+      (turn-on-cldoc-mode)))
   :init
   ;; Change lambda to an actual lambda symbol
   (mapc
@@ -673,7 +667,6 @@
                                    (clj-refactor-mode 1)
                                    (cljr-add-keybindings-with-prefix
                                     "C-c C-m")))
-    (bind-key "C-:" #'cljr-cycle-stringlike clojure-mode-map)
     (bind-key "C->" #'cljr-cycle-coll clojure-mode-map))
 
   (use-package flycheck-clojure
