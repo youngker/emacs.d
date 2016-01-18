@@ -434,6 +434,7 @@
   :diminish auto-complete-mode
   :after ido
   :config
+  (use-package auto-complete-config :ensure nil)
   (setq ac-auto-show-menu t)
   (setq ac-dwim t)
   (setq ac-use-menu-map t)
