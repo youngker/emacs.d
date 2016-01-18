@@ -41,14 +41,14 @@
  'default-black
  '(default ((t (:inherit nil :stipple nil :background "Black" :foreground "White" :inverse-video nil :box nil :strike-t*hrough nil :overline nil :underline nil :slant normal :weight normal :width normal :height 105))))
  '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#111111"))))
- '(region ((nil (:background "#008b8b"))))
+ '(region ((nil (:background "#464740"))))
  '(hl-line ((nil (:background "#222222"))))
  '(yas-field-highlight-face ((nil (:background "#333399"))))
  '(js2-function-param-face ((t (:foreground "LightGoldenrod"))))
  '(font-lock-warning-face ((nil (:foreground "#ff6666"))))
- '(show-paren-match ((nil (:background "deep pink"))))
+ '(show-paren-match ((nil (:background "#333399"))))
  '(show-paren-mismatch ((((class color)) (:background "red"))))
- '(eval-sexp-fu-flash ((t (:background "#111111" :foreground "#9bcd9b"))))
+ '(eval-sexp-fu-flash ((t (:background "#333399" :foreground "White"))))
  '(helm-source-header ((t (:background "Black" :foreground "Orange" :bold nil))))
  '(helm-candidate-number ((t (:background nil :foreground "cyan" :bold t))))
  '(helm-selection ((t (:background "#222222"))))
@@ -77,6 +77,7 @@
  echo-keystrokes 0.02
  ediff-split-window-function 'split-window-horizontally
  ediff-window-setup-function 'ediff-setup-windows-plain
+ electric-indent-mode nil
  fill-column 80
  gc-cons-threshold 20000000
  global-auto-revert-non-file-buffers t
@@ -432,7 +433,7 @@
 
 (use-package auto-complete
   :diminish auto-complete-mode
-  :after ido
+  :commands ac-emacs-lisp-mode-setup
   :config
   (use-package auto-complete-config :ensure nil)
   (setq ac-auto-show-menu t)
@@ -489,136 +490,53 @@
 
 ;;; Languages
 
-(defsubst hook-into-modes (func &rest modes)
-  "Hook into modes FUNC MODES."
-  (dolist (mode-hook modes) (add-hook mode-hook func)))
+(defsubst youngker/add-hook (func &rest hook)
+  "Add hook with FUNC and HOOK."
+  (dolist (mode-hook hook)
+    (add-hook mode-hook func)))
 
 
 ;; Lisp
+(defun youngker/lisp-mode ()
+  "Lisp mode."
+  (add-hook 'after-save-hook 'check-parens nil t)
+  (auto-fill-mode 1)
+  (flycheck-mode 1)
+  (paredit-mode 1)
+  (rainbow-delimiters-mode 1)
+  (redshank-mode 1)
+  (eldoc-mode)
+  (turn-on-eval-sexp-fu-flash-mode))
+
+(defun youngker/elisp-mode ()
+  "Elisp mode."
+  (ac-emacs-lisp-mode-setup)
+  (elisp-slime-nav-mode 1))
+
+(use-package redshank
+  :diminish redshank-mode
+  :commands redshank-mode)
+
+(use-package elisp-slime-nav
+  :diminish elisp-slime-nav-mode
+  :commands elisp-slime-nav-mode)
 
 (use-package lisp-mode
   :defer t
   :ensure nil
-  :preface
-  (defvar lisp-modes '(emacs-lisp-mode
-                       inferior-emacs-lisp-mode
-                       ielm-mode
-                       lisp-mode
-                       inferior-lisp-mode
-                       lisp-interaction-mode
-                       slime-repl-mode))
-
-  (defvar lisp-mode-hooks
-    (mapcar (function
-             (lambda (mode)
-               (intern
-                (concat (symbol-name mode) "-hook"))))
-            lisp-modes))
-
-  (use-package redshank
-    :diminish redshank-mode
-    :commands redshank-mode)
-
-  (use-package elisp-slime-nav
-    :diminish elisp-slime-nav-mode
-    :commands elisp-slime-nav-mode)
-
-  (defvar slime-mode nil)
-  (defvar lisp-mode-initialized nil)
-
-  (defun my-lisp-mode-hook ()
-    (unless lisp-mode-initialized
-      (setq lisp-mode-initialized t)
-
-      (use-package edebug)
-
-      (use-package eldoc
-        :commands eldoc-mode
-        :config
-        (eldoc-add-command 'paredit-backward-delete
-                           'paredit-close-round))
-
-      (use-package cldoc
-        :ensure nil
-        :commands (cldoc-mode turn-on-cldoc-mode))
-
-      (use-package ert
-        :bind ("C-c e t" . ert-run-tests-interactively))
-
-      (use-package elint
-        :commands 'elint-initialize
-        :preface
-        (defun elint-current-buffer ()
-          (interactive)
-          (elint-initialize)
-          (elint-current-buffer))
-
-        :config
-        (add-to-list 'elint-standard-variables 'current-prefix-arg)
-        (add-to-list 'elint-standard-variables 'command-line-args-left)
-        (add-to-list 'elint-standard-variables 'buffer-file-coding-system)
-        (add-to-list 'elint-standard-variables 'emacs-major-version)
-        (add-to-list 'elint-standard-variables 'window-system))
-
-      (use-package highlight-cl
-        :init
-        (mapc (function
-               (lambda (mode-hook)
-                 (add-hook mode-hook
-                           'highlight-cl-add-font-lock-keywords)))
-              lisp-mode-hooks))
-
-      (defun my-elisp-indent-or-complete (&optional arg)
-        (interactive "p")
-        (call-interactively 'lisp-indent-line)
-        (unless (or (looking-back "^\\s-*")
-                    (bolp)
-                    (not (looking-back "[-A-Za-z0-9_*+/=<>!?]+")))
-          (call-interactively 'lisp-complete-symbol)))
-
-      (defun my-lisp-indent-or-complete (&optional arg)
-        (interactive "p")
-        (if (or (looking-back "^\\s-*") (bolp))
-            (call-interactively 'lisp-indent-line)
-          (call-interactively 'slime-indent-and-complete-symbol)))
-
-      (defun my-byte-recompile-file ()
-        (save-excursion
-          (byte-recompile-file buffer-file-name)))
-
-      (use-package testcover
-        :commands testcover-this-defun))
-
-    (auto-fill-mode 1)
-    (paredit-mode 1)
-    (redshank-mode 1)
-    (elisp-slime-nav-mode 1)
-    (flycheck-mode 1)
-    (rainbow-delimiters-mode 1)
-    (turn-on-eval-sexp-fu-flash-mode)
-
-    (add-hook 'after-save-hook 'check-parens nil t)
-
-    (unless (memq major-mode
-                  '(emacs-lisp-mode inferior-emacs-lisp-mode ielm-mode))
-      (turn-on-cldoc-mode)))
   :init
-  ;; Change lambda to an actual lambda symbol
-  (mapc
-   (lambda (major-mode)
-     (font-lock-add-keywords
-      major-mode
-      '(("(\\(lambda\\)\\>"
-         (0 (ignore
-             (compose-region (match-beginning 1)
-                             (match-end 1) ?λ))))
-        ("(\\(ert-deftest\\)\\>[         '(]*\\(setf[    ]+\\sw+\\|\\sw+\\)?"
-         (1 font-lock-keyword-face)
-         (2 font-lock-function-name-face
-            nil t)))))
-   lisp-modes)
-
-  (apply #'hook-into-modes 'my-lisp-mode-hook lisp-mode-hooks))
+  (apply #'youngker/add-hook
+         #'youngker/lisp-mode  '(emacs-lisp-mode-hook
+                                 inferior-emacs-lisp-mode
+                                 ielm-mode-hook
+                                 lisp-mode-hook
+                                 inferior-lisp-mode-hook
+                                 lisp-interaction-mode-hook
+                                 slime-repl-mode-hook))
+  (apply #'youngker/add-hook
+         #'youngker/elisp-mode '(emacs-lisp-mode-hook
+                                 inferior-emacs-lisp-mode
+                                 ielm-mode-hook)))
 
 
 ;; C-c++
@@ -628,8 +546,8 @@
          ("\\.c\\'"                   . c-mode)
          ("\\.cc\\'"                  . c++-mode))
   :config
-  (hook-into-modes #'google-set-c-style 'c-mode-common-hook)
-  (hook-into-modes #'google-make-newline-indent 'c-mode-common-hook))
+  (youngker/add-hook #'google-set-c-style 'c-mode-common-hook)
+  (youngker/add-hook #'google-make-newline-indent 'c-mode-common-hook))
 
 
 ;; Markdown
@@ -644,35 +562,43 @@
 
 (use-package clojure-mode
   :mode ("\\.clj\\'" "\\.cljs\\'" "\\.cljc\\'")
+  :init
+  (youngker/add-hook #'youngker/lisp-mode 'clojure-mode-hook)
+  (youngker/add-hook #'subword-mode 'clojure-mode-hook)
   :config
   (use-package cljsbuild-mode)
-  (use-package elein)
-  (hook-into-modes #'subword-mode 'clojure-mode-hook))
+  (use-package elein))
 
 (use-package cider
   :commands (cider-jack-in cider-connect)
   :bind
   ("C-c M-j" . cider-jack-in)
   :config
-  (use-package ac-cider
-    :config
-    (hook-into-modes #'ac-cider-setup
+  (youngker/add-hook (lambda () (flycheck-clojure-setup)) 'cider-mode-hook))
+
+(use-package ac-cider
+  :commands ac-cider-setup
+  :init
+  (youngker/add-hook (lambda ()
+                       (ac-cider-setup))
                      'cider-mode-hook
                      'cider-repl-mode-hook)
-    (eval-after-load "auto-complete"
-      '(add-to-list 'ac-modes 'cider-mode)))
+  :config
+  (eval-after-load "auto-complete"
+    '(add-to-list 'ac-modes 'cider-mode)))
 
-  (use-package clj-refactor
-    :config
-    (add-hook 'clojure-mode-hook (lambda ()
-                                   (clj-refactor-mode 1)
-                                   (cljr-add-keybindings-with-prefix
-                                    "C-c C-m")))
-    (bind-key "C->" #'cljr-cycle-coll clojure-mode-map))
+(use-package clj-refactor
+  :commands clj-refactor-mode
+  :init
+  (youngker/add-hook (lambda ()
+                       (clj-refactor-mode 1)
+                       (cljr-add-keybindings-with-prefix "C-c C-m"))
+                     'clojure-mode-hook)
+  :config
+  (bind-key "C->" #'cljr-cycle-coll clojure-mode-map))
 
-  (use-package flycheck-clojure
-    :config
-    (flycheck-clojure-setup)))
+(use-package flycheck-clojure
+  :commands flycheck-clojure-setup)
 
 
 ;;; Elapsed time
