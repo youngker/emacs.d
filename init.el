@@ -50,7 +50,7 @@
  '(show-paren-mismatch ((((class color)) (:background "red"))))
  '(eval-sexp-fu-flash ((t (:background "#333399" :foreground "White"))))
  '(helm-source-header ((t (:background "Black" :foreground "Orange" :bold nil))))
- '(helm-candidate-number ((t (:background nil :foreground "cyan" :bold t))))
+ '(helm-candidate-number ((t (:background nil :foreground "#87cefa" :bold t))))
  '(helm-selection ((t (:background "#222222"))))
  '(helm-visible-mark ((t (:background "#444444" :forground "White"))))
  '(helm-match ((t (:background "Black" :foreground "#008b8b"))))
@@ -70,6 +70,7 @@
 
 (setq-default
  auto-revert-verbose nil
+ blink-matching-paren nil ;;
  column-number-mode t
  confirm-nonexistent-file-or-buffer nil
  delete-by-moving-to-trash nil
@@ -92,8 +93,12 @@
  recentf-max-saved-items 100
  require-final-newline t
  ring-bell-function #'ignore
+ scroll-conservatively 100000
+ scroll-margin 0
+ scroll-preserve-screen-position 1
  sentence-end-double-space nil
  shift-select-mode nil
+ tab-always-indent 'complete
  transient-mark-mode t
  truncate-lines t
  truncate-partial-width-windows nil
@@ -202,6 +207,7 @@
     :config
     (exec-path-from-shell-initialize))
 
+  (menu-bar-mode +1)
   (setq mac-option-modifier 'super)
   (setq mac-command-modifier 'meta)
   (setq ns-function-modifier 'hyper))
@@ -209,10 +215,21 @@
 
 ;;; Ido
 
+(defun youngker/ido-recent-file ()
+  "Find a recent file."
+  (interactive)
+  (let ((file (ido-completing-read
+               "Choose recent file: "
+               (mapcar 'abbreviate-file-name recentf-list) nil t)))
+    (when file
+      (find-file file))))
+
 (use-package ido
-  :bind (("C-x C-f" . ido-find-file)
-         ("C-x b"   . ido-switch-buffer)
-         ("C-x B"   . ido-switch-buffer-other-window))
+  :bind
+  (("C-x C-f" . ido-find-file)
+   ("C-x f"   . youngker/ido-recent-file)
+   ("C-x b"   . ido-switch-buffer)
+   ("C-x B"   . ido-switch-buffer-other-window))
   :config
   (use-package flx-ido
     :config
@@ -221,7 +238,7 @@
   (use-package ido-vertical-mode
     :config
     (ido-vertical-mode)
-    (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right))
+    (setq ido-vertical-define-keys 'C-n-and-C-p-only))
 
   (ido-mode t)
   (icomplete-mode 1)
@@ -260,13 +277,16 @@
    ("C-c h t" . helm-codesearch-find-pattern)
    ("C-c h I" . helm-codesearch-create-csearchindex)))
 
+(use-package helm-grepint
+  :bind
+  ("C-c g" . helm-grepint-grep)
+  :config
+  (helm-grepint-set-default-config))
+
 (use-package helm-config
   :ensure nil
   :bind
   (;("C-c h"   . helm-command-prefix)
-                                        ;   ("C-c h a" . helm-apropos)
-   ("C-x f"   . helm-recentf)
-                                        ;   ("C-c h o" . helm-occur)
    ("C-x C-i" . helm-imenu)
    ("M-y"     . helm-show-kill-ring))
   :init
@@ -274,17 +294,47 @@
   :config
   (use-package helm-command :ensure nil)
   (use-package helm-semantic :ensure nil)
-  (setq helm-idle-delay 0.0
-        helm-input-idle-delay 0.01
-        helm-quick-update           t
-        helm-M-x-requires-pattern   nil
-        helm-ff-skip-boring-files   t
-        helm-split-window-in-side-p t
-        helm-M-x-fuzzy-match        t
-        helm-buffers-fuzzy-matching t
-        helm-recentf-fuzzy-match    t
-        helm-semantic-fuzzy-match   t
-        helm-imenu-fuzzy-match      t))
+
+  (helm-autoresize-mode 1)
+
+  (setq
+   helm-M-x-fuzzy-match        t
+   helm-M-x-requires-pattern   nil
+   helm-autoresize-max-height  30
+   helm-autoresize-min-height 30
+   helm-buffers-fuzzy-matching t
+   helm-display-header-line    nil
+   helm-ff-skip-boring-files   t
+   helm-idle-delay             0.0
+   helm-imenu-fuzzy-match      t
+   helm-input-idle-delay       0.01
+   helm-quick-update           t
+   helm-recentf-fuzzy-match    t
+   helm-semantic-fuzzy-match   t)
+
+  (defvar helm-source-header-default-background
+    (face-attribute 'helm-source-header :background))
+  (defvar helm-source-header-default-foreground
+    (face-attribute 'helm-source-header :foreground))
+  (defvar helm-source-header-default-box
+    (face-attribute 'helm-source-header :box))
+
+  (defun helm-toggle-header-line ()
+    (if (> (length helm-sources) 1)
+        (set-face-attribute 'helm-source-header
+                            nil
+                            :foreground helm-source-header-default-foreground
+                            :background helm-source-header-default-background
+                            :box helm-source-header-default-box
+                            :height 1.0)
+      (set-face-attribute 'helm-source-header
+                          nil
+                          :foreground (face-attribute 'helm-selection :background)
+                          :background (face-attribute 'helm-selection :background)
+                          :box nil
+                          :height 0.1)))
+
+  (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line))
 
 
 ;;; Tool
@@ -329,7 +379,8 @@
   (popwin-mode 1))
 
 (use-package undo-tree
-  :after ido
+  :bind
+  ("C-x u" . undo-tree-visualize)
   :diminish undo-tree-mode
   :config
   (global-undo-tree-mode))
