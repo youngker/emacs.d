@@ -334,6 +334,14 @@
   :config
   (global-undo-tree-mode))
 
+(use-package yasnippet
+  :after ido
+  :diminish yas-minor-mode
+  :config
+  (setq yas-verbosity 1)
+  (setq yas-wrap-around-region t)
+  (yas-global-mode 1))
+
 (use-package aggressive-indent
   :after ido
   :diminish aggressive-indent-mode
@@ -474,6 +482,7 @@
 (use-package eval-sexp-fu
   :commands turn-on-eval-sexp-fu-flash-mode
   :config
+  (use-package cider-eval-sexp-fu)
   (setq eval-sexp-fu-flash-duration 0.5))
 
 (use-package mic-paren
@@ -499,14 +508,14 @@
 ;; Lisp
 (defun youngker/lisp-mode ()
   "Lisp mode."
-  (add-hook 'after-save-hook 'check-parens nil t)
   (auto-fill-mode 1)
+  (eldoc-mode 1)
   (flycheck-mode 1)
   (paredit-mode 1)
   (rainbow-delimiters-mode 1)
   (redshank-mode 1)
-  (eldoc-mode)
-  (turn-on-eval-sexp-fu-flash-mode))
+  (turn-on-eval-sexp-fu-flash-mode)
+  (add-hook 'after-save-hook 'check-parens nil t))
 
 (defun youngker/elisp-mode ()
   "Elisp mode."
@@ -525,18 +534,18 @@
   :defer t
   :ensure nil
   :init
-  (apply #'youngker/add-hook
-         #'youngker/lisp-mode  '(emacs-lisp-mode-hook
-                                 inferior-emacs-lisp-mode
-                                 ielm-mode-hook
-                                 lisp-mode-hook
-                                 inferior-lisp-mode-hook
-                                 lisp-interaction-mode-hook
-                                 slime-repl-mode-hook))
-  (apply #'youngker/add-hook
-         #'youngker/elisp-mode '(emacs-lisp-mode-hook
-                                 inferior-emacs-lisp-mode
-                                 ielm-mode-hook)))
+  (apply #'youngker/add-hook #'youngker/lisp-mode
+         '(emacs-lisp-mode-hook
+           inferior-emacs-lisp-mode-hook
+           ielm-mode-hook
+           lisp-mode-hook
+           inferior-lisp-mode-hook
+           lisp-interaction-mode-hook
+           slime-repl-mode-hook))
+  (apply #'youngker/add-hook #'youngker/elisp-mode
+         '(emacs-lisp-mode-hook
+           inferior-emacs-lisp-mode-hook
+           ielm-mode-hook)))
 
 
 ;; C-c++
@@ -565,6 +574,8 @@
   :init
   (youngker/add-hook #'youngker/lisp-mode 'clojure-mode-hook)
   (youngker/add-hook #'subword-mode 'clojure-mode-hook)
+  ;; (youngker/add-hook (lambda ()
+  ;;                      (flycheck-clojure-setup)) 'clojure-mode-hook)
   :config
   (use-package cljsbuild-mode)
   (use-package elein))
@@ -572,9 +583,7 @@
 (use-package cider
   :commands (cider-jack-in cider-connect)
   :bind
-  ("C-c M-j" . cider-jack-in)
-  :config
-  (youngker/add-hook (lambda () (flycheck-clojure-setup)) 'cider-mode-hook))
+  ("C-c M-j" . cider-jack-in))
 
 (use-package ac-cider
   :commands ac-cider-setup
