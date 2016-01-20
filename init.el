@@ -4,7 +4,7 @@
 
 ;; Author: Youngjoo Lee <youngker@gmail.com>
 ;; Version: 0.1.0
-;; Keywords: configuration
+;; Keywords: convenience
 ;; Package-Requires: ((emacs "24.5"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -54,6 +54,8 @@
  '(helm-selection ((t (:background "#222222"))))
  '(helm-visible-mark ((t (:background "#444444" :forground "White"))))
  '(helm-match ((t (:background "Black" :foreground "#008b8b"))))
+ '(helm-swoop-target-line-face ((t (:background "#222222"))))
+ '(helm-swoop-target-word-face ((t (:background "#333399" :foreground "White"))))
  '(ac-candidate-face ((t (:background "#1a1a1a" :foreground "#a6a6a6"))))
  '(ac-selection-face ((t (:background "#2e2e2e" :foreground "#a6a6a6"))))
  '(popup-isearch-match ((t (:background "Black" :foreground "deep pink"))))
@@ -80,12 +82,13 @@
  ediff-window-setup-function 'ediff-setup-windows-plain
  electric-indent-mode nil
  fill-column 80
- gc-cons-threshold 20000000
+ gc-cons-threshold 50000000
  global-auto-revert-non-file-buffers t
  history-length 1000
  indent-tabs-mode nil
  inhibit-startup-message t
  initial-major-mode 'text-mode
+ large-file-warning-threshold 100000000
  make-backup-files nil
  next-error-highlight t
  next-error-highlight-no-select t
@@ -161,6 +164,7 @@
 
 (use-package auto-compile
   :after ido
+  :defines auto-compile-on-load-mode
   :config
   (setq load-prefer-newer t)
   (auto-compile-on-load-mode)
@@ -203,7 +207,8 @@
 
 (when (equal system-type 'darwin)
   (use-package exec-path-from-shell
-    :after ido
+    :after helm
+    :defines exec-path-from-shell-initialize
     :config
     (exec-path-from-shell-initialize))
 
@@ -231,65 +236,58 @@
    ("C-x b"   . ido-switch-buffer)
    ("C-x B"   . ido-switch-buffer-other-window))
   :config
+  (ido-mode +1)
+  (icomplete-mode +1)
+  (setq ido-auto-merge-work-directories-length -1
+        ido-case-fold nil
+        ido-create-new-buffer 'always
+        ido-default-file-method 'selected-window
+        ido-enable-flex-matching t
+        ido-enable-prefix nil
+        ido-enable-prefix nil
+        ido-everywhere 1
+        ido-max-prospects 10
+        ido-use-faces nil
+        ido-use-filename-at-point nil)
+  (define-key ido-file-completion-map (kbd "C-\\") 'backward-kill-word)
+
   (use-package flx-ido
     :config
-    (flx-ido-mode t))
+    (flx-ido-mode +1))
 
   (use-package ido-vertical-mode
     :config
     (ido-vertical-mode)
     (setq ido-vertical-define-keys 'C-n-and-C-p-only))
 
-  (ido-mode t)
-  (icomplete-mode 1)
-  (setq ido-auto-merge-work-directories-length -1
-        ido-create-new-buffer 'always
-        ido-default-file-method 'selected-window
-        ido-case-fold nil
-        ido-enable-prefix nil
-        ido-enable-flex-matching t
-        ido-everywhere 1
-        ido-max-prospects 10
-        ido-use-faces nil
-        ido-use-filename-at-point nil
-        ido-enable-prefix nil)
-  (define-key ido-file-completion-map (kbd "C-\\") 'backward-kill-word))
+  (use-package ido-ubiquitous
+    :config
+    (ido-ubiquitous-mode +1)))
 
 
 ;;; helm
 
-(use-package helm
+(use-package helm-config
+  :ensure nil
   :bind
   (("C-x C-i" . helm-imenu)
-   ("M-y"     . helm-show-kill-ring)
+   ("C-c g"   . helm-find-files)
+   ("M-i"     . helm-swoop)
+   ("C-c M-i" . helm-multi-swoop)
+   ("C-x M-i" . helm-multi-swoop-all)
    ("C-c h w" . helm-descbinds)
    ("C-c h f" . helm-codesearch-find-file)
    ("C-c h t" . helm-codesearch-find-pattern)
    ("C-c h I" . helm-codesearch-create-csearchindex)
-   ("M-i"     . helm-swoop)
-   ("M-I"     . helm-swoop-back-to-last-point)
-   ("C-c M-i" . helm-multi-swoop)
-   ("C-x M-i" . helm-multi-swoop-all))
+   ("C-c h b" . helm-resume)
+   ("M-y"     . helm-show-kill-ring))
+  :defines (helm-autoresize-mode)
   :config
-  (use-package helm-config :ensure nil)
   (use-package helm-command :ensure nil)
   (use-package helm-semantic :ensure nil)
-  (use-package helm-codesearch)
   (use-package helm-descbinds)
   (use-package helm-swoop)
-  (unbind-key "C-x c")
-  (bind-keys* :prefix-map helm-command-prefix
-              :prefix "C-c h"
-              ("w" . helm-descbinds)
-              ("f" . helm-codesearch-find-file)
-              ("t" . helm-codesearch-find-pattern)
-              ("I" . helm-codesearch-create-csearchindex))
-
-  (bind-keys*
-   ("M-i"     . helm-swoop)
-   ("M-I"     . helm-swoop-back-to-last-point)
-   ("C-c M-i" . helm-multi-swoop)
-   ("C-x M-i" . helm-multi-swoop-all))
+  (use-package helm-codesearch)
 
   (bind-keys :map helm-map
              ("<tab>" . helm-execute-persistent-action)
@@ -297,6 +295,7 @@
              ("C-z"   . helm-select-action))
 
   (helm-autoresize-mode 1)
+
   (setq
    helm-M-x-fuzzy-match        t
    helm-M-x-requires-pattern   nil
@@ -353,7 +352,9 @@
   (add-hook 'find-file-hook #'(lambda () (auto-revert-mode 1))))
 
 (use-package avy
-  :bind ("C-;" . avy-goto-char)
+  :bind
+  ("C-;" . avy-goto-char)
+  :defines avy-setup-default
   :config
   (avy-setup-default))
 
@@ -364,7 +365,9 @@
   (volatile-highlights-mode t))
 
 (use-package win-switch
-  :bind ("C-x o" . win-switch-dispatch)
+  :bind
+  ("C-x o" . win-switch-dispatch)
+  :defines win-switch-set-keys
   :config
   (setq win-switch-feedback-background-color "DeepPink3")
   (setq win-switch-feedback-foreground-color "black")
@@ -382,6 +385,7 @@
   :bind
   ("C-x u" . undo-tree-visualize)
   :diminish undo-tree-mode
+  :defines global-undo-tree-mode
   :config
   (global-undo-tree-mode))
 
@@ -440,7 +444,8 @@
   (setq eopengrok-ctags "/usr/local/bin/ctags"))
 
 (use-package google-translate
-  :bind ("C-c t" . google-translate-smooth-translate)
+  :bind
+  ("C-c t" . google-translate-smooth-translate)
   :config
   (use-package google-translate-smooth-ui :ensure nil)
   ;; (setq google-translate-output-destination 'popup)
@@ -599,12 +604,13 @@
            ielm-mode-hook)))
 
 
-;; C-c++
+;; C
 
 (use-package google-c-style
   :mode (("\\.h\\(h?\\|xx\\|pp\\)\\'" . c++-mode)
          ("\\.c\\'"                   . c-mode)
          ("\\.cc\\'"                  . c++-mode))
+  :defines (google-set-c-style google-make-newline-indent)
   :config
   (youngker/add-hook #'google-set-c-style 'c-mode-common-hook)
   (youngker/add-hook #'google-make-newline-indent 'c-mode-common-hook))
@@ -649,6 +655,7 @@
 
 (use-package clj-refactor
   :commands clj-refactor-mode
+  :defines (cljr-add-keybindings-with-prefix cljr-cycle-coll)
   :init
   (youngker/add-hook (lambda ()
                        (clj-refactor-mode 1)
