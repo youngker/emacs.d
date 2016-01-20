@@ -258,45 +258,45 @@
 
 ;;; helm
 
-(use-package helm-descbinds
-  :bind (("C-c h w" . helm-descbinds)))
-
-(use-package helm-swoop
+(use-package helm
   :bind
-  (("M-i"     . helm-swoop)
+  (("C-x C-i" . helm-imenu)
+   ("M-y"     . helm-show-kill-ring)
+   ("C-c h w" . helm-descbinds)
+   ("C-c h f" . helm-codesearch-find-file)
+   ("C-c h t" . helm-codesearch-find-pattern)
+   ("C-c h I" . helm-codesearch-create-csearchindex)
+   ("M-i"     . helm-swoop)
    ("M-I"     . helm-swoop-back-to-last-point)
    ("C-c M-i" . helm-multi-swoop)
    ("C-x M-i" . helm-multi-swoop-all))
   :config
-  (define-key isearch-mode-map (kbd "M-i") 'helm-swoop-from-isearch)
-  (define-key helm-swoop-map (kbd "M-i") 'helm-multi-swoop-all-from-helm-swoop))
-
-(use-package helm-codesearch
-  :bind
-  (("C-c h f" . helm-codesearch-find-file)
-   ("C-c h t" . helm-codesearch-find-pattern)
-   ("C-c h I" . helm-codesearch-create-csearchindex)))
-
-(use-package helm-grepint
-  :bind
-  ("C-c g" . helm-grepint-grep)
-  :config
-  (helm-grepint-set-default-config))
-
-(use-package helm-config
-  :ensure nil
-  :bind
-  (;("C-c h"   . helm-command-prefix)
-   ("C-x C-i" . helm-imenu)
-   ("M-y"     . helm-show-kill-ring))
-  :init
-  (global-unset-key (kbd "C-x c"))
-  :config
+  (use-package helm-config :ensure nil)
   (use-package helm-command :ensure nil)
   (use-package helm-semantic :ensure nil)
+  (use-package helm-codesearch)
+  (use-package helm-descbinds)
+  (use-package helm-swoop)
+  (unbind-key "C-x c")
+  (bind-keys* :prefix-map helm-command-prefix
+              :prefix "C-c h"
+              ("w" . helm-descbinds)
+              ("f" . helm-codesearch-find-file)
+              ("t" . helm-codesearch-find-pattern)
+              ("I" . helm-codesearch-create-csearchindex))
+
+  (bind-keys*
+   ("M-i"     . helm-swoop)
+   ("M-I"     . helm-swoop-back-to-last-point)
+   ("C-c M-i" . helm-multi-swoop)
+   ("C-x M-i" . helm-multi-swoop-all))
+
+  (bind-keys :map helm-map
+             ("<tab>" . helm-execute-persistent-action)
+             ("C-i"   . helm-execute-persistent-action)
+             ("C-z"   . helm-select-action))
 
   (helm-autoresize-mode 1)
-
   (setq
    helm-M-x-fuzzy-match        t
    helm-M-x-requires-pattern   nil
@@ -659,6 +659,17 @@
 
 (use-package flycheck-clojure
   :commands flycheck-clojure-setup)
+
+
+;; Go
+
+(use-package go-mode
+  :mode ("\\.go\\'" . go-mode)
+  :config
+  (add-hook 'before-save-hook 'gofmt-before-save)
+  (setq gofmt-command "goimports")
+  (bind-keys :map go-mode-map
+             ("M-." 'godef-jump)))
 
 
 ;;; Elapsed time
