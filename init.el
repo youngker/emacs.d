@@ -108,14 +108,14 @@
  visible-bell nil
  x-select-enable-clipboard t)
 
-(auto-compression-mode 1)
+(auto-compression-mode +1)
 (blink-cursor-mode -1)
-(global-auto-revert-mode 1)
-(global-font-lock-mode 1)
-(global-hl-line-mode 1)
-(savehist-mode 1)
-(show-paren-mode 1)
-(winner-mode 1)
+(global-auto-revert-mode +1)
+(global-font-lock-mode +1)
+(global-hl-line-mode +1)
+(savehist-mode +1)
+(show-paren-mode +1)
+(winner-mode +1)
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; font
@@ -164,7 +164,6 @@
 
 (use-package auto-compile
   :after ido
-  :defines auto-compile-on-load-mode
   :config
   (setq load-prefer-newer t)
   (auto-compile-on-load-mode)
@@ -190,12 +189,12 @@
   :diminish subword-mode
   :after ido
   :config
-  (global-subword-mode 1))
+  (global-subword-mode +1))
 
 (use-package recentf
   :after ido
   :config
-  (recentf-mode 1))
+  (recentf-mode +1))
 
 (use-package saveplace
   :after ido
@@ -207,9 +206,9 @@
 
 (when (equal system-type 'darwin)
   (use-package exec-path-from-shell
-    :after helm
-    :defines exec-path-from-shell-initialize
+    :defer 5
     :config
+    (setq exec-path-from-shell-check-startup-files nil)
     (exec-path-from-shell-initialize))
 
   (menu-bar-mode +1)
@@ -220,21 +219,21 @@
 
 ;;; Ido
 
-(defun youngker/ido-recent-file ()
-  "Find a recent file."
-  (interactive)
-  (let ((file (ido-completing-read
-               "Choose recent file: "
-               (mapcar 'abbreviate-file-name recentf-list) nil t)))
-    (when file
-      (find-file file))))
-
 (use-package ido
   :bind
   (("C-x C-f" . ido-find-file)
-   ("C-x f"   . youngker/ido-recent-file)
+   ("C-x f"   . ido-recent-file)
    ("C-x b"   . ido-switch-buffer)
    ("C-x B"   . ido-switch-buffer-other-window))
+  :preface
+  (defun ido-recent-file ()
+    "Find a recent file."
+    (interactive)
+    (let ((file (ido-completing-read
+                 "Choose recent file: "
+                 (mapcar 'abbreviate-file-name recentf-list) nil t)))
+      (when file
+        (find-file file))))
   :config
   (ido-mode +1)
   (icomplete-mode +1)
@@ -267,8 +266,7 @@
 
 ;;; helm
 
-(use-package helm-config
-  :ensure nil
+(use-package helm
   :bind
   (("C-x C-i" . helm-imenu)
    ("C-c g"   . helm-find-files)
@@ -281,7 +279,6 @@
    ("C-c h I" . helm-codesearch-create-csearchindex)
    ("C-c h b" . helm-resume)
    ("M-y"     . helm-show-kill-ring))
-  :defines (helm-autoresize-mode)
   :config
   (use-package helm-command :ensure nil)
   (use-package helm-semantic :ensure nil)
@@ -294,13 +291,13 @@
              ("C-i"   . helm-execute-persistent-action)
              ("C-z"   . helm-select-action))
 
-  (helm-autoresize-mode 1)
+  ;; (helm-autoresize-mode +1)
 
   (setq
    helm-M-x-fuzzy-match        t
    helm-M-x-requires-pattern   nil
-   helm-autoresize-max-height  30
-   helm-autoresize-min-height 30
+   ;; helm-autoresize-max-height  30
+   ;; helm-autoresize-min-height 30
    helm-buffers-fuzzy-matching t
    helm-display-header-line    nil
    helm-ff-skip-boring-files   t
@@ -349,12 +346,11 @@
   :commands auto-revert-mode
   :diminish auto-revert-mode
   :init
-  (add-hook 'find-file-hook #'(lambda () (auto-revert-mode 1))))
+  (add-hook 'find-file-hook #'(lambda () (auto-revert-mode +1))))
 
 (use-package avy
   :bind
   ("C-;" . avy-goto-char)
-  :defines avy-setup-default
   :config
   (avy-setup-default))
 
@@ -367,7 +363,6 @@
 (use-package win-switch
   :bind
   ("C-x o" . win-switch-dispatch)
-  :defines win-switch-set-keys
   :config
   (setq win-switch-feedback-background-color "DeepPink3")
   (setq win-switch-feedback-foreground-color "black")
@@ -379,13 +374,12 @@
 (use-package popwin
   :after ido
   :config
-  (popwin-mode 1))
+  (popwin-mode +1))
 
 (use-package undo-tree
   :bind
   ("C-x u" . undo-tree-visualize)
   :diminish undo-tree-mode
-  :defines global-undo-tree-mode
   :config
   (global-undo-tree-mode))
 
@@ -395,7 +389,7 @@
   :config
   (setq yas-verbosity 1)
   (setq yas-wrap-around-region t)
-  (yas-global-mode 1))
+  (yas-global-mode +1))
 
 (use-package aggressive-indent
   :after ido
@@ -418,7 +412,7 @@
   :diminish which-key-mode
   :defer 5
   :config
-  (which-key-mode 1))
+  (which-key-mode +1))
 
 (use-package visual-regexp
   :bind
@@ -555,28 +549,8 @@
 
 ;;; Languages
 
-(defsubst youngker/add-hook (func &rest hook)
-  "Add hook with FUNC and HOOK."
-  (dolist (mode-hook hook)
-    (add-hook mode-hook func)))
-
 
 ;; Lisp
-(defun youngker/lisp-mode ()
-  "Lisp mode."
-  (auto-fill-mode 1)
-  (eldoc-mode 1)
-  (flycheck-mode 1)
-  (paredit-mode 1)
-  (rainbow-delimiters-mode 1)
-  (redshank-mode 1)
-  (turn-on-eval-sexp-fu-flash-mode)
-  (add-hook 'after-save-hook 'check-parens nil t))
-
-(defun youngker/elisp-mode ()
-  "Elisp mode."
-  (ac-emacs-lisp-mode-setup)
-  (elisp-slime-nav-mode 1))
 
 (use-package redshank
   :diminish redshank-mode
@@ -589,19 +563,41 @@
 (use-package lisp-mode
   :defer t
   :ensure nil
+  :preface
+  (defvar lisp-mode-hook-list
+    '(lisp-mode-hook
+      inferior-lisp-mode-hook
+      lisp-interaction-mode-hook
+      slime-repl-mode-hook))
+
+  (defvar elisp-mode-hook-list
+    '(emacs-lisp-mode-hook
+      inferior-emacs-lisp-mode-hook
+      ielm-mode-hook))
+
+  (defun lisp-mode-setup-hook ()
+    "Lisp mode."
+    (auto-fill-mode +1)
+    (eldoc-mode +1)
+    (flycheck-mode +1)
+    (paredit-mode +1)
+    (rainbow-delimiters-mode +1)
+    (redshank-mode +1)
+    (turn-on-eval-sexp-fu-flash-mode)
+    (add-hook 'after-save-hook 'check-parens nil t))
+
+  (defun elisp-mode-setup-hook ()
+    "Elisp mode."
+    (ac-emacs-lisp-mode-setup)
+    (elisp-slime-nav-mode +1))
+
   :init
-  (apply #'youngker/add-hook #'youngker/lisp-mode
-         '(emacs-lisp-mode-hook
-           inferior-emacs-lisp-mode-hook
-           ielm-mode-hook
-           lisp-mode-hook
-           inferior-lisp-mode-hook
-           lisp-interaction-mode-hook
-           slime-repl-mode-hook))
-  (apply #'youngker/add-hook #'youngker/elisp-mode
-         '(emacs-lisp-mode-hook
-           inferior-emacs-lisp-mode-hook
-           ielm-mode-hook)))
+  (dolist (hook lisp-mode-hook-list)
+    (add-hook hook #'lisp-mode-setup-hook))
+
+  (dolist (hook elisp-mode-hook-list)
+    (add-hook hook #'lisp-mode-setup-hook)
+    (add-hook hook #'elisp-mode-setup-hook)))
 
 
 ;; C
@@ -610,10 +606,9 @@
   :mode (("\\.h\\(h?\\|xx\\|pp\\)\\'" . c++-mode)
          ("\\.c\\'"                   . c-mode)
          ("\\.cc\\'"                  . c++-mode))
-  :defines (google-set-c-style google-make-newline-indent)
   :config
-  (youngker/add-hook #'google-set-c-style 'c-mode-common-hook)
-  (youngker/add-hook #'google-make-newline-indent 'c-mode-common-hook))
+  (add-hook 'c-mode-common-hook #'google-set-c-style)
+  (add-hook 'c-mode-common-hook #'google-make-newline-indent))
 
 
 ;; Markdown
@@ -629,38 +624,42 @@
 (use-package clojure-mode
   :mode ("\\.clj\\'" "\\.cljs\\'" "\\.cljc\\'")
   :init
-  (youngker/add-hook #'youngker/lisp-mode 'clojure-mode-hook)
-  (youngker/add-hook #'subword-mode 'clojure-mode-hook)
-  ;; (youngker/add-hook (lambda ()
-  ;;                      (flycheck-clojure-setup)) 'clojure-mode-hook)
+  (add-hook 'clojure-mode-hook #'lisp-mode-setup-hook)
+  (add-hook 'clojure-mode-hook #'subword-mode)
   :config
   (use-package cljsbuild-mode)
   (use-package elein))
 
 (use-package cider
-  :commands (cider-jack-in cider-connect)
-  :bind
-  ("C-c M-j" . cider-jack-in))
+  :commands cider-mode
+  :init
+  (with-eval-after-load 'clojure-mode
+    (add-hook 'clojure-mode-hook #'cider-mode))
+  :config
+  (setq nrepl-hide-special-buffers t
+        cider-repl-pop-to-buffer-on-connect nil
+        cider-repl-use-clojure-font-lock t)
+  (add-hook 'cider-mode-hook #'eldoc-mode))
 
 (use-package ac-cider
   :commands ac-cider-setup
   :init
-  (youngker/add-hook (lambda ()
-                       (ac-cider-setup))
-                     'cider-mode-hook
-                     'cider-repl-mode-hook)
+  (with-eval-after-load 'cider-mode
+    (add-hook 'cider-mode-hook #'ac-cider-setup)
+    (add-hook 'cider-repl-mode-hook #'ac-cider-setup))
   :config
-  (eval-after-load "auto-complete"
+  (with-eval-after-load 'auto-complete
     '(add-to-list 'ac-modes 'cider-mode)))
 
 (use-package clj-refactor
   :commands clj-refactor-mode
-  :defines (cljr-add-keybindings-with-prefix cljr-cycle-coll)
+  :preface
+  (defun clj-refactor-setup-hook ()
+    (clj-refactor-mode +1)
+    (cljr-add-keybindings-with-prefix "C-c C-m"))
   :init
-  (youngker/add-hook (lambda ()
-                       (clj-refactor-mode 1)
-                       (cljr-add-keybindings-with-prefix "C-c C-m"))
-                     'clojure-mode-hook)
+  (with-eval-after-load 'clojure-mode
+    (add-hook 'clojure-mode-hook #'clj-refactor-setup-hook))
   :config
   (bind-key "C->" #'cljr-cycle-coll clojure-mode-map))
 
@@ -670,13 +669,142 @@
 
 ;; Go
 
+(use-package go-eldoc
+  :commands go-eldoc-setup
+  :preface
+  (defun go-eldoc-setup-hook ()
+    (go-eldoc-setup))
+  :init
+  (with-eval-after-load 'go-mode
+    (add-hook 'go-mode-hook #'go-eldoc-setup-hook)))
+
+(use-package go-autocomplete
+  :defer t
+  :init
+  (with-eval-after-load 'auto-complete
+    '(add-to-list 'ac-modes 'go-mode)))
+
 (use-package go-mode
   :mode ("\\.go\\'" . go-mode)
+  :preface
+  (defun go-mode-setup-hook ()
+    (setq gofmt-command "goimports")
+    (setq compile-command "go build -v && go test -v && go vet")
+    (add-hook 'before-save-hook 'gofmt-before-save))
+  :init
+  (add-hook 'go-mode-hook 'go-mode-setup-hook)
   :config
-  (add-hook 'before-save-hook 'gofmt-before-save)
-  (setq gofmt-command "goimports")
   (bind-keys :map go-mode-map
-             ("M-." 'godef-jump)))
+             ("M-." . godef-jump)
+             ("C-c C-c" . compile)))
+
+
+;; Org
+
+(use-package org
+  :ensure nil
+  :defer t
+  :bind
+  (("C-c a" . org-agenda)
+   ("C-c l" . org-store-link)
+   ("C-c b" . org-iswitchb)
+   ("C-c k" . org-capture))
+  :config
+  (use-package org-capture
+    :ensure nil)
+  ;; Add some new modules.
+  (add-to-list 'org-modules 'org-habit)
+
+  ;; Set up paths.
+  (setq org-directory "~/org"
+        ;; File for capturing new tasks.
+        org-default-notes-file (concat org-directory "/notes.org")
+        org-agenda-files (list (concat org-directory "/todo.org")
+                               org-default-notes-file))
+
+  (setq org-todo-keywords
+        '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+          (sequence "WAITING(w@)" "HOLD(h@)" "|" "CANCELLED(c)")))
+
+  (setq org-todo-keyword-faces
+        '(("NEXT" :foreground "blue" :weight bold)
+          ("WAITING" :foreground "orange" :weight bold)
+          ("HOLD" :foreground "magenta" :weight bold)
+          ("CANCELLED" :foreground "forest green" :weight bold)))
+
+  (setq org-capture-templates
+        (let ((refile-file (concat org-directory "/notes.org")))
+          `(("t" "todo" entry (file ,refile-file)
+             "* TODO %?")
+            ("n" "note" entry (file ,refile-file)
+             "* %?"))))
+
+  ;; Refile setup.
+  (setq org-refile-targets '((org-agenda-files :level . 1))
+        org-refile-use-outline-path 'file)
+
+  ;; Use ido completion.
+  (setq org-completion-use-ido t)
+
+  ;; Do not split line when cursor in not at the end.
+  (setq org-M-RET-may-split-line nil)
+
+  ;; Highlight source code.
+  (setq org-src-fontify-natively t)
+
+  ;; Add a timestamp when a certain TODO item was finished.
+  (setq org-log-done 'time)
+
+  ;; Custom timestamp formats.
+  (setq-default org-display-custom-times t)
+  (setq org-time-stamp-custom-formats
+        '("<%d-%m-%Y %a>" . "<%d-%m-%Y %a %H:%M>"))
+
+  (setq org-ellipsis "⤵")
+
+  ;; Align org tags before saving.
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (add-hook 'before-save-hook 'org-align-all-tags nil t)))
+
+  ;; Org babel
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (sh . t)
+     (python . t))))
+
+;; LaTeX export
+(use-package ox-latex
+  :ensure nil
+  :defer t
+  :config
+  (progn
+    (setq org-latex-pdf-process
+          (-repeat 3 "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"))
+    (add-to-list 'org-latex-packages-alist '("" "minted"))
+    (setq org-latex-listings 'minted)))
+
+;; Integration with beamer
+(use-package ox-beamer
+  :ensure nil
+  :defer t
+  :config
+  (progn
+    ;; Don't ask me if this variable can be evaluated.
+    (put 'org-beamer-outline-frame-title 'safe-local-variable 'stringp)
+    (add-to-list 'org-beamer-environments-extra
+                 '("onlyenv+block"
+                   "O"
+                   "\\begin{onlyenv}%a\\begin{block}{%h}"
+                   "\\end{block}\\end{onlyenv}"))))
+
+(use-package org-journal
+  :defer t
+  :mode
+  ("journal/[0-9]\\{8\\}$" . org-journal-mode)
+  :config
+  (setq org-journal-dir (concat org-directory "/journal/")))
 
 
 ;;; Elapsed time
