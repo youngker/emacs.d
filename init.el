@@ -164,6 +164,8 @@
 
 (use-package auto-compile
   :after ido
+  :commands (auto-compile-on-load-mode
+             auto-compile-on-save-mode)
   :config
   (setq load-prefer-newer t)
   (auto-compile-on-load-mode)
@@ -207,6 +209,11 @@
 (when (equal system-type 'darwin)
   (use-package exec-path-from-shell
     :defer 5
+    :defines (exec-path-from-shell-check-startup-files
+              mac-option-modifier
+              mac-command-modifier
+              ns-function-modifier)
+    :functions exec-path-from-shell-initialize
     :config
     (setq exec-path-from-shell-check-startup-files nil)
     (exec-path-from-shell-initialize))
@@ -225,6 +232,10 @@
    ("C-x f"   . ido-recent-file)
    ("C-x b"   . ido-switch-buffer)
    ("C-x B"   . ido-switch-buffer-other-window))
+  :commands (ido-fallback-command
+             ido-complete
+             ido-select-text
+             ido-exit-minibuffer)
   :preface
   (defun ido-recent-file ()
     "Find a recent file."
@@ -251,6 +262,8 @@
   (define-key ido-file-completion-map (kbd "C-\\") 'backward-kill-word)
 
   (use-package flx-ido
+    :demand t
+    :commands (flx-ido-mode flx-ido-reset flx-ido-debug flx-ido-match)
     :config
     (flx-ido-mode +1))
 
@@ -282,6 +295,9 @@
   :config
   (use-package helm-command :ensure nil)
   (use-package helm-semantic :ensure nil)
+  (use-package helm-config
+    :ensure nil
+    :commands async-bytecomp-get-allowed-pkgs)
   (use-package helm-descbinds)
   (use-package helm-swoop)
   (use-package helm-codesearch)
@@ -351,12 +367,14 @@
 (use-package avy
   :bind
   ("C-;" . avy-goto-char)
+  :commands avy-setup-default
   :config
   (avy-setup-default))
 
 (use-package volatile-highlights
   :after ido
   :diminish volatile-highlights-mode
+  :commands volatile-highlights-mode
   :config
   (volatile-highlights-mode t))
 
@@ -373,6 +391,7 @@
 
 (use-package popwin
   :after ido
+  :commands popwin-mode
   :config
   (popwin-mode +1))
 
@@ -380,6 +399,7 @@
   :bind
   ("C-x u" . undo-tree-visualize)
   :diminish undo-tree-mode
+  :commands global-undo-tree-mode
   :config
   (global-undo-tree-mode))
 
@@ -392,10 +412,10 @@
   (yas-global-mode +1))
 
 (use-package aggressive-indent
-  :after ido
+  :commands aggressive-indent-mode
   :diminish aggressive-indent-mode
   :config
-  (global-aggressive-indent-mode t))
+  (aggressive-indent-mode t))
 
 (use-package expand-region
   :bind
@@ -491,9 +511,11 @@
 
 (use-package auto-complete
   :diminish auto-complete-mode
-  :commands ac-emacs-lisp-mode-setup
+  :commands (ac-emacs-lisp-mode-setup
+             ac-flyspell-workaround)
   :config
-  (use-package auto-complete-config :ensure nil)
+  (use-package auto-complete-config
+    :ensure nil)
   (setq ac-auto-show-menu t)
   (setq ac-dwim t)
   (setq ac-use-menu-map t)
@@ -530,13 +552,16 @@
 
 
 (use-package eval-sexp-fu
-  :commands turn-on-eval-sexp-fu-flash-mode
+  :commands (eval-sexp-fu-flash
+             turn-on-eval-sexp-fu-flash-mode
+             esf-flash-doit)
   :config
-  (use-package cider-eval-sexp-fu)
+  (use-package cider-eval-sexp-fu
+    :commands cider-esf--bounds-of-last-sexp)
   (setq eval-sexp-fu-flash-duration 0.5))
 
 (use-package mic-paren
-  :after ido
+  :commands paren-activate
   :config
   (paren-activate))
 
@@ -581,9 +606,11 @@
     (eldoc-mode +1)
     (flycheck-mode +1)
     (paredit-mode +1)
+    (paren-activate)
     (rainbow-delimiters-mode +1)
     (redshank-mode +1)
     (turn-on-eval-sexp-fu-flash-mode)
+    (aggressive-indent-mode)
     (add-hook 'after-save-hook 'check-parens nil t))
 
   (defun elisp-mode-setup-hook ()
@@ -603,10 +630,9 @@
 ;; C
 
 (use-package google-c-style
-  :mode (("\\.h\\(h?\\|xx\\|pp\\)\\'" . c++-mode)
-         ("\\.c\\'"                   . c-mode)
-         ("\\.cc\\'"                  . c++-mode))
-  :config
+  :commands (google-set-c-style
+             google-make-newline-indent)
+  :init
   (add-hook 'c-mode-common-hook #'google-set-c-style)
   (add-hook 'c-mode-common-hook #'google-make-newline-indent))
 
@@ -652,7 +678,9 @@
     '(add-to-list 'ac-modes 'cider-mode)))
 
 (use-package clj-refactor
-  :commands clj-refactor-mode
+  :commands (clj-refactor-mode
+             cljr-cycle-coll
+             cljr-add-keybindings-with-prefix)
   :preface
   (defun clj-refactor-setup-hook ()
     (clj-refactor-mode +1)
@@ -778,26 +806,25 @@
 (use-package ox-latex
   :ensure nil
   :defer t
+  :commands -repeat
   :config
-  (progn
-    (setq org-latex-pdf-process
-          (-repeat 3 "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"))
-    (add-to-list 'org-latex-packages-alist '("" "minted"))
-    (setq org-latex-listings 'minted)))
+  (setq org-latex-pdf-process
+        (-repeat 3 "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"))
+  (add-to-list 'org-latex-packages-alist '("" "minted"))
+  (setq org-latex-listings 'minted))
 
 ;; Integration with beamer
 (use-package ox-beamer
   :ensure nil
   :defer t
   :config
-  (progn
-    ;; Don't ask me if this variable can be evaluated.
-    (put 'org-beamer-outline-frame-title 'safe-local-variable 'stringp)
-    (add-to-list 'org-beamer-environments-extra
-                 '("onlyenv+block"
-                   "O"
-                   "\\begin{onlyenv}%a\\begin{block}{%h}"
-                   "\\end{block}\\end{onlyenv}"))))
+  ;; Don't ask me if this variable can be evaluated.
+  (put 'org-beamer-outline-frame-title 'safe-local-variable 'stringp)
+  (add-to-list 'org-beamer-environments-extra
+               '("onlyenv+block"
+                 "O"
+                 "\\begin{onlyenv}%a\\begin{block}{%h}"
+                 "\\end{block}\\end{onlyenv}")))
 
 (use-package org-journal
   :defer t
