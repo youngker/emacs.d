@@ -194,9 +194,7 @@
   (global-subword-mode +1))
 
 (use-package recentf
-  :after ido
-  :config
-  (recentf-mode +1))
+  :commands recentf-mode)
 
 (use-package saveplace
   :after ido
@@ -207,21 +205,22 @@
 ;;; Mac
 
 (when (equal system-type 'darwin)
-  (use-package exec-path-from-shell
-    :defer 5
-    :defines (exec-path-from-shell-check-startup-files
-              mac-option-modifier
-              mac-command-modifier
-              ns-function-modifier)
-    :functions exec-path-from-shell-initialize
-    :config
-    (setq exec-path-from-shell-check-startup-files nil)
-    (exec-path-from-shell-initialize))
-
   (menu-bar-mode +1)
   (setq mac-option-modifier 'super)
   (setq mac-command-modifier 'meta)
   (setq ns-function-modifier 'hyper))
+
+(use-package exec-path-from-shell
+  :if (equal system-type 'darwin)
+  :defer 2
+  :defines (exec-path-from-shell-check-startup-files
+            mac-option-modifier
+            mac-command-modifier
+            ns-function-modifier)
+  :functions exec-path-from-shell-initialize
+  :config
+  (setq exec-path-from-shell-check-startup-files nil)
+  (exec-path-from-shell-initialize))
 
 
 ;;; Ido
@@ -240,6 +239,7 @@
   (defun ido-recent-file ()
     "Find a recent file."
     (interactive)
+    (recentf-mode +1)
     (let ((file (ido-completing-read
                  "Choose recent file: "
                  (mapcar 'abbreviate-file-name recentf-list) nil t)))
@@ -295,9 +295,11 @@
   :config
   (use-package helm-command :ensure nil)
   (use-package helm-semantic :ensure nil)
+  (use-package helm-ring :ensure nil)
   (use-package helm-config
     :ensure nil
-    :commands async-bytecomp-get-allowed-pkgs)
+    :commands (async-bytecomp-get-allowed-pkgs
+               async-byte-recompile-directory))
   (use-package helm-descbinds)
   (use-package helm-swoop)
   (use-package helm-codesearch)
@@ -381,6 +383,7 @@
 (use-package win-switch
   :bind
   ("C-x o" . win-switch-dispatch)
+  :commands win-switch-set-keys
   :config
   (setq win-switch-feedback-background-color "DeepPink3")
   (setq win-switch-feedback-foreground-color "black")
@@ -431,6 +434,7 @@
 (use-package which-key
   :diminish which-key-mode
   :defer 5
+  :commands which-key-mode
   :config
   (which-key-mode +1))
 
@@ -511,11 +515,12 @@
 
 (use-package auto-complete
   :diminish auto-complete-mode
-  :commands (ac-emacs-lisp-mode-setup
-             ac-flyspell-workaround)
+  :commands (ac-emacs-lisp-mode-setup ac-flyspell-workaround)
   :config
   (use-package auto-complete-config
-    :ensure nil)
+    :ensure nil
+    :demand t
+    :commands ac-emacs-lisp-mode-setup)
   (setq ac-auto-show-menu t)
   (setq ac-dwim t)
   (setq ac-use-menu-map t)
@@ -656,6 +661,7 @@
   (use-package cljsbuild-mode)
   (use-package elein))
 
+(eval-when-compile (defun org-bookmark-jump-unhide ()))
 (use-package cider
   :commands cider-mode
   :init
@@ -832,6 +838,11 @@
   ("journal/[0-9]\\{8\\}$" . org-journal-mode)
   :config
   (setq org-journal-dir (concat org-directory "/journal/")))
+
+
+;;; registers
+
+(set-register ?i `(file . ,(concat user-emacs-directory "init.el")))
 
 
 ;;; Elapsed time
