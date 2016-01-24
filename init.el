@@ -596,6 +596,11 @@
   :config
   (dired-details-install))
 
+(use-package default-text-scale
+  :bind
+  ("C-M-=" . default-text-scale-increase)
+  ("C-M--" . default-text-scale-decrease))
+
 
 ;;; git
 
