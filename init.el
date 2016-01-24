@@ -121,11 +121,11 @@
 ;; font
 (cond
  ((eq window-system 'x)
-  (set-face-attribute 'default nil :font "DejaVu Sans Mono 10"))
+  (set-face-attribute 'default nil :height 135 :family "DejaVu Sans Mono"))
  ((eq window-system 'w32)
-  (set-face-attribute 'default nil :font "Consolas bold 11"))
+  (set-face-attribute 'default nil :height 135 :family "Consolas bold"))
  ((memq window-system '(ns mac))
-  (set-face-attribute 'default nil :font "Monaco 13")))
+  (set-face-attribute 'default nil :height 250 :family "Monaco")))
 
 ;; locale
 (set-language-environment "Korean")
@@ -149,6 +149,7 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+;;(package-initialize)
 (let ((default-directory (concat user-emacs-directory "elpa/")))
   (normal-top-level-add-subdirs-to-load-path))
 
@@ -448,6 +449,12 @@
    ("S-<f3>" . highlight-symbol-prev)
    ("M-<f3>" . highlight-symbol-next)))
 
+(use-package diff-hl
+  :after ido
+  :commands global-diff-hl-mode
+  :config
+  (global-diff-hl-mode +1))
+
 (use-package eopengrok
   :bind
   (("C-c s I" . eopengrok-make-index)
@@ -483,7 +490,17 @@
 ;;; Lisp tools
 
 (use-package rainbow-delimiters
-  :commands rainbow-delimiters-mode)
+  :commands rainbow-delimiters-mode
+  :config
+  (use-package color :ensure nil
+    :commands color-saturate-name
+    :demand t
+    :config
+    (cl-loop
+     for index from 1 to rainbow-delimiters-max-face-count
+     do
+     (let ((face (intern (format "rainbow-delimiters-depth-%d-face" index))))
+       (cl-callf color-saturate-name (face-foreground face) 20)))))
 
 (use-package paredit-everywhere
   :commands paredit-everywhere-mode
@@ -516,20 +533,21 @@
 (use-package auto-complete
   :diminish auto-complete-mode
   :commands (ac-emacs-lisp-mode-setup ac-flyspell-workaround)
+  :init
+  (setq ac-auto-start 2
+        ac-candidate-menu-min 0
+        ac-disable-inline t
+        ac-dwim t
+        ac-quick-help-delay 1
+        ac-quick-help-height 60
+        ac-show-menu-immediately-on-auto-complete t
+        ac-use-menu-map t
+        ac-auto-show-menu t)
   :config
   (use-package auto-complete-config
     :ensure nil
     :demand t
     :commands ac-emacs-lisp-mode-setup)
-  (setq ac-auto-show-menu t)
-  (setq ac-dwim t)
-  (setq ac-use-menu-map t)
-  (setq ac-quick-help-delay 1)
-  (setq ac-quick-help-height 60)
-  (setq ac-disable-inline t)
-  (setq ac-show-menu-immediately-on-auto-complete t)
-  (setq ac-auto-start 2)
-  (setq ac-candidate-menu-min 0)
   (set-default 'ac-sources
                '(ac-source-dictionary
                  ac-source-words-in-buffer
@@ -540,19 +558,19 @@
   (ac-flyspell-workaround)
   (global-auto-complete-mode t)
   (add-to-list 'ac-dictionary-directories (concat user-emacs-directory "dict"))
-  (dolist (mode '(magit-log-edit-mode log-edit-mode org-mode text-mode haml-mode
-                                      sass-mode yaml-mode csv-mode espresso-mode
-                                      haskell-mode html-mode nxml-mode sh-mode
-                                      smarty-mode clojure-mode lisp-mode
-                                      textile-mode markdown-mode tuareg-mode))
+  (dolist (mode '(magit-log-edit-mode
+                  log-edit-mode org-mode text-mode haml-mode
+                  sass-mode yaml-mode csv-mode espresso-mode
+                  haskell-mode html-mode nxml-mode sh-mode
+                  smarty-mode clojure-mode lisp-mode
+                  textile-mode markdown-mode tuareg-mode))
     (add-to-list 'ac-modes mode))
-  ;;Key triggers
-  (define-key ac-completing-map (kbd "C-M-n") 'ac-next)
-  (define-key ac-completing-map (kbd "C-M-p") 'ac-previous)
-  (define-key ac-completing-map "\t" 'ac-complete)
-  (define-key ac-completing-map (kbd "M-RET") 'ac-help)
-  (define-key ac-completing-map "\r" 'nil))
-
+  (bind-keys :map ac-completing-map
+             ("C-M-n" . ac-next)
+             ("C-M-p" . ac-previous)
+             ("<tab>" . ac-complete)
+             ("M-RET" . ac-help)
+             ("\r" . nil)))
 
 
 
@@ -581,6 +599,9 @@
 
 
 ;; Lisp
+
+(eval-after-load "eldoc"
+  '(diminish 'eldoc-mode))
 
 (use-package redshank
   :diminish redshank-mode
@@ -838,6 +859,11 @@
   ("journal/[0-9]\\{8\\}$" . org-journal-mode)
   :config
   (setq org-journal-dir (concat org-directory "/journal/")))
+
+
+;;; key bindings
+
+(bind-key "C-x m" #'eshell)
 
 
 ;;; registers
