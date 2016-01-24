@@ -54,6 +54,7 @@
  '(helm-selection ((t (:background "#222222"))))
  '(helm-visible-mark ((t (:background "#444444" :forground "White"))))
  '(helm-match ((t (:background "Black" :foreground "#008b8b"))))
+ '(helm-match-item ((t (:background "#333399" :foreground "White"))))
  '(helm-swoop-target-line-face ((t (:background "#222222"))))
  '(helm-swoop-target-word-face ((t (:background "#333399" :foreground "White"))))
  '(ac-candidate-face ((t (:background "#1a1a1a" :foreground "#a6a6a6"))))
@@ -300,6 +301,7 @@
   (use-package helm-ring :ensure nil)
   (use-package helm-config
     :ensure nil
+    :demand t
     :commands (async-bytecomp-get-allowed-pkgs
                async-byte-recompile-directory))
   (use-package helm-descbinds)
