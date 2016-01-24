@@ -70,9 +70,10 @@
   (scroll-bar-mode -1)
   (setq frame-title-format '(buffer-file-name "%f" ("%b"))))
 
+;; sane defaults
 (setq-default
  auto-revert-verbose nil
- blink-matching-paren nil ;;
+ blink-matching-paren nil
  column-number-mode t
  confirm-nonexistent-file-or-buffer nil
  delete-by-moving-to-trash nil
@@ -149,7 +150,7 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;;(package-initialize)
+;; (package-initialize)
 (let ((default-directory (concat user-emacs-directory "elpa/")))
   (normal-top-level-add-subdirs-to-load-path))
 
@@ -218,7 +219,7 @@
             mac-option-modifier
             mac-command-modifier
             ns-function-modifier)
-  :functions exec-path-from-shell-initialize
+  :commands exec-path-from-shell-initialize
   :config
   (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-initialize))
@@ -312,20 +313,19 @@
 
   ;; (helm-autoresize-mode +1)
 
-  (setq
-   helm-M-x-fuzzy-match        t
-   helm-M-x-requires-pattern   nil
-   ;; helm-autoresize-max-height  30
-   ;; helm-autoresize-min-height 30
-   helm-buffers-fuzzy-matching t
-   helm-display-header-line    nil
-   helm-ff-skip-boring-files   t
-   helm-idle-delay             0.0
-   helm-imenu-fuzzy-match      t
-   helm-input-idle-delay       0.01
-   helm-quick-update           t
-   helm-recentf-fuzzy-match    t
-   helm-semantic-fuzzy-match   t)
+  (setq helm-M-x-fuzzy-match        t
+        helm-M-x-requires-pattern   nil
+        ;; helm-autoresize-max-height  30
+        ;; helm-autoresize-min-height 30
+        helm-buffers-fuzzy-matching t
+        helm-display-header-line    nil
+        helm-ff-skip-boring-files   t
+        helm-idle-delay             0.0
+        helm-imenu-fuzzy-match      t
+        helm-input-idle-delay       0.01
+        helm-quick-update           t
+        helm-recentf-fuzzy-match    t
+        helm-semantic-fuzzy-match   t)
 
   (defvar helm-source-header-default-background
     (face-attribute 'helm-source-header :background))
@@ -365,7 +365,7 @@
   :commands auto-revert-mode
   :diminish auto-revert-mode
   :init
-  (add-hook 'find-file-hook #'(lambda () (auto-revert-mode +1))))
+  (add-hook 'find-file-hook `(lambda () (auto-revert-mode +1))))
 
 (use-package avy
   :bind
@@ -505,8 +505,8 @@
 (use-package paredit-everywhere
   :commands paredit-everywhere-mode
   :init
-  (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
-  (add-hook 'css-mode-hook 'paredit-everywhere-mode))
+  (add-hook 'prog-mode-hook #'paredit-everywhere-mode)
+  (add-hook 'css-mode-hook #'paredit-everywhere-mode))
 
 (use-package paredit
   :diminish paredit-mode
@@ -587,6 +587,15 @@
   :commands paren-activate
   :config
   (paren-activate))
+
+(use-package dired-details
+  :after ido
+  :commands dired-details-install
+  :init
+  (setq-default dired-details-hidden-string "--- ")
+  :config
+  (dired-details-install))
+
 
 ;;; git
 
@@ -637,7 +646,7 @@
     (redshank-mode +1)
     (turn-on-eval-sexp-fu-flash-mode)
     (aggressive-indent-mode)
-    (add-hook 'after-save-hook 'check-parens nil t))
+    (add-hook 'after-save-hook #'check-parens nil t))
 
   (defun elisp-mode-setup-hook ()
     "Elisp mode."
@@ -741,13 +750,14 @@
 
 (use-package go-mode
   :mode ("\\.go\\'" . go-mode)
+  :commands gofmt-before-save
   :preface
   (defun go-mode-setup-hook ()
     (setq gofmt-command "goimports")
     (setq compile-command "go build -v && go test -v && go vet")
-    (add-hook 'before-save-hook 'gofmt-before-save))
+    (add-hook 'before-save-hook #'gofmt-before-save))
   :init
-  (add-hook 'go-mode-hook 'go-mode-setup-hook)
+  (add-hook 'go-mode-hook #'go-mode-setup-hook)
   :config
   (bind-keys :map go-mode-map
              ("M-." . godef-jump)
