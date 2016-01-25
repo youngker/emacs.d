@@ -123,9 +123,9 @@
 ;; font
 (cond
  ((eq window-system 'x)
-  (set-face-attribute 'default nil :height 135 :family "DejaVu Sans Mono"))
+  (set-face-attribute 'default nil :height 105 :bold t :family "DejaVu Sans Mono"))
  ((eq window-system 'w32)
-  (set-face-attribute 'default nil :height 135 :family "Consolas bold"))
+  (set-face-attribute 'default nil :height 110 :bold t :family "Consolas"))
  ((memq window-system '(ns mac))
   (set-face-attribute 'default nil :height 250 :family "Monaco")))
 
@@ -207,12 +207,6 @@
 
 ;;; Mac
 
-(when (equal system-type 'darwin)
-  (menu-bar-mode +1)
-  (setq mac-option-modifier 'super)
-  (setq mac-command-modifier 'meta)
-  (setq ns-function-modifier 'hyper))
-
 (use-package exec-path-from-shell
   :if (equal system-type 'darwin)
   :defer 2
@@ -224,6 +218,12 @@
   :config
   (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-initialize))
+
+(when (equal system-type 'darwin)
+  (menu-bar-mode +1)
+  (setq mac-option-modifier 'super)
+  (setq mac-command-modifier 'meta)
+  (setq ns-function-modifier 'hyper))
 
 
 ;;; Ido
@@ -582,6 +582,7 @@
              esf-flash-doit)
   :config
   (use-package cider-eval-sexp-fu
+    :demand t
     :commands cider-esf--bounds-of-last-sexp)
   (setq eval-sexp-fu-flash-duration 0.5))
 
@@ -760,6 +761,7 @@
   :commands gofmt-before-save
   :preface
   (defun go-mode-setup-hook ()
+    (setq tab-width 4)
     (setq gofmt-command "goimports")
     (setq compile-command "go build -v && go test -v && go vet")
     (add-hook 'before-save-hook #'gofmt-before-save))
