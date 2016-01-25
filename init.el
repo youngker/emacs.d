@@ -39,27 +39,27 @@
 
 (custom-theme-set-faces
  'default-black
- '(default ((t (:inherit nil :stipple nil :background "Black" :foreground "White" :inverse-video nil :box nil :strike-t*hrough nil :overline nil :underline nil :slant normal :weight normal :width normal :height 105))))
+ '(default ((t (:inherit nil :stipple nil :background "#000000" :foreground "#ffffff" :inverse-video nil :box nil :strike-t*hrough nil :overline nil :underline nil :slant normal :weight normal :width normal :height 105))))
  '(highlight ((((class color) (min-colors 88) (background dark)) (:background "#111111"))))
  '(region ((nil (:background "#464740"))))
  '(hl-line ((nil (:background "#222222"))))
  '(yas-field-highlight-face ((nil (:background "#333399"))))
- '(js2-function-param-face ((t (:foreground "LightGoldenrod"))))
+ '(js2-function-param-face ((t (:foreground "#eedd82"))))
  '(font-lock-warning-face ((nil (:foreground "#ff6666"))))
  '(show-paren-match ((nil (:background "#333399"))))
- '(show-paren-mismatch ((((class color)) (:background "red"))))
- '(eval-sexp-fu-flash ((t (:background "#333399" :foreground "White"))))
- '(helm-source-header ((t (:background "Black" :foreground "Orange" :bold nil))))
+ '(show-paren-mismatch ((((class color)) (:background "#cc1b00"))))
+ '(eval-sexp-fu-flash ((t (:background "#000000" :foreground "#333399"))))
+ '(helm-source-header ((t (:background "#000000" :foreground "#ff7f24" :bold nil))))
  '(helm-candidate-number ((t (:background nil :foreground "#87cefa" :bold t))))
  '(helm-selection ((t (:background "#222222"))))
- '(helm-visible-mark ((t (:background "#444444" :forground "White"))))
- '(helm-match ((t (:background "Black" :foreground "#008b8b"))))
- '(helm-match-item ((t (:background "#333399" :foreground "White"))))
+ '(helm-visible-mark ((t (:background "#444444" :forground "#ffffff"))))
+ '(helm-match ((t (:background "#000000" :foreground "#333399"))))
+ '(helm-match-item ((t (:background "#333399" :foreground "#ffffff"))))
  '(helm-swoop-target-line-face ((t (:background "#222222"))))
- '(helm-swoop-target-word-face ((t (:background "#333399" :foreground "White"))))
+ '(helm-swoop-target-word-face ((t (:background "#333399" :foreground "#ffffff"))))
  '(ac-candidate-face ((t (:background "#1a1a1a" :foreground "#a6a6a6"))))
  '(ac-selection-face ((t (:background "#2e2e2e" :foreground "#a6a6a6"))))
- '(popup-isearch-match ((t (:background "Black" :foreground "deep pink"))))
+ '(popup-isearch-match ((t (:background "#000000" :foreground "#fe2f92"))))
  '(popup-tip-face ((t (:background "#1a1a1a" :foreground "#a6a6a6"))))
  '(popup-scroll-bar-foreground-face ((t (:background "#6e6e6e"))))
  '(popup-scroll-bar-background-face ((t (:background "#383838")))))
@@ -127,7 +127,7 @@
  ((eq window-system 'w32)
   (set-face-attribute 'default nil :height 110 :bold t :family "Consolas"))
  ((memq window-system '(ns mac))
-  (set-face-attribute 'default nil :height 250 :family "Monaco")))
+  (set-face-attribute 'default nil :height 140 :family "Monaco")))
 
 ;; locale
 (set-language-environment "Korean")
@@ -204,6 +204,16 @@
   :config
   (setq-default save-place t
                 save-place-file (concat user-emacs-directory "place")))
+
+(use-package uniquify
+  :ensure nil
+  :after ido
+  :config
+  (setq uniquify-buffer-name-style 'reverse
+        uniquify-separator " • "
+        uniquify-after-kill-buffer-p t
+        uniquify-ignore-buffers-re "^\\*"))
+
 
 ;;; Mac
 
@@ -388,8 +398,8 @@
   ("C-x o" . win-switch-dispatch)
   :commands win-switch-set-keys
   :config
-  (setq win-switch-feedback-background-color "DeepPink3")
-  (setq win-switch-feedback-foreground-color "black")
+  (setq win-switch-feedback-background-color "#fe2f92")
+  (setq win-switch-feedback-foreground-color "#000000")
   (setq win-switch-window-threshold 1)
   (setq win-switch-idle-time 0.7)
   (win-switch-set-keys '("o") 'next-window)
@@ -478,6 +488,17 @@
   ;; (setq google-translate-output-destination 'popup)
   (setq google-translate-translation-directions-alist
         '(("en" . "ko") ("ko" . "en"))))
+
+(use-package rainbow-mode
+  :commands rainbow-mode
+  :preface
+  (defun enable-rainbow-mode ()
+    (when (string-match "\\(color-theme-\\|-theme\\|init\\.el\\)" (buffer-name))
+      (rainbow-mode +1)))
+  :init
+  (add-hook 'emacs-lisp-mode-hook #'enable-rainbow-mode)
+  (dolist (hook '(css-mode-hook html-mode-hook sass-mode-hook))
+    (add-hook hook #'rainbow-mode)))
 
 
 ;;; Syntax check
