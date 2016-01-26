@@ -55,6 +55,8 @@
  '(helm-visible-mark ((t (:background "#444444" :forground "#ffffff"))))
  '(helm-match ((t (:background "#000000" :foreground "#333399"))))
  '(helm-match-item ((t (:background "#333399" :foreground "#ffffff"))))
+ '(helm-grep-file ((t (:foreground "#87cefa" :background "#000000"))))
+ '(helm-grep-lineno ((t (:foreground "#7ffcd4" :background "#000000"))))
  '(helm-swoop-target-line-face ((t (:background "#222222"))))
  '(helm-swoop-target-word-face ((t (:background "#333399" :foreground "#ffffff"))))
  '(ac-candidate-face ((t (:background "#1a1a1a" :foreground "#a6a6a6"))))
@@ -696,9 +698,20 @@
 (use-package google-c-style
   :commands (google-set-c-style
              google-make-newline-indent)
+  :preface
+  (defun c-mode-common-setup-hook ()
+    (google-set-c-style)
+    (google-make-newline-indent)
+    (c-add-style "my-c-style"
+                 '("Google"
+                   (tab-width . 4)
+                   (c-basic-offset . 4)
+                   (indent-tabs-mode . t)
+                   (c-auto-newline . t)
+                   (c-electric-flag . t)))
+    (c-set-style "my-c-style"))
   :init
-  (add-hook 'c-mode-common-hook #'google-set-c-style)
-  (add-hook 'c-mode-common-hook #'google-make-newline-indent))
+  (add-hook 'c-mode-common-hook #'c-mode-common-setup-hook))
 
 
 ;; Markdown
