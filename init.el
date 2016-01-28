@@ -185,7 +185,6 @@
 
 (use-package whitespace-cleanup-mode
   :after ido
-  :diminish whitespace-cleanup-mode
   :config
   (global-whitespace-cleanup-mode))
 
