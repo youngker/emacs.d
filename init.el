@@ -473,7 +473,7 @@
    ("C-c s b" . eopengrok-resume))
   :init
   (setq eopengrok-jar
-        "/Users/youngker/Projects/opengrok-0.12.1.5/lib/opengrok.jar")
+        "/Users/youngker/Projects/clj-opengrok/target/clj-opengrok-0.2.0.jar")
   (setq eopengrok-ctags "/usr/local/bin/ctags"))
 
 (use-package google-translate
@@ -773,9 +773,6 @@
   :init
   (add-hook 'clojure-mode-hook #'lisp-mode-setup-hook)
   (add-hook 'clojure-mode-hook #'subword-mode)
-  (add-hook 'clojure-mode-hook (lambda ()
-                                 (setq-local lisp-indent-function
-                                             #'redefine-lisp-indent-function)))
   :config
   (use-package cljsbuild-mode)
   (use-package elein))
@@ -973,6 +970,7 @@
 ;;; key bindings
 
 (bind-key "C-x m" #'eshell)
+(bind-key "C-c r" #'revert-buffer)
 
 
 ;;; registers
