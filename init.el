@@ -473,7 +473,7 @@
    ("C-c s b" . eopengrok-resume))
   :init
   (setq eopengrok-jar
-        "/Users/youngker/Projects/clj-opengrok/target/clj-opengrok-0.2.0.jar")
+        "/Users/youngker/Projects/clj-opengrok/target/clj-opengrok-0.2.0-standalone.jar")
   (setq eopengrok-ctags "/usr/local/bin/ctags"))
 
 (use-package google-translate
@@ -814,7 +814,10 @@
   (bind-key "C->" #'cljr-cycle-coll clojure-mode-map))
 
 (use-package flycheck-clojure
-  :commands flycheck-clojure-setup)
+  :commands flycheck-clojure-setup
+  :init
+  (with-eval-after-load 'clojure-mode
+    (add-hook 'clojure-mode-hook #'flycheck-clojure-setup)))
 
 
 ;; Go
