@@ -278,7 +278,7 @@
   (use-package ido-vertical-mode
     :config
     (ido-vertical-mode)
-    (setq ido-vertical-define-keys 'C-n-and-C-p-only))
+    (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right))
 
   (use-package ido-ubiquitous
     :config
@@ -473,7 +473,7 @@
    ("C-c s b" . eopengrok-resume))
   :init
   (setq eopengrok-jar
-        "/Users/youngker/Projects/clj-opengrok/target/clj-opengrok-0.2.0-standalone.jar")
+        "/Users/youngker/Projects/clj-opengrok/target/clj-opengrok-0.3.0-standalone.jar")
   (setq eopengrok-ctags "/usr/local/bin/ctags"))
 
 (use-package google-translate
