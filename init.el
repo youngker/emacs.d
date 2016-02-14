@@ -255,6 +255,7 @@
         (find-file file))))
   :config
   (ido-mode +1)
+  (ido-everywhere +1)
   (icomplete-mode +1)
   (setq ido-auto-merge-work-directories-length -1
         ido-case-fold nil
@@ -263,7 +264,6 @@
         ido-enable-flex-matching t
         ido-enable-prefix nil
         ido-enable-prefix nil
-        ido-everywhere 1
         ido-max-prospects 10
         ido-use-faces nil
         ido-use-filename-at-point nil)
@@ -469,7 +469,8 @@
 
 (use-package eopengrok
   :bind
-  (("C-c s I" . eopengrok-make-index)
+  (("C-c s i" . eopengrok-make-index)
+   ("C-c s I" . eopengrok-make-index-with-enable-projects)
    ("C-c s d" . eopengrok-find-definition)
    ("C-c s f" . eopengrok-find-file)
    ("C-c s s" . eopengrok-find-reference)
