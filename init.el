@@ -451,10 +451,15 @@
   ("M-/" . vr/replace))
 
 (use-package highlight-symbol
+  :diminish highlight-symbol-mode
+  :commands
+  (highlight-symbol-mode highlight-symbol-nav-mode)
   :bind
-  (("C-<f3>" . highlight-symbol)
-   ("S-<f3>" . highlight-symbol-prev)
-   ("M-<f3>" . highlight-symbol-next)))
+  ("C-<f3>" . highlight-symbol)
+  :init
+  (dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
+    (add-hook hook #'highlight-symbol-mode)
+    (add-hook hook #'highlight-symbol-nav-mode)))
 
 (use-package diff-hl
   :after ido
@@ -486,6 +491,7 @@
         '(("en" . "ko") ("ko" . "en"))))
 
 (use-package rainbow-mode
+  :diminish rainbow-mode
   :commands rainbow-mode
   :preface
   (defun enable-rainbow-mode ()
