@@ -241,6 +241,7 @@
    ("C-x B"   . ido-switch-buffer-other-window))
   :commands (ido-fallback-command
              ido-complete
+             ido-everywhere
              ido-select-text
              ido-exit-minibuffer)
   :preface
@@ -404,7 +405,26 @@
   :after ido
   :commands popwin-mode
   :config
-  (popwin-mode +1))
+  (popwin-mode +1)
+  (setq popwin:special-display-config
+        '(("*Help*"
+           :dedicated t :position bottom :stick t :noselect nil :height 0.4)
+          ("*compilation*"
+           :dedicated t :position bottom :stick t :noselect t :height 0.4)
+          ("*Shell Command Output*"
+           :dedicated t :position bottom :stick t :noselect nil)
+          ("*Async Shell Command*"
+           :dedicated t :position bottom :stick t :noselect nil)
+          ("*undo-tree*"
+           :dedicated t :position bottom :stick t :noselect nil :height 0.4)
+          ("*ert*"
+           :dedicated t :position bottom :stick t :noselect nil)
+          ("*grep*"
+           :dedicated t :position bottom :stick t :noselect nil)
+          ("*nosetests*"
+           :dedicated t :position bottom :stick t :noselect nil)
+          ("^\*WoMan.+\*$"
+           :regexp t :position bottom))))
 
 (use-package undo-tree
   :bind
