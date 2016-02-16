@@ -42,7 +42,7 @@
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil
                 :background "#000000" :foreground "#ffffff" :strike-t*hrough nil
                 :overline nil :underline nil :slant normal :weight normal
-                :width normal :height 200 :family "Monaco"))))
+                :width normal :height 160 :family "Fira Code"))))
  '(highlight ((((class color) (min-colors 88) (background dark))
                (:background "#111111"))))
  '(region ((nil (:background "#464740"))))
@@ -389,6 +389,14 @@
   :config
   (volatile-highlights-mode t))
 
+(use-package highlight-tail
+  :after ido
+  :diminish highlight-tail-mode
+  :defines highlight-tail-steps
+  :config
+  (setq highlight-tail-steps 16)
+  (highlight-tail-mode))
+
 (use-package win-switch
   :bind
   ("C-x o" . win-switch-dispatch)
@@ -479,7 +487,9 @@
   :init
   (dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
     (add-hook hook #'highlight-symbol-mode)
-    (add-hook hook #'highlight-symbol-nav-mode)))
+    (add-hook hook #'highlight-symbol-nav-mode))
+  (setq highlight-symbol-idle-delay 0
+        highlight-symbol-highlight-single-occurrence nil))
 
 (use-package diff-hl
   :after ido
