@@ -42,7 +42,7 @@
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil
                 :background "#000000" :foreground "#ffffff" :strike-t*hrough nil
                 :overline nil :underline nil :slant normal :weight normal
-                :width normal :height 160 :family "Fira Code"))))
+                :width normal :height 180 :family "Monaco"))))
  '(highlight ((((class color) (min-colors 88) (background dark))
                (:background "#111111"))))
  '(region ((nil (:background "#464740"))))
