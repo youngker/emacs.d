@@ -40,19 +40,19 @@
 (custom-theme-set-faces
  'default-black
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil
-                :background "#000000" :foreground "#ffffff" :strike-t*hrough nil
+                :background "#202020" :foreground "#a6a6a6" :strike-through nil
                 :overline nil :underline nil :slant normal :weight normal
                 :width normal :height 180 :family "Monaco"))))
  '(highlight ((((class color) (min-colors 88) (background dark))
-               (:background "#111111"))))
- '(region ((nil (:background "#464740"))))
- '(hl-line ((nil (:background "#222222"))))
+               (:background "#8b1c3b"))))
+ '(region ((nil (:background "#343d46"))))
+ '(hl-line ((nil (:background "#373a40"))))
  '(yas-field-highlight-face ((nil (:background "#333399"))))
  '(js2-function-param-face ((t (:foreground "#eedd82"))))
  '(font-lock-warning-face ((nil (:foreground "#ff6666"))))
  '(show-paren-match ((nil (:background "#333399"))))
  '(show-paren-mismatch ((((class color)) (:background "#cc1b00"))))
- '(eval-sexp-fu-flash ((t (:background "#000000" :foreground "#333399"))))
+ '(eval-sexp-fu-flash ((t (:background "#8b1c3b" :foreground "#e79ea1"))))
  '(helm-source-header ((t (:background "#000000" :foreground "#ff7f24"))))
  '(helm-candidate-number ((t (:background nil :foreground "#87cefa" :bold t))))
  '(helm-selection ((t (:background "#222222"))))
@@ -392,7 +392,6 @@
 (use-package highlight-tail
   :after ido
   :diminish highlight-tail-mode
-  :defines highlight-tail-steps
   :config
   (setq highlight-tail-steps 16)
   (highlight-tail-mode))
@@ -402,7 +401,7 @@
   ("C-x o" . win-switch-dispatch)
   :commands win-switch-set-keys
   :config
-  (setq win-switch-feedback-background-color "#fe2f92")
+  (setq win-switch-feedback-background-color "#6c96af")
   (setq win-switch-feedback-foreground-color "#000000")
   (setq win-switch-window-threshold 1)
   (setq win-switch-idle-time 0.7)
@@ -487,9 +486,7 @@
   :init
   (dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
     (add-hook hook #'highlight-symbol-mode)
-    (add-hook hook #'highlight-symbol-nav-mode))
-  (setq highlight-symbol-idle-delay 0
-        highlight-symbol-highlight-single-occurrence nil))
+    (add-hook hook #'highlight-symbol-nav-mode)))
 
 (use-package diff-hl
   :after ido
