@@ -44,7 +44,7 @@
                 :overline nil :underline nil :slant normal :weight normal
                 :width normal :height 180 :family "Monaco"))))
  '(highlight ((((class color) (min-colors 88) (background dark))
-               (:background "#8b1c3b"))))
+               (:background "#373a40"))))
  '(region ((nil (:background "#343d46"))))
  '(hl-line ((nil (:background "#373a40"))))
  '(yas-field-highlight-face ((nil (:background "#333399"))))
@@ -55,7 +55,7 @@
  '(eval-sexp-fu-flash ((t (:background "#8b1c3b" :foreground "#e79ea1"))))
  '(helm-source-header ((t (:background "#000000" :foreground "#ff7f24"))))
  '(helm-candidate-number ((t (:background nil :foreground "#87cefa" :bold t))))
- '(helm-selection ((t (:background "#222222"))))
+ '(helm-selection ((t (:background "#373a40"))))
  '(helm-visible-mark ((t (:background "#444444" :forground "#ffffff"))))
  '(helm-match ((t (:background "#000000" :foreground "#333399"))))
  '(helm-match-item ((t (:background "#333399" :foreground "#ffffff"))))
