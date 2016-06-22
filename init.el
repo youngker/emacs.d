@@ -377,7 +377,7 @@
 
 (use-package avy
   :bind
-  ("C-;" . avy-goto-char)
+  ("C-c ;" . avy-goto-char)
   :commands avy-setup-default
   :config
   (avy-setup-default))
@@ -457,7 +457,7 @@
 
 (use-package expand-region
   :bind
-  ("C-=" . er/expand-region))
+  ("C-c =" . er/expand-region))
 
 (use-package multiple-cursors
   :bind
@@ -482,7 +482,7 @@
   :commands
   (highlight-symbol-mode highlight-symbol-nav-mode)
   :bind
-  ("C-<f3>" . highlight-symbol)
+  ("C-c c" . highlight-symbol)
   :init
   (dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
     (add-hook hook #'highlight-symbol-mode)
@@ -886,6 +886,13 @@
   (bind-keys :map go-mode-map
     ("M-." . godef-jump)
     ("C-c C-c" . compile)))
+
+
+;; Swift
+(use-package swift-mode
+  :mode ("\\.swift\\'" . swift-mode)
+  :init
+  (add-hook 'swift-mode-hook 'flycheck-mode))
 
 
 ;; Org
