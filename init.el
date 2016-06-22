@@ -441,6 +441,16 @@
   :config
   (global-undo-tree-mode))
 
+(use-package ztree
+  :commands ztree-diff
+  :config
+  (set-face-attribute
+   'ztreep-diff-model-add-face  nil :foreground "#87cefa")
+  (setq ztree-draw-unicode-lines t)
+  (bind-keys :map ztreediff-mode-map
+    ("p" . previous-line)
+    ("n" . next-line)))
+
 (use-package yasnippet
   :after ido
   :diminish yas-minor-mode
