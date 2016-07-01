@@ -85,7 +85,6 @@
  confirm-nonexistent-file-or-buffer nil
  delete-by-moving-to-trash nil
  delete-selection-mode t
- echo-keystrokes 0.02
  ediff-split-window-function 'split-window-horizontally
  ediff-window-setup-function 'ediff-setup-windows-plain
  electric-indent-mode nil
