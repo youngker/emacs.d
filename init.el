@@ -285,9 +285,35 @@
     (ido-ubiquitous-mode +1)))
 
 
+;;; ivy
+
+(use-package ivy
+  :diminish ivy-mode
+  :bind
+  (("C-x f" . ivy-recentf)
+   ("C-x b" . ivy-switch-buffer)
+   ("C-x B" . ivy-switch-buffer-other-window)
+   ("C-c C-r" . ivy-resume))
+  :config
+  (ivy-mode +1)
+  (setq ivy-use-virtual-buffers t))
+
+(use-package counsel
+  :bind
+  (("C-x C-f" . counsel-find-file)
+   ("C-x C-i" . counsel-imenu)
+   ("M-x" . counsel-M-x)
+   ("M-y" . counsel-yank-pop)))
+
+(use-package swiper
+  :bind
+  ("C-s" . swiper))
+
+
 ;;; helm
 
 (use-package helm
+  :disabled t
   :bind
   (("C-x C-i" . helm-imenu)
    ("C-c g"   . helm-find-files)
@@ -362,6 +388,7 @@
 ;;; Tool
 
 (use-package smex
+  :disabled t
   :bind
   (("M-x" . smex)
    ("M-X" . smex-major-mode-commands))
