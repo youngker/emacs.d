@@ -161,7 +161,6 @@
 ;;;
 
 (use-package auto-compile
-  :after ido
   :commands (auto-compile-on-load-mode
              auto-compile-on-save-mode)
   :config
@@ -170,14 +169,14 @@
   (auto-compile-on-save-mode))
 
 (use-package page-break-lines
-  :after ido
   :diminish page-break-lines-mode
+  :commands global-page-break-lines-mode
   :config
   (global-page-break-lines-mode)
   (turn-on-page-break-lines-mode))
 
 (use-package whitespace-cleanup-mode
-  :after ido
+  :commands global-whitespace-cleanup-mode
   :config
   (global-whitespace-cleanup-mode))
 
@@ -186,15 +185,19 @@
 
 (use-package subword
   :diminish subword-mode
-  :after ido
+  :commands subword-mode
+  :init
+  (add-hook 'prog-mode-hook #'subword-mode)
   :config
   (global-subword-mode +1))
 
 (use-package recentf
-  :commands recentf-mode)
+  :commands recentf-mode
+  :config
+  (recentf-mode +1))
 
 (use-package saveplace
-  :after ido
+  :commands save-place-mode
   :config
   (setq-default save-place t
                 save-place-file (concat user-emacs-directory "place")))
@@ -233,6 +236,7 @@
 ;;; Ido
 
 (use-package ido
+  :disabled t
   :bind
   (("C-x C-f" . ido-find-file)
    ("C-x f"   . ido-recent-file)
@@ -289,14 +293,30 @@
 
 (use-package ivy
   :diminish ivy-mode
+  :preface
+  (defun ivy-setup-hook ()
+    (global-page-break-lines-mode)
+    (global-whitespace-cleanup-mode)
+    (auto-compile-on-load-mode)
+    (recentf-mode)
+    (save-place-mode)
+    (volatile-highlights-mode)
+    (popwin-mode)
+    (yas-global-mode)
+    (global-diff-hl-mode)
+    (dired-details-install)
+    (which-key-mode))
   :bind
   (("C-x f" . ivy-recentf)
    ("C-x b" . ivy-switch-buffer)
    ("C-x B" . ivy-switch-buffer-other-window)
    ("C-c C-r" . ivy-resume))
+  :init
+  (add-hook 'ivy-mode-hook #'ivy-setup-hook)
   :config
   (ivy-mode +1)
-  (setq ivy-use-virtual-buffers t))
+  (setq ivy-use-virtual-buffers t
+        ivy-format-function 'ivy-format-function-arrow))
 
 (use-package counsel
   :bind
@@ -307,10 +327,17 @@
 
 (use-package swiper
   :bind
-  ("C-s" . swiper))
+  ("M-i" . swiper))
 
 
 ;;; helm
+
+(use-package helm-codesearch
+  :bind
+  (("C-c h f" . helm-codesearch-find-file)
+   ("C-c h t" . helm-codesearch-find-pattern)
+   ("C-c h I" . helm-codesearch-create-csearchindex)
+   ("C-c h b" . helm-resume)))
 
 (use-package helm
   :disabled t
@@ -409,20 +436,20 @@
   (avy-setup-default))
 
 (use-package volatile-highlights
-  :after ido
   :diminish volatile-highlights-mode
   :commands volatile-highlights-mode
   :config
   (volatile-highlights-mode t))
 
 (use-package highlight-tail
-  :after ido
+  :disabled t
   :diminish highlight-tail-mode
   :config
   (setq highlight-tail-steps 16)
   (highlight-tail-mode))
 
 (use-package win-switch
+  :disabled t
   :bind
   ("C-x o" . win-switch-dispatch)
   :commands win-switch-set-keys
@@ -435,7 +462,6 @@
   (win-switch-set-keys '("p") 'previous-window))
 
 (use-package popwin
-  :after ido
   :commands popwin-mode
   :config
   (popwin-mode +1)
@@ -478,8 +504,8 @@
     ("n" . next-line)))
 
 (use-package yasnippet
-  :after ido
   :diminish yas-minor-mode
+  :commands yas-global-mode
   :config
   (setq yas-verbosity 1)
   (setq yas-wrap-around-region t)
@@ -504,7 +530,6 @@
 
 (use-package which-key
   :diminish which-key-mode
-  :defer 5
   :commands which-key-mode
   :config
   (which-key-mode +1))
@@ -525,10 +550,10 @@
     (add-hook hook #'highlight-symbol-nav-mode)))
 
 (use-package diff-hl
-  :after ido
   :commands global-diff-hl-mode
   :config
-  (global-diff-hl-mode +1))
+  (global-diff-hl-mode +1)
+  (setq diff-hl-draw-borders nil))
 
 (use-package eopengrok
   :bind
@@ -679,7 +704,6 @@
   (paren-activate))
 
 (use-package dired-details
-  :after ido
   :commands dired-details-install
   :init
   (setq-default dired-details-hidden-string "--- ")
