@@ -100,7 +100,6 @@
  next-error-highlight t
  next-error-highlight-no-select t
  query-replace-highlight t
- recentf-max-saved-items 100
  require-final-newline t
  ring-bell-function #'ignore
  scroll-conservatively 100000
@@ -194,13 +193,17 @@
 (use-package recentf
   :commands recentf-mode
   :config
-  (recentf-mode +1))
+  (recentf-mode +1)
+  (setq-default
+   recentf-max-saved-items 100
+   recentf-save-file (concat user-emacs-directory "recentf")))
 
 (use-package saveplace
   :commands save-place-mode
   :config
-  (setq-default save-place t
-                save-place-file (concat user-emacs-directory "place")))
+  (setq-default
+   save-place t
+   save-place-file (concat user-emacs-directory "place")))
 
 (use-package uniquify
   :ensure nil
