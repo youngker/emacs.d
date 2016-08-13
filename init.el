@@ -34,19 +34,18 @@
 ;;; Basic preferences
 
 ;; theme
-(deftheme default-black
-  "Default-black theme.")
+(deftheme black "Black color theme")
 
 (custom-theme-set-faces
- 'default-black
+ 'black
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil
-                :background "#202020" :foreground "#a6a6a6" :strike-through nil
+                :background "#000000" :foreground "#ffffff" :strike-through nil
                 :overline nil :underline nil :slant normal :weight normal
                 :width normal :height 180 :family "Monaco"))))
  '(highlight ((((class color) (min-colors 88) (background dark))
-               (:background "#373a40"))))
- '(region ((nil (:background "#343d46"))))
- '(hl-line ((nil (:background "#373a40"))))
+               (:background "#cc1b00"))))
+ '(region ((nil (:background "#e79ea1" :foreground "#8b1c3b"))))
+ '(hl-line ((nil (:background "#8b1c3b" :foreground "#e79ea1"))))
  '(yas-field-highlight-face ((nil (:background "#333399"))))
  '(js2-function-param-face ((t (:foreground "#eedd82"))))
  '(font-lock-warning-face ((nil (:foreground "#ff6666"))))
@@ -68,7 +67,8 @@
  '(popup-isearch-match ((t (:background "#000000" :foreground "#fe2f92"))))
  '(popup-tip-face ((t (:background "#1a1a1a" :foreground "#a6a6a6"))))
  '(popup-scroll-bar-foreground-face ((t (:background "#6e6e6e"))))
- '(popup-scroll-bar-background-face ((t (:background "#383838")))))
+ '(popup-scroll-bar-background-face ((t (:background "#383838"))))
+ '(ivy-current-match ((t (:foreground "#ff7f24" :weight bold)))))
 
 (when window-system
   (tooltip-mode -1)
@@ -199,7 +199,7 @@
    recentf-save-file (concat user-emacs-directory "recentf")))
 
 (use-package saveplace
-  :commands save-place-mode
+  :after ivy
   :config
   (setq-default
    save-place t
@@ -302,7 +302,6 @@
     (global-whitespace-cleanup-mode)
     (auto-compile-on-load-mode)
     (recentf-mode)
-    (save-place-mode)
     (volatile-highlights-mode)
     (popwin-mode)
     (yas-global-mode)
