@@ -43,9 +43,9 @@
                 :overline nil :underline nil :slant normal :weight normal
                 :width normal :height 180 :family "Monaco"))))
  '(highlight ((((class color) (min-colors 88) (background dark))
-               (:background "#cc1b00"))))
- '(region ((nil (:background "#e79ea1" :foreground "#8b1c3b"))))
- '(hl-line ((nil (:background "#8b1c3b" :foreground "#e79ea1"))))
+               (:background "#111111"))))
+ '(region ((nil (:background "#8b1c3b" :foreground "#e79ea1"))))
+ '(hl-line ((nil (:background "#222222"))))
  '(yas-field-highlight-face ((nil (:background "#333399"))))
  '(js2-function-param-face ((t (:foreground "#eedd82"))))
  '(font-lock-warning-face ((nil (:foreground "#ff6666"))))
@@ -298,16 +298,17 @@
   :diminish ivy-mode
   :preface
   (defun ivy-setup-hook ()
+    (auto-compile-on-load-mode)
+    (dired-details-install)
+    (global-auto-complete-mode)
+    (global-diff-hl-mode)
     (global-page-break-lines-mode)
     (global-whitespace-cleanup-mode)
-    (auto-compile-on-load-mode)
+    (popwin-mode)
     (recentf-mode)
     (volatile-highlights-mode)
-    (popwin-mode)
-    (yas-global-mode)
-    (global-diff-hl-mode)
-    (dired-details-install)
-    (which-key-mode))
+    (which-key-mode)
+    (yas-global-mode))
   :bind
   (("C-x f" . ivy-recentf)
    ("C-x b" . ivy-switch-buffer)
@@ -648,8 +649,14 @@
 
 (use-package auto-complete
   :diminish auto-complete-mode
-  :commands (ac-emacs-lisp-mode-setup ac-flyspell-workaround)
+  :commands global-auto-complete-mode
   :init
+  (dolist (hook '(prog-mode-hook org-mode-hook markdown-mode-hook))
+    (add-hook hook #'auto-complete-mode))
+  :config
+  (use-package auto-complete-config
+    :ensure nil
+    :demand t)
   (setq ac-auto-start 2
         ac-candidate-menu-min 0
         ac-disable-inline t
@@ -659,11 +666,6 @@
         ac-show-menu-immediately-on-auto-complete t
         ac-use-menu-map t
         ac-auto-show-menu t)
-  :config
-  (use-package auto-complete-config
-    :ensure nil
-    :demand t
-    :commands ac-emacs-lisp-mode-setup)
   (set-default 'ac-sources
                '(ac-source-dictionary
                  ac-source-words-in-buffer
@@ -673,20 +675,7 @@
   (ac-config-default)
   (ac-flyspell-workaround)
   (global-auto-complete-mode t)
-  (add-to-list 'ac-dictionary-directories (concat user-emacs-directory "dict"))
-  (dolist (mode '(magit-log-edit-mode
-                  log-edit-mode org-mode text-mode haml-mode
-                  sass-mode yaml-mode csv-mode espresso-mode
-                  haskell-mode html-mode nxml-mode sh-mode
-                  smarty-mode clojure-mode lisp-mode
-                  textile-mode markdown-mode tuareg-mode))
-    (add-to-list 'ac-modes mode))
-  (bind-keys :map ac-completing-map
-    ("C-M-n" . ac-next)
-    ("C-M-p" . ac-previous)
-    ("<tab>" . ac-complete)
-    ("M-RET" . ac-help)
-    ("\r" . nil)))
+  (add-to-list 'ac-dictionary-directories (concat user-emacs-directory "dict")))
 
 
 
@@ -772,7 +761,6 @@
 
   (defun elisp-mode-setup-hook ()
     "Elisp mode."
-    (ac-emacs-lisp-mode-setup)
     (elisp-slime-nav-mode +1))
 
   :init
@@ -897,7 +885,6 @@
 
 (use-package clj-refactor
   :commands (clj-refactor-mode
-             cljr-cycle-coll
              cljr-add-keybindings-with-prefix)
   :preface
   (defun clj-refactor-setup-hook ()
@@ -905,9 +892,7 @@
     (cljr-add-keybindings-with-prefix "C-c C-m"))
   :init
   (with-eval-after-load 'clojure-mode
-    (add-hook 'clojure-mode-hook #'clj-refactor-setup-hook))
-  :config
-  (bind-key "C->" #'cljr-cycle-coll clojure-mode-map))
+    (add-hook 'clojure-mode-hook #'clj-refactor-setup-hook)))
 
 (use-package flycheck-clojure
   :commands flycheck-clojure-setup
@@ -955,6 +940,11 @@
   :mode ("\\.swift\\'" . swift-mode)
   :init
   (add-hook 'swift-mode-hook 'flycheck-mode))
+
+
+;; Haskell
+(use-package haskell-mode
+  :mode ("\\.hs\\'" . haskell-mode))
 
 
 ;; Org
