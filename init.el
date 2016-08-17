@@ -3,7 +3,7 @@
 ;; Copyright (C) 2016 Youngjoo Lee
 
 ;; Author: Youngjoo Lee <youngker@gmail.com>
-;; Version: 0.1.0
+;; Version: 0.2.0
 ;; Keywords: convenience
 ;; Package-Requires: ((emacs "24.5"))
 
@@ -34,10 +34,10 @@
 ;;; Basic preferences
 
 ;; theme
-(deftheme black "Black color theme")
+(deftheme theme "youngker's theme")
 
 (custom-theme-set-faces
- 'black
+ 'theme
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil
                 :background "#000000" :foreground "#ffffff" :strike-through nil
                 :overline nil :underline nil :slant normal :weight normal
@@ -45,18 +45,26 @@
  '(highlight ((((class color) (min-colors 88) (background dark))
                (:background "#111111"))))
  '(region ((nil (:background "#8b1c3b" :foreground "#e79ea1"))))
- '(hl-line ((nil (:background "#222222"))))
+ '(hl-line ((((class color) (background dark)) (:background "#222222"))
+            (((class color) (background light)) (:background "#f4f4f4"))))
  '(yas-field-highlight-face ((nil (:background "#333399"))))
  '(js2-function-param-face ((t (:foreground "#eedd82"))))
  '(font-lock-warning-face ((nil (:foreground "#ff6666"))))
  '(show-paren-match ((nil (:background "#333399"))))
  '(show-paren-mismatch ((((class color)) (:background "#cc1b00"))))
  '(eval-sexp-fu-flash ((t (:background "#8b1c3b" :foreground "#e79ea1"))))
- '(helm-source-header ((t (:background "#000000" :foreground "#ff7f24"))))
- '(helm-candidate-number ((t (:background nil :foreground "#87cefa" :bold t))))
- '(helm-selection ((t (:background "#373a40"))))
+ '(helm-source-header ((((class color) (background dark))
+                        (:background "#000000" :foreground "#ff7f24"))
+                       (((class color) (background light))
+                        (:background "#ffffff" :foreground "#ff7f24"))))
+ '(helm-candidate-number ((t (:background nil :foreground "#8b1c3b" :bold t))))
+ '(helm-selection ((((class color) (background dark)) (:background "#373a40"))
+                   (((class color) (background light)) (:background "#f4f4f4"))))
  '(helm-visible-mark ((t (:background "#444444" :forground "#ffffff"))))
- '(helm-match ((t (:background "#000000" :foreground "#333399"))))
+ '(helm-match ((((class color) (background dark))
+                (:background "#000000" :foreground "#333399"))
+               (((class color) (background light))
+                (:background "#ffffff" :foreground "#ff6666"))))
  '(helm-match-item ((t (:background "#333399" :foreground "#ffffff"))))
  '(helm-grep-file ((t (:foreground "#87cefa" :background "#000000"))))
  '(helm-grep-lineno ((t (:foreground "#7ffcd4" :background "#000000"))))
@@ -69,6 +77,17 @@
  '(popup-scroll-bar-foreground-face ((t (:background "#6e6e6e"))))
  '(popup-scroll-bar-background-face ((t (:background "#383838"))))
  '(ivy-current-match ((t (:foreground "#ff7f24" :weight bold)))))
+
+(defun toggle-dark/light-theme ()
+  "Toggle dark/light theme."
+  (interactive)
+  (if (string= (face-attribute 'default :background) "#ffffff")
+      (set-face-attribute 'default nil
+                          :background "#000000"
+                          :foreground "#ffffff")
+    (set-face-attribute 'default nil
+                        :background "#ffffff"
+                        :foreground "#000000")))
 
 (when window-system
   (tooltip-mode -1)
@@ -1067,6 +1086,7 @@
 
 (bind-key "C-x m" #'eshell)
 (bind-key "C-c r" #'revert-buffer)
+(bind-key "C-c q" #'toggle-dark/light-theme)
 
 
 ;;; registers
