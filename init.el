@@ -34,60 +34,67 @@
 ;;; Basic preferences
 
 ;; theme
-(deftheme theme "youngker's theme")
+(defvar my-background-color "#000000")
+(defvar my-foreground-color "#ffffff")
 
-(custom-theme-set-faces
- 'theme
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil
-                :background "#000000" :foreground "#ffffff" :strike-through nil
-                :overline nil :underline nil :slant normal :weight normal
-                :width normal :height 180 :family "Monaco"))))
- '(highlight ((((class color) (min-colors 88) (background dark))
-               (:background "#111111"))))
- '(region ((nil (:background "#8b1c3b" :foreground "#e79ea1"))))
- '(hl-line ((((class color) (background dark)) (:background "#222222"))
-            (((class color) (background light)) (:background "#f4f4f4"))))
- '(yas-field-highlight-face ((nil (:background "#333399"))))
- '(js2-function-param-face ((t (:foreground "#eedd82"))))
- '(font-lock-warning-face ((nil (:foreground "#ff6666"))))
- '(show-paren-match ((nil (:background "#333399"))))
- '(show-paren-mismatch ((((class color)) (:background "#cc1b00"))))
- '(eval-sexp-fu-flash ((t (:background "#8b1c3b" :foreground "#e79ea1"))))
- '(helm-source-header ((((class color) (background dark))
-                        (:background "#000000" :foreground "#ff7f24"))
-                       (((class color) (background light))
-                        (:background "#ffffff" :foreground "#ff7f24"))))
- '(helm-candidate-number ((t (:background nil :foreground "#8b1c3b" :bold t))))
- '(helm-selection ((((class color) (background dark)) (:background "#373a40"))
-                   (((class color) (background light)) (:background "#f4f4f4"))))
- '(helm-visible-mark ((t (:background "#444444" :forground "#ffffff"))))
- '(helm-match ((((class color) (background dark))
-                (:background "#000000" :foreground "#333399"))
-               (((class color) (background light))
-                (:background "#ffffff" :foreground "#ff6666"))))
- '(helm-match-item ((t (:background "#333399" :foreground "#ffffff"))))
- '(helm-grep-file ((t (:foreground "#87cefa" :background "#000000"))))
- '(helm-grep-lineno ((t (:foreground "#7ffcd4" :background "#000000"))))
- '(helm-swoop-target-line-face ((t (:background "#222222"))))
- '(helm-swoop-target-word-face ((t (:background "#333399" :foreground "#ffffff"))))
- '(ac-candidate-face ((t (:background "#1a1a1a" :foreground "#a6a6a6"))))
- '(ac-selection-face ((t (:background "#2e2e2e" :foreground "#a6a6a6"))))
- '(popup-isearch-match ((t (:background "#000000" :foreground "#fe2f92"))))
- '(popup-tip-face ((t (:background "#1a1a1a" :foreground "#a6a6a6"))))
- '(popup-scroll-bar-foreground-face ((t (:background "#6e6e6e"))))
- '(popup-scroll-bar-background-face ((t (:background "#383838"))))
- '(ivy-current-match ((t (:foreground "#ff7f24" :weight bold)))))
+(defun start-my-theme ()
+  "Start my theme."
+  (deftheme my-theme "youngker's theme")
+  (custom-theme-set-faces
+   'my-theme
+   `(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil
+                  :background ,my-background-color
+                  :foreground ,my-foreground-color :strike-through nil
+                  :overline nil :underline nil :slant normal :weight normal
+                  :width normal :family "Monaco"))))
+   '(highlight ((((class color) (min-colors 88) (background dark))
+                 (:background "#111111"))))
+   '(region ((nil (:background "#8b1c3b" :foreground "#e79ea1"))))
+   '(hl-line ((((class color) (background dark)) (:background "#222222"))
+              (((class color) (background light)) (:background "#f4f4f4"))))
+   '(yas-field-highlight-face ((nil (:background "#333399"))))
+   '(js2-function-param-face ((t (:foreground "#eedd82"))))
+   '(font-lock-warning-face ((nil (:foreground "#ff6666"))))
+   '(show-paren-match ((nil (:background "#333399"))))
+   '(show-paren-mismatch ((((class color)) (:background "#cc1b00"))))
+   '(eval-sexp-fu-flash ((t (:background "#8b1c3b" :foreground "#e79ea1"))))
+   '(helm-source-header ((((class color) (background dark))
+                          (:background "#000000" :foreground "#ff7f24"))
+                         (((class color) (background light))
+                          (:background "#ffffff" :foreground "#ff7f24"))))
+   '(helm-candidate-number ((t (:background nil :foreground "#8b1c3b" :bold t))))
+   '(helm-selection ((((class color) (background dark)) (:background "#373a40"))
+                     (((class color) (background light)) (:background "#f4f4f4"))))
+   '(helm-visible-mark ((t (:background "#444444" :forground "#ffffff"))))
+   '(helm-match ((((class color) (background dark))
+                  (:background "#000000" :foreground "#333399"))
+                 (((class color) (background light))
+                  (:background "#ffffff" :foreground "#ff6666"))))
+   '(helm-match-item ((t (:background "#333399" :foreground "#ffffff"))))
+   '(helm-grep-file ((t (:foreground "#87cefa" :background "#000000"))))
+   '(helm-grep-lineno ((t (:foreground "#7ffcd4" :background "#000000"))))
+   '(helm-swoop-target-line-face ((t (:background "#222222"))))
+   '(helm-swoop-target-word-face ((t (:background "#333399" :foreground "#ffffff"))))
+   '(ac-candidate-face ((t (:background "#1a1a1a" :foreground "#a6a6a6"))))
+   '(ac-selection-face ((t (:background "#2e2e2e" :foreground "#a6a6a6"))))
+   '(popup-isearch-match ((t (:background "#000000" :foreground "#fe2f92"))))
+   '(popup-tip-face ((t (:background "#1a1a1a" :foreground "#a6a6a6"))))
+   '(popup-scroll-bar-foreground-face ((t (:background "#6e6e6e"))))
+   '(popup-scroll-bar-background-face ((t (:background "#383838"))))
+   '(ivy-current-match ((t (:foreground "#ff7f24" :weight bold))))))
+
+(start-my-theme)
+(set-face-attribute 'default nil :height 110)
 
 (defun toggle-dark/light-theme ()
   "Toggle dark/light theme."
   (interactive)
   (if (string= (face-attribute 'default :background) "#ffffff")
-      (set-face-attribute 'default nil
-                          :background "#000000"
-                          :foreground "#ffffff")
-    (set-face-attribute 'default nil
-                        :background "#ffffff"
-                        :foreground "#000000")))
+      (setq my-background-color "#000000"
+            my-foreground-color "#ffffff")
+    (setq my-background-color "#ffffff"
+          my-foreground-color "#000000"))
+  (start-my-theme))
 
 (when window-system
   (tooltip-mode -1)
