@@ -83,9 +83,6 @@
    '(popup-scroll-bar-background-face ((t (:background "#383838"))))
    '(ivy-current-match ((t (:foreground "#ff7f24" :weight bold))))))
 
-(start-my-theme)
-(set-face-attribute 'default nil :height 110)
-
 (defun toggle-dark/light-theme ()
   "Toggle dark/light theme."
   (interactive)
@@ -101,6 +98,7 @@
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
+  (set-face-attribute 'default nil :height 180)
   (setq frame-title-format '(buffer-file-name "%f" ("%b"))))
 
 ;; sane defaults
@@ -140,6 +138,7 @@
  visible-bell nil
  x-select-enable-clipboard t)
 
+(start-my-theme)
 (auto-compression-mode +1)
 (blink-cursor-mode -1)
 (global-auto-revert-mode +1)
@@ -157,6 +156,11 @@
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
+
+;; custom-file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
 
 
 ;;; Bootstrap `use-package'
@@ -184,6 +188,13 @@
 
 
 ;;;
+
+(use-package server
+  :ensure nil
+  :commands server-running-p
+  :config
+  (unless (server-running-p)
+    (server-start)))
 
 (use-package auto-compile
   :commands (auto-compile-on-load-mode
@@ -332,6 +343,7 @@
     (global-whitespace-cleanup-mode)
     (popwin-mode)
     (recentf-mode)
+    (server-running-p)
     (volatile-highlights-mode)
     (which-key-mode)
     (yas-global-mode))
