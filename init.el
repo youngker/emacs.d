@@ -256,7 +256,6 @@
 
 (use-package exec-path-from-shell
   :if (equal system-type 'darwin)
-  :defer 2
   :defines (exec-path-from-shell-check-startup-files
             mac-option-modifier
             mac-command-modifier
@@ -337,6 +336,7 @@
   (defun ivy-setup-hook ()
     (auto-compile-on-load-mode)
     (dired-details-install)
+    (exec-path-from-shell-initialize)
     (global-auto-complete-mode)
     (global-diff-hl-mode)
     (global-page-break-lines-mode)
@@ -348,8 +348,7 @@
     (which-key-mode)
     (yas-global-mode))
   :bind
-  (("C-x f" . ivy-recentf)
-   ("C-x b" . ivy-switch-buffer)
+  (("C-x b" . ivy-switch-buffer)
    ("C-x B" . ivy-switch-buffer-other-window)
    ("C-c C-r" . ivy-resume))
   :init
@@ -363,6 +362,7 @@
   :bind
   (("C-x C-f" . counsel-find-file)
    ("C-x C-i" . counsel-imenu)
+   ("C-x f" . counsel-recentf)
    ("M-x" . counsel-M-x)
    ("M-y" . counsel-yank-pop)))
 
@@ -605,11 +605,7 @@
    ("C-c s s" . eopengrok-find-reference)
    ("C-c s t" . eopengrok-find-text)
    ("C-c s h" . eopengrok-find-history)
-   ("C-c s b" . eopengrok-resume))
-  :init
-  (setq eopengrok-jar
-        "/Users/youngker/Projects/clj-opengrok/target/clj-opengrok-0.3.0-standalone.jar")
-  (setq eopengrok-ctags "/usr/local/bin/ctags"))
+   ("C-c s b" . eopengrok-resume)))
 
 (use-package google-translate
   :bind
