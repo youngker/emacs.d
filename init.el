@@ -260,7 +260,6 @@
             mac-option-modifier
             mac-command-modifier
             ns-function-modifier)
-  :commands exec-path-from-shell-initialize
   :config
   (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-initialize))
@@ -336,7 +335,6 @@
   (defun ivy-setup-hook ()
     (auto-compile-on-load-mode)
     (dired-details-install)
-    (exec-path-from-shell-initialize)
     (global-auto-complete-mode)
     (global-diff-hl-mode)
     (global-page-break-lines-mode)
