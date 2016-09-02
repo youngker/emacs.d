@@ -81,7 +81,9 @@
    '(popup-tip-face ((t (:background "#1a1a1a" :foreground "#a6a6a6"))))
    '(popup-scroll-bar-foreground-face ((t (:background "#6e6e6e"))))
    '(popup-scroll-bar-background-face ((t (:background "#383838"))))
-   '(ivy-current-match ((t (:foreground "#ff7f24" :weight bold))))))
+   `(ivy-current-match ((t (:foreground "#ff7f24"
+                            :background ,my-background-color :weight bold))))))
+
 
 (defun toggle-dark/light-theme ()
   "Toggle dark/light theme."
@@ -603,6 +605,7 @@
    ("C-c s s" . eopengrok-find-reference)
    ("C-c s t" . eopengrok-find-text)
    ("C-c s h" . eopengrok-find-history)
+   ("C-c s c" . eopengrok-find-custom)
    ("C-c s b" . eopengrok-resume)))
 
 (use-package google-translate
