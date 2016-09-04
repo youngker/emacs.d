@@ -47,8 +47,6 @@
                   :foreground ,my-foreground-color :strike-through nil
                   :overline nil :underline nil :slant normal :weight normal
                   :width normal :family "Monaco"))))
-   '(highlight ((((class color) (min-colors 88) (background dark))
-                 (:background "#111111"))))
    '(region ((nil (:background "#8b1c3b" :foreground "#e79ea1"))))
    '(hl-line ((((class color) (background dark)) (:background "#222222"))
               (((class color) (background light)) (:background "#f4f4f4"))))
@@ -598,8 +596,8 @@
 
 (use-package eopengrok
   :bind
-  (("C-c s i" . eopengrok-make-index)
-   ("C-c s I" . eopengrok-make-index-with-enable-projects)
+  (("C-c s i" . eopengrok-create-index)
+   ("C-c s I" . eopengrok-create-index-with-enable-projects)
    ("C-c s d" . eopengrok-find-definition)
    ("C-c s f" . eopengrok-find-file)
    ("C-c s s" . eopengrok-find-reference)
