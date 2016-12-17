@@ -1098,6 +1098,7 @@
 
 ;;; key bindings
 
+(bind-key "C-x k" #'kill-this-buffer)
 (bind-key "C-x m" #'eshell)
 (bind-key "C-c r" #'revert-buffer)
 (bind-key "C-c q" #'toggle-dark/light-theme)
