@@ -98,7 +98,7 @@
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
-  (set-face-attribute 'default nil :height 180)
+  (set-face-attribute 'default nil :height 110)
   (setq frame-title-format '(buffer-file-name "%f" ("%b"))))
 
 ;; sane defaults
@@ -671,14 +671,8 @@
 
 ;; not use company
 (use-package company
-  :disabled t
   :diminish company-mode
-  :commands company-mode
-  :config
-  (defadvice company-pseudo-tooltip-unless-just-one-frontend
-      (around only-show-tooltip-when-invoked activate)
-    (when (company-explicit-action-p)
-      ad-do-it)))
+  :commands company-mode)
 
 (use-package auto-complete
   :diminish auto-complete-mode
@@ -978,6 +972,30 @@
 ;; Haskell
 (use-package haskell-mode
   :mode ("\\.hs\\'" . haskell-mode))
+
+
+;; Rust
+(use-package rust-mode
+  :mode ("\\.rs\\'" . rust-mode)
+  :init
+  (add-hook 'rust-mode-hook #'flycheck-mode)
+  (add-hook 'rust-mode-hook #'company-mode)
+  :config
+  (use-package rustfmt
+    :config
+    (bind-keys :map rust-mode-map
+      ("C-c <tab>" . rust-format-buffer)))
+  (use-package racer
+    :init
+    (add-hook 'rust-mode-hook #'racer-mode)
+    (add-hook 'racer-mode-hook #'eldoc-mode))
+  (use-package flycheck-rust
+    :init
+    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+  (use-package cargo
+    :commands cargo-minor-mode
+    :init
+    (add-hook 'rust-mode-hook #'cargo-minor-mode)))
 
 
 ;; Org
