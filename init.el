@@ -627,6 +627,11 @@
   (dolist (hook '(css-mode-hook html-mode-hook sass-mode-hook))
     (add-hook hook #'rainbow-mode)))
 
+(use-package plantuml-mode
+  :mode ("\\.plantuml\\'" . plantuml-mode)
+  :config
+  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/8048/libexec/plantuml.jar"))
+
 
 ;;; Syntax check
 
@@ -995,7 +1000,8 @@
   (use-package cargo
     :commands cargo-minor-mode
     :init
-    (add-hook 'rust-mode-hook #'cargo-minor-mode)))
+    (add-hook 'rust-mode-hook #'cargo-minor-mode))
+  (setq electric-indent-mode +1))
 
 
 ;; Org
