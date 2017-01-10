@@ -33,72 +33,16 @@
 
 ;;; Basic preferences
 
-;; theme
-(defvar my-background-color "#000000")
-(defvar my-foreground-color "#ffffff")
-
-(defun start-my-theme ()
-  "Start my theme."
-  (deftheme my-theme "youngker's theme")
-  (custom-theme-set-faces
-   'my-theme
-   `(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil
-                  :background ,my-background-color
-                  :foreground ,my-foreground-color :strike-through nil
-                  :overline nil :underline nil :slant normal :weight normal
-                  :width normal :family "Monaco"))))
-   '(region ((nil (:background "#8b1c3b" :foreground "#e79ea1"))))
-   '(hl-line ((((class color) (background dark)) (:background "#222222"))
-              (((class color) (background light)) (:background "#f4f4f4"))))
-   '(yas-field-highlight-face ((nil (:background "#333399"))))
-   '(js2-function-param-face ((t (:foreground "#eedd82"))))
-   '(font-lock-warning-face ((nil (:foreground "#ff6666"))))
-   '(show-paren-match ((nil (:background "#333399"))))
-   '(show-paren-mismatch ((((class color)) (:background "#cc1b00"))))
-   '(eval-sexp-fu-flash ((t (:background "#8b1c3b" :foreground "#e79ea1"))))
-   '(helm-source-header ((((class color) (background dark))
-                          (:background "#000000" :foreground "#ff7f24"))
-                         (((class color) (background light))
-                          (:background "#ffffff" :foreground "#ff7f24"))))
-   '(helm-candidate-number ((t (:background nil :foreground "#8b1c3b" :bold t))))
-   '(helm-selection ((((class color) (background dark)) (:background "#373a40"))
-                     (((class color) (background light)) (:background "#f4f4f4"))))
-   '(helm-visible-mark ((t (:background "#444444" :forground "#ffffff"))))
-   '(helm-match ((((class color) (background dark))
-                  (:background "#000000" :foreground "#333399"))
-                 (((class color) (background light))
-                  (:background "#ffffff" :foreground "#ff6666"))))
-   '(helm-match-item ((t (:background "#333399" :foreground "#ffffff"))))
-   '(helm-grep-file ((t (:foreground "#87cefa" :background "#000000"))))
-   '(helm-grep-lineno ((t (:foreground "#7ffcd4" :background "#000000"))))
-   '(helm-swoop-target-line-face ((t (:background "#222222"))))
-   '(helm-swoop-target-word-face ((t (:background "#333399" :foreground "#ffffff"))))
-   '(ac-candidate-face ((t (:background "#1a1a1a" :foreground "#a6a6a6"))))
-   '(ac-selection-face ((t (:background "#2e2e2e" :foreground "#a6a6a6"))))
-   '(popup-isearch-match ((t (:background "#000000" :foreground "#fe2f92"))))
-   '(popup-tip-face ((t (:background "#1a1a1a" :foreground "#a6a6a6"))))
-   '(popup-scroll-bar-foreground-face ((t (:background "#6e6e6e"))))
-   '(popup-scroll-bar-background-face ((t (:background "#383838"))))
-   `(ivy-current-match ((t (:foreground "#ff7f24"
-                            :background ,my-background-color :weight bold))))))
-
-
-(defun toggle-dark/light-theme ()
-  "Toggle dark/light theme."
-  (interactive)
-  (if (string= (face-attribute 'default :background) "#ffffff")
-      (setq my-background-color "#000000"
-            my-foreground-color "#ffffff")
-    (setq my-background-color "#ffffff"
-          my-foreground-color "#000000"))
-  (start-my-theme))
+(setq default-frame-alist (append '((width . 80)
+                                    (height . 40)
+                                    (font . "Monaco-11"))
+                                  default-frame-alist))
 
 (when window-system
   (tooltip-mode -1)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
-  (set-face-attribute 'default nil :height 110)
   (setq frame-title-format '(buffer-file-name "%f" ("%b"))))
 
 ;; sane defaults
@@ -138,7 +82,6 @@
  visible-bell nil
  x-select-enable-clipboard t)
 
-(start-my-theme)
 (auto-compression-mode +1)
 (blink-cursor-mode -1)
 (global-auto-revert-mode +1)
@@ -188,6 +131,10 @@
 
 
 ;;;
+
+(use-package zenburn-theme
+  :config
+  (load-theme 'zenburn t))
 
 (use-package server
   :ensure nil
@@ -1123,7 +1070,6 @@
 (bind-key "C-x k" #'kill-this-buffer)
 (bind-key "C-x m" #'eshell)
 (bind-key "C-c r" #'revert-buffer)
-(bind-key "C-c q" #'toggle-dark/light-theme)
 
 
 ;;; registers
