@@ -209,7 +209,7 @@
   :commands global-page-break-lines-mode
   :config
   (global-page-break-lines-mode)
-  (turn-on-page-break-lines-mode))
+  (page-break-lines-mode))
 
 (use-package whitespace-cleanup-mode
   :commands global-whitespace-cleanup-mode
@@ -682,6 +682,7 @@
 (use-package auto-complete
   :diminish auto-complete-mode
   :commands global-auto-complete-mode
+  :functions ac-flyspell-workaround
   :init
   (dolist (hook '(prog-mode-hook org-mode-hook markdown-mode-hook))
     (add-hook hook #'auto-complete-mode))
@@ -893,7 +894,6 @@
   (use-package cljsbuild-mode)
   (use-package elein))
 
-(eval-when-compile (defun org-bookmark-jump-unhide ()))
 (use-package cider
   :commands cider-mode
   :init
@@ -987,9 +987,9 @@
   (add-hook 'rust-mode-hook #'company-mode)
   :config
   (use-package rustfmt
-    :config
-    (bind-keys :map rust-mode-map
-      ("C-c <tab>" . rust-format-buffer)))
+    :functions rust-format-buffer
+    :init
+    (bind-key "C-c <tab>" #'rust-format-buffer rust-mode-map))
   (use-package racer
     :init
     (add-hook 'rust-mode-hook #'racer-mode)
@@ -998,7 +998,6 @@
     :init
     (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
   (use-package cargo
-    :commands cargo-minor-mode
     :init
     (add-hook 'rust-mode-hook #'cargo-minor-mode))
   (setq electric-indent-mode +1))
@@ -1008,7 +1007,6 @@
 
 (use-package org
   :ensure nil
-  :defer t
   :bind
   (("C-c a" . org-agenda)
    ("C-c l" . org-store-link)
