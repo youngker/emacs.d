@@ -33,17 +33,16 @@
 
 ;;; Basic preferences
 
-(setq default-frame-alist (append '((width . 80)
-                                    (height . 40)
-                                    (font . "Monaco-11"))
-                                  default-frame-alist))
-
 (when window-system
   (tooltip-mode -1)
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
-  (setq frame-title-format '(buffer-file-name "%f" ("%b"))))
+  (setq frame-title-format '(buffer-file-name "%f" ("%b")))
+  (setq default-frame-alist (append '((width . 80)
+                                      (height . 40)
+                                      (font . "Monaco-11"))
+                                    default-frame-alist)))
 
 ;; sane defaults
 (setq-default
@@ -109,8 +108,8 @@
 ;;; Bootstrap `use-package'
 
 (setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("melpa" . "http://melpa.org/packages/")))
+      '(("gnu" . "https://elpa.gnu.org/packages/")
+        ("melpa" . "https://melpa.org/packages/")))
 (setq package-enable-at-startup nil)
 (package-initialize 'noactivate)
 
@@ -130,11 +129,14 @@
 (setq use-package-always-ensure t)
 
 
-;;;
+;;; Themes
 
 (use-package zenburn-theme
   :config
   (load-theme 'zenburn t))
+
+
+;;;
 
 (use-package server
   :ensure nil
@@ -327,6 +329,7 @@
 
 (use-package helm
   :disabled t
+  :defines (helm-idle-delay helm-quick-update)
   :bind
   (("C-x C-i" . helm-imenu)
    ("C-c g"   . helm-find-files)
@@ -621,7 +624,6 @@
 
 ;;; Auto complete
 
-;; not use company
 (use-package company
   :diminish company-mode
   :commands company-mode)
@@ -660,9 +662,7 @@
 
 
 (use-package eval-sexp-fu
-  :commands (eval-sexp-fu-flash
-             turn-on-eval-sexp-fu-flash-mode
-             esf-flash-doit)
+  :commands turn-on-eval-sexp-fu-flash-mode
   :config
   (use-package cider-eval-sexp-fu
     :demand t
@@ -743,6 +743,52 @@
     "Elisp mode."
     (elisp-slime-nav-mode +1))
 
+  (defun redefine-lisp-indent-function (indent-point state)
+    "Redefine 'lisp-indent-function (INDENT-POINT STATE)."
+    (let ((normal-indent (current-column))
+          (orig-point (point)))
+      (goto-char (1+ (elt state 1)))
+      (parse-partial-sexp (point) calculate-lisp-indent-last-sexp 0 t)
+      (cond
+       ((and (elt state 2)
+             (or (not (looking-at "\\sw\\|\\s_"))
+                 (looking-at ":")))
+        (if (not (> (save-excursion (forward-line 1) (point))
+                    calculate-lisp-indent-last-sexp))
+            (progn (goto-char calculate-lisp-indent-last-sexp)
+                   (beginning-of-line)
+                   (parse-partial-sexp (point)
+                                       calculate-lisp-indent-last-sexp 0 t)))
+        (backward-prefix-chars)
+        (current-column))
+       ((and (save-excursion
+               (goto-char indent-point)
+               (skip-syntax-forward " ")
+               (not (looking-at ":")))
+             (save-excursion
+               (goto-char orig-point)
+               (looking-at ":")))
+        (save-excursion
+          (goto-char (+ 2 (elt state 1)))
+          (current-column)))
+       (t
+        (let ((function (buffer-substring (point)
+                                          (progn (forward-sexp 1) (point))))
+              method)
+          (setq method (or (function-get (intern-soft function)
+                                         'lisp-indent-function)
+                           (get (intern-soft function) 'lisp-indent-hook)))
+          (cond ((or (eq method 'defun)
+                     (and (null method)
+                          (> (length function) 3)
+                          (string-match "\\`def" function)))
+                 (lisp-indent-defform state indent-point))
+                ((integerp method)
+                 (lisp-indent-specform method state
+                                       indent-point normal-indent))
+                (method
+                 (funcall method indent-point state))))))))
+
   :init
   (dolist (hook lisp-mode-hook-list)
     (add-hook hook #'lisp-mode-setup-hook))
@@ -753,52 +799,6 @@
     (add-hook hook (lambda ()
                      (setq-local lisp-indent-function
                                  #'redefine-lisp-indent-function)))))
-
-(defun redefine-lisp-indent-function (indent-point state)
-  "Redefine 'lisp-indent-function (INDENT-POINT STATE)."
-  (let ((normal-indent (current-column))
-        (orig-point (point)))
-    (goto-char (1+ (elt state 1)))
-    (parse-partial-sexp (point) calculate-lisp-indent-last-sexp 0 t)
-    (cond
-     ((and (elt state 2)
-           (or (not (looking-at "\\sw\\|\\s_"))
-               (looking-at ":")))
-      (if (not (> (save-excursion (forward-line 1) (point))
-                  calculate-lisp-indent-last-sexp))
-          (progn (goto-char calculate-lisp-indent-last-sexp)
-                 (beginning-of-line)
-                 (parse-partial-sexp (point)
-                                     calculate-lisp-indent-last-sexp 0 t)))
-      (backward-prefix-chars)
-      (current-column))
-     ((and (save-excursion
-             (goto-char indent-point)
-             (skip-syntax-forward " ")
-             (not (looking-at ":")))
-           (save-excursion
-             (goto-char orig-point)
-             (looking-at ":")))
-      (save-excursion
-        (goto-char (+ 2 (elt state 1)))
-        (current-column)))
-     (t
-      (let ((function (buffer-substring (point)
-                                        (progn (forward-sexp 1) (point))))
-            method)
-        (setq method (or (function-get (intern-soft function)
-                                       'lisp-indent-function)
-                         (get (intern-soft function) 'lisp-indent-hook)))
-        (cond ((or (eq method 'defun)
-                   (and (null method)
-                        (> (length function) 3)
-                        (string-match "\\`def" function)))
-               (lisp-indent-defform state indent-point))
-              ((integerp method)
-               (lisp-indent-specform method state
-                                     indent-point normal-indent))
-              (method
-               (funcall method indent-point state))))))))
 
 
 ;; C
@@ -950,7 +950,7 @@
   (setq electric-indent-mode +1))
 
 
-;; Org
+;;; Org
 
 (use-package org
   :ensure nil
