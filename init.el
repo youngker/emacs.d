@@ -1,6 +1,6 @@
 ;;; init.el --- youngker's configuration
 
-;; Copyright (C) 2016 Youngjoo Lee
+;; Copyright (C) 2017 Youngjoo Lee
 
 ;; Author: Youngjoo Lee <youngker@gmail.com>
 ;; Version: 0.2.0
@@ -692,6 +692,28 @@
 (use-package magit
   :bind
   ("C-x g" . magit-status))
+
+
+;;; pdf
+
+(use-package pdf-tools
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :config
+  (use-package pdf-annot :ensure nil)
+  (use-package pdf-links :ensure nil)
+  (use-package pdf-info :ensure nil)
+  (use-package pdf-misc :ensure nil)
+  (use-package pdf-sync :ensure nil)
+  (use-package pdf-occur :ensure nil)
+  (use-package pdf-outline :ensure nil)
+  (use-package pdf-history :ensure nil)
+  (pdf-tools-install)
+  (add-hook 'pdf-view-mode-hook
+            (lambda ()
+              (pdf-misc-size-indication-minor-mode)
+              (pdf-links-minor-mode)
+              (pdf-isearch-minor-mode)
+              (pdf-outline-minor-mode))))
 
 
 ;;; Languages
