@@ -109,7 +109,8 @@
 
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
-        ("melpa" . "https://melpa.org/packages/")))
+        ("melpa" . "https://melpa.org/packages/")
+        ("melpa-stable" . "https://stable.melpa.org/packages/")))
 (setq package-enable-at-startup nil)
 (package-initialize 'noactivate)
 
@@ -315,7 +316,8 @@
 
 (use-package swiper
   :bind
-  ("M-i" . swiper))
+  (("M-i" . swiper)
+   ("M-I" . swiper-all)))
 
 
 ;;; helm
@@ -865,6 +867,7 @@
 
 (use-package cider
   :commands cider-mode
+  :pin melpa-stable
   :init
   (with-eval-after-load 'clojure-mode
     (add-hook 'clojure-mode-hook #'cider-mode))
@@ -900,6 +903,13 @@
   :init
   (with-eval-after-load 'clojure-mode
     (add-hook 'clojure-mode-hook #'flycheck-clojure-setup)))
+
+(use-package clojure-cheatsheet
+  :commands clojure-cheatsheet
+  :init
+  (with-eval-after-load 'clojure-mode
+    (bind-keys :map clojure-mode-map
+      ("C-c C-h" . clojure-cheatsheet))))
 
 
 ;; Go
