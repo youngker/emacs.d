@@ -965,10 +965,6 @@
   (add-hook 'rust-mode-hook #'flycheck-mode)
   (add-hook 'rust-mode-hook #'company-mode)
   :config
-  (use-package rustfmt
-    :functions rust-format-buffer
-    :init
-    (bind-key "C-c <tab>" #'rust-format-buffer rust-mode-map))
   (use-package racer
     :init
     (add-hook 'rust-mode-hook #'racer-mode)
