@@ -110,7 +110,8 @@
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")
-        ("melpa-stable" . "https://stable.melpa.org/packages/")))
+        ("melpa-stable" . "https://stable.melpa.org/packages/")
+        ("org" . "http://orgmode.org/elpa/")))
 (setq package-enable-at-startup nil)
 (package-initialize 'noactivate)
 
@@ -118,9 +119,9 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; (package-initialize)
-(let ((default-directory (concat user-emacs-directory "elpa/")))
-  (normal-top-level-add-subdirs-to-load-path))
+(package-initialize)
+;; (let ((default-directory (concat user-emacs-directory "elpa/")))
+;;   (normal-top-level-add-subdirs-to-load-path))
 
 (eval-when-compile
   (require 'use-package))
@@ -981,15 +982,19 @@
 ;;; Org
 
 (use-package org
-  :ensure nil
+  :ensure org-plus-contrib
+  :pin org
   :bind
   (("C-c a" . org-agenda)
    ("C-c l" . org-store-link)
    ("C-c b" . org-iswitchb)
    ("C-c k" . org-capture))
   :config
-  (use-package org-capture
-    :ensure nil)
+  (use-package ox-reveal
+    :init
+    (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
+    (setq org-reveal-mathjax t))
+
   ;; Add some new modules.
   (add-to-list 'org-modules 'org-habit)
 
@@ -1077,7 +1082,6 @@
                  "\\end{block}\\end{onlyenv}")))
 
 (use-package org-journal
-  :defer t
   :mode
   ("journal/[0-9]\\{8\\}$" . org-journal-mode)
   :config
@@ -1087,7 +1091,6 @@
   :commands org-bullets-mode
   :preface
   (defun org-bullets-mode-hook ()
-    (setq org-bullets-bullet-list '("◉" "◎" "⚫" "○" "►" "◇"))
     (org-bullets-mode +1))
   :init
   (add-hook 'org-mode-hook #'org-bullets-mode-hook))
