@@ -839,10 +839,11 @@
                  '("Google"
                    (tab-width . 4)
                    (c-basic-offset . 4)
-                   (indent-tabs-mode . t)
+                   (indent-tabs-mode . nil)
                    (c-auto-newline . t)
                    (c-electric-flag . t)))
-    (c-set-style "my-c-style"))
+    (c-set-style "my-c-style")
+    (flycheck-mode +1))
   :init
   (add-hook 'c-mode-common-hook #'c-mode-common-setup-hook))
 
