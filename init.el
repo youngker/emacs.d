@@ -869,7 +869,6 @@
 
 (use-package cider
   :commands cider-mode
-  :pin melpa-stable
   :init
   (with-eval-after-load 'clojure-mode
     (add-hook 'clojure-mode-hook #'cider-mode))
@@ -963,6 +962,9 @@
 ;; Rust
 (use-package rust-mode
   :mode ("\\.rs\\'" . rust-mode)
+  :commands (racer-mode
+             flycheck-rust-setup
+             cargo-minor-mode)
   :init
   (add-hook 'rust-mode-hook #'flycheck-mode)
   (add-hook 'rust-mode-hook #'company-mode)
@@ -984,13 +986,14 @@
 
 (use-package org
   :ensure org-plus-contrib
-  :pin org
   :bind
   (("C-c a" . org-agenda)
    ("C-c l" . org-store-link)
    ("C-c b" . org-iswitchb)
    ("C-c k" . org-capture))
   :config
+  (use-package org-capture
+    :ensure nil)
   (use-package ox-reveal
     :init
     (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
@@ -1026,9 +1029,6 @@
   ;; Refile setup.
   (setq org-refile-targets '((org-agenda-files :level . 1))
         org-refile-use-outline-path 'file)
-
-  ;; Use ido completion.
-  (setq org-completion-use-ido t)
 
   ;; Do not split line when cursor in not at the end.
   (setq org-M-RET-may-split-line nil)
