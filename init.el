@@ -134,8 +134,13 @@
 ;;; Themes
 
 (use-package zenburn-theme
+  :disabled t
   :config
   (load-theme 'zenburn t))
+
+(use-package dracula-theme
+  :config
+  (load-theme 'dracula t))
 
 
 ;;;
@@ -826,7 +831,7 @@
                                  #'redefine-lisp-indent-function)))))
 
 
-;; C
+;; C / C++
 
 (use-package google-c-style
   :commands (google-set-c-style
@@ -841,11 +846,56 @@
                    (c-basic-offset . 4)
                    (indent-tabs-mode . nil)
                    (c-auto-newline . t)
-                   (c-electric-flag . t)))
+                   (c-electric-flag . t)
+                   (c-offsets-alist . ((access-label . -)
+                                       (inextern-lang . 0)
+                                       (innamespace . 0)
+                                       (member-init-intro . ++)))))
     (c-set-style "my-c-style")
     (flycheck-mode +1))
   :init
   (add-hook 'c-mode-common-hook #'c-mode-common-setup-hook))
+
+(use-package rtags
+  :bind
+  (("M-." . rtags-find-symbol-at-point)
+   ("M-," . rtags-location-stack-back))
+  :init
+  (add-hook 'c-mode-hook 'rtags-start-process-unless-running)
+  (add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
+  (add-hook 'objc-mode-hook 'rtags-start-process-unless-running))
+
+(use-package helm-rtags
+  :bind
+  ("M--" . rtags-find-references-at-point)
+  :init
+  (setq rtags-display-result-backend 'helm))
+
+(use-package irony
+  :commands irony-mode
+  :preface
+  (defun my-irony-mode-hook ()
+    (define-key irony-mode-map
+      [remap completion-at-point] 'counsel-irony)
+    (define-key irony-mode-map
+      [remap complete-symbol] 'counsel-irony))
+  :init
+  (add-hook 'c++-mode-hook 'irony-mode)
+  (add-hook 'c-mode-hook 'irony-mode)
+  (add-hook 'objc-mode-hook 'irony-mode)
+  :config
+  (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+
+(use-package irony-eldoc
+  :commands irony-mode
+  :init
+  (add-hook 'irony-mode-hook 'irony-eldoc))
+
+(use-package flycheck-irony
+  :commands irony-mode
+  :init
+  (add-hook 'flycheck-mode-hook 'flycheck-irony-setup))
 
 
 ;; Markdown
@@ -962,24 +1012,27 @@
 ;; Rust
 (use-package rust-mode
   :mode ("\\.rs\\'" . rust-mode)
-  :commands (racer-mode
-             flycheck-rust-setup
-             cargo-minor-mode)
   :init
   (add-hook 'rust-mode-hook #'flycheck-mode)
   (add-hook 'rust-mode-hook #'company-mode)
   :config
-  (use-package racer
-    :init
-    (add-hook 'rust-mode-hook #'racer-mode)
-    (add-hook 'racer-mode-hook #'eldoc-mode))
-  (use-package flycheck-rust
-    :init
-    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-  (use-package cargo
-    :init
-    (add-hook 'rust-mode-hook #'cargo-minor-mode))
   (setq electric-indent-mode +1))
+
+(use-package racer
+  :commands rust-mode
+  :init
+  (add-hook 'rust-mode-hook #'racer-mode)
+  (add-hook 'racer-mode-hook #'eldoc-mode))
+
+(use-package flycheck-rust
+  :commands rust-mode
+  :init
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+
+(use-package cargo
+  :commands rust-mode
+  :init
+  (add-hook 'rust-mode-hook #'cargo-minor-mode))
 
 
 ;;; Org
