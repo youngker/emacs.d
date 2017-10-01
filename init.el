@@ -79,6 +79,7 @@
  truncate-lines t
  truncate-partial-width-windows nil
  visible-bell nil
+ visible-cursor nil
  x-select-enable-clipboard t)
 
 (auto-compression-mode +1)
