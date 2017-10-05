@@ -134,14 +134,9 @@
 
 ;;; Themes
 
-(use-package zenburn-theme
-  :disabled t
+(use-package base16-theme
   :config
-  (load-theme 'zenburn t))
-
-(use-package dracula-theme
-  :config
-  (load-theme 'dracula t))
+  (load-theme 'base16-default-dark t))
 
 
 ;;;
@@ -671,6 +666,7 @@
 
 
 (use-package eval-sexp-fu
+  :disabled t
   :commands turn-on-eval-sexp-fu-flash-mode
   :config
   (use-package cider-eval-sexp-fu
@@ -734,6 +730,7 @@
   '(diminish 'eldoc-mode))
 
 (use-package redshank
+  :disabled t
   :diminish redshank-mode
   :commands redshank-mode)
 
@@ -765,8 +762,8 @@
     (paredit-mode +1)
     (paren-activate)
     (rainbow-delimiters-mode +1)
-    (redshank-mode +1)
-    (turn-on-eval-sexp-fu-flash-mode)
+    ;;(redshank-mode +1)
+    ;;(turn-on-eval-sexp-fu-flash-mode)
     (aggressive-indent-mode)
     (add-hook 'after-save-hook #'check-parens nil t))
 
@@ -1061,6 +1058,13 @@
 ;; Haskell
 (use-package haskell-mode
   :mode ("\\.hs\\'" . haskell-mode))
+
+(use-package dante
+  :after haskell-mode
+  :commands 'dante-mode
+  :init
+  (add-hook 'haskell-mode-hook 'dante-mode)
+  (add-hook 'haskell-mode-hook 'flycheck-mode))
 
 
 ;; Rust
