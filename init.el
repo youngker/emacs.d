@@ -136,7 +136,7 @@
 
 (use-package base16-theme
   :config
-  (load-theme 'base16-default-dark t))
+  (load-theme 'base16-dracula t))
 
 
 ;;;
@@ -612,6 +612,7 @@
        (cl-callf color-saturate-name (face-foreground face) 20)))))
 
 (use-package paredit-everywhere
+  :diminish paredit-everywhere-mode
   :commands paredit-everywhere-mode
   :init
   (add-hook 'prog-mode-hook #'paredit-everywhere-mode)
@@ -834,6 +835,7 @@
 (use-package google-c-style
   :commands (google-set-c-style
              google-make-newline-indent)
+  :functions c-langelem-pos
   :preface
   (defun c-mode-common-setup-hook ()
     (google-set-c-style)
@@ -1091,6 +1093,11 @@
   :commands rust-mode
   :init
   (add-hook 'rust-mode-hook #'cargo-minor-mode))
+
+
+;; Qml
+(use-package qml-mode
+  :mode ("\\.qml\\'" . qml-mode))
 
 
 ;;; Org
