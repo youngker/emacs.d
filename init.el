@@ -581,11 +581,6 @@
   (dolist (hook '(css-mode-hook html-mode-hook sass-mode-hook))
     (add-hook hook #'rainbow-mode)))
 
-(use-package plantuml-mode
-  :mode ("\\.plantuml\\'" . plantuml-mode)
-  :config
-  (setq plantuml-jar-path "/usr/local/Cellar/plantuml/8048/libexec/plantuml.jar"))
-
 
 ;;; Syntax check
 
@@ -1117,6 +1112,12 @@
     (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
     (setq org-reveal-mathjax t))
 
+  (use-package ob-plantuml
+    :ensure nil
+    :init
+    (setq org-plantuml-jar-path (concat user-emacs-directory
+                                        "lib/plantuml.jar")))
+
   ;; Add some new modules.
   (add-to-list 'org-modules 'org-habit)
 
@@ -1174,7 +1175,8 @@
    'org-babel-load-languages
    '((emacs-lisp . t)
      (sh . t)
-     (python . t))))
+     (python . t)
+     (plantuml . t))))
 
 ;; LaTeX export
 (use-package ox-latex
