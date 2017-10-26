@@ -74,6 +74,7 @@
  scroll-preserve-screen-position 1
  sentence-end-double-space nil
  shift-select-mode nil
+ show-trailing-whitespace t
  tab-always-indent 'complete
  transient-mark-mode t
  truncate-lines t
