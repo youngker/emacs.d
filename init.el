@@ -136,7 +136,7 @@
 
 (use-package base16-theme
   :config
-  (load-theme 'base16-dracula t))
+  (load-theme 'base16-grayscale-light t))
 
 
 ;;;
@@ -287,6 +287,7 @@
   (defun ivy-setup-hook ()
     (auto-compile-on-load-mode)
     (dired-details-install)
+    (global-git-gutter-mode)
     (global-auto-complete-mode)
     (global-diff-hl-mode)
     (global-page-break-lines-mode)
@@ -693,6 +694,15 @@
 (use-package magit
   :bind
   ("C-x g" . magit-status))
+
+(use-package git-gutter
+  :diminish git-gutter-mode
+  :commands global-git-gutter-mode
+  :bind
+  (("C-c n" . git-gutter:next-hunk)
+   ("C-c p" . git-gutter:previous-hunk))
+  :config
+  (global-git-gutter-mode +1))
 
 
 ;;; pdf
