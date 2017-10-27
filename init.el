@@ -289,7 +289,8 @@
     (auto-compile-on-load-mode)
     (dired-details-install)
     (global-git-gutter-mode)
-    (global-auto-complete-mode)
+    ;;(global-auto-complete-mode)
+    (global-company-mode)
     (global-diff-hl-mode)
     (global-page-break-lines-mode)
     (global-whitespace-cleanup-mode)
@@ -628,9 +629,26 @@
 
 (use-package company
   :diminish company-mode
-  :commands company-mode)
+  :commands global-company-mode
+  :init
+  :config
+  (setq company-tooltip-limit 10
+        company-idle-delay 0.2
+        company-echo-delay 0
+        company-minimum-prefix-length 3
+        company-require-match nil
+        company-selection-wrap-around t
+        company-tooltip-align-annotations t
+        company-tooltip-flip-when-above t
+        company-transformers '(company-sort-by-occurrence))
+  (global-company-mode +1)
+  (bind-keys :map company-active-map
+    ("C-p" . company-select-previous)
+    ("C-n" . company-select-next)
+    ("TAB" . company-complete-common-or-cycle)))
 
 (use-package auto-complete
+  :disabled t
   :diminish auto-complete-mode
   :commands global-auto-complete-mode
   :functions ac-flyspell-workaround
