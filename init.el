@@ -137,7 +137,7 @@
 
 (use-package base16-theme
   :config
-  (load-theme 'base16-grayscale-light t))
+  (load-theme 'base16-dracula t))
 
 
 ;;;
@@ -945,7 +945,6 @@
     (setq rtags-display-result-backend 'helm)))
 
 (use-package irony
-  :disabled t
   :commands irony-mode
   :preface
   (defun my-irony-mode-hook ()
@@ -964,7 +963,8 @@
     :commands irony-mode
     :init
     (add-hook 'irony-mode-hook 'irony-eldoc))
-
+  (use-package company-irony
+    :commands irony-mode)
   (use-package flycheck-irony
     :commands irony-mode
     :init
@@ -1007,6 +1007,7 @@
   (add-hook 'cider-mode-hook #'eldoc-mode))
 
 (use-package ac-cider
+  :disabled t
   :commands ac-cider-setup
   :init
   (with-eval-after-load 'cider-mode
@@ -1053,6 +1054,7 @@
     (add-hook 'go-mode-hook #'go-eldoc-setup-hook)))
 
 (use-package go-autocomplete
+  :disabled t
   :defer t
   :init
   (with-eval-after-load 'auto-complete
@@ -1099,7 +1101,6 @@
   :mode ("\\.rs\\'" . rust-mode)
   :init
   (add-hook 'rust-mode-hook #'flycheck-mode)
-  (add-hook 'rust-mode-hook #'company-mode)
   :config
   (setq electric-indent-mode +1))
 
