@@ -929,21 +929,23 @@
   (add-hook 'c-mode-common-hook #'c-mode-common-setup-hook))
 
 (use-package rtags
+  :disabled t
   :bind
   (("M-." . rtags-find-symbol-at-point)
    ("M-," . rtags-location-stack-back))
   :init
   (add-hook 'c-mode-hook 'rtags-start-process-unless-running)
   (add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
-  (add-hook 'objc-mode-hook 'rtags-start-process-unless-running))
-
-(use-package helm-rtags
-  :bind
-  ("M--" . rtags-find-references-at-point)
-  :init
-  (setq rtags-display-result-backend 'helm))
+  (add-hook 'objc-mode-hook 'rtags-start-process-unless-running)
+  :config
+  (use-package helm-rtags
+    :bind
+    ("M--" . rtags-find-references-at-point)
+    :init
+    (setq rtags-display-result-backend 'helm)))
 
 (use-package irony
+  :disabled t
   :commands irony-mode
   :preface
   (defun my-irony-mode-hook ()
@@ -957,17 +959,16 @@
   (add-hook 'objc-mode-hook 'irony-mode)
   :config
   (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+  (use-package irony-eldoc
+    :commands irony-mode
+    :init
+    (add-hook 'irony-mode-hook 'irony-eldoc))
 
-(use-package irony-eldoc
-  :commands irony-mode
-  :init
-  (add-hook 'irony-mode-hook 'irony-eldoc))
-
-(use-package flycheck-irony
-  :commands irony-mode
-  :init
-  (add-hook 'flycheck-mode-hook 'flycheck-irony-setup))
+  (use-package flycheck-irony
+    :commands irony-mode
+    :init
+    (add-hook 'flycheck-mode-hook 'flycheck-irony-setup)))
 
 (use-package modern-cpp-font-lock
   :commands modern-c++-font-lock-mode
