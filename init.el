@@ -945,6 +945,7 @@
     (setq rtags-display-result-backend 'helm)))
 
 (use-package irony
+  :diminish irony-mode
   :commands irony-mode
   :preface
   (defun my-irony-mode-hook ()
@@ -971,6 +972,7 @@
     (add-hook 'flycheck-mode-hook 'flycheck-irony-setup)))
 
 (use-package modern-cpp-font-lock
+  :diminish modern-c++-font-lock-mode
   :commands modern-c++-font-lock-mode
   :init
   (add-hook 'c++-mode-hook 'modern-c++-font-lock-mode))
