@@ -33,16 +33,15 @@
 
 ;;; Basic preferences
 
-(when window-system
-  (tooltip-mode -1)
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
-  (scroll-bar-mode -1)
-  (setq frame-title-format '(buffer-file-name "%f" ("%b")))
-  (setq default-frame-alist (append '((width . 80)
-                                      (height . 40)
-                                      (font . "Monaco-11"))
-                                    default-frame-alist)))
+(tooltip-mode -1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(setq frame-title-format '(buffer-file-name "%f" ("%b")))
+(setq default-frame-alist (append '((width . 80)
+                                    (height . 40)
+                                    (font . "Monaco-11"))
+                                  default-frame-alist))
 
 ;; sane defaults
 (setq-default
