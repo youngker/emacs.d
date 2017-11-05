@@ -40,7 +40,7 @@
 (setq frame-title-format '(buffer-file-name "%f" ("%b")))
 (setq default-frame-alist (append '((width . 80)
                                     (height . 40)
-                                    (font . "Monaco-11"))
+                                    (font . "Fira Mono 9"))
                                   default-frame-alist))
 
 ;; sane defaults
@@ -188,10 +188,10 @@
    recentf-save-file (concat user-emacs-directory "recentf")))
 
 (use-package saveplace
-  :after ivy
+  :commands save-place-mode
   :config
   (setq-default
-   save-place t
+   ;;save-place t
    save-place-file (concat user-emacs-directory "place")))
 
 (use-package uniquify
@@ -295,6 +295,7 @@
     (global-whitespace-cleanup-mode)
     (popwin-mode)
     (recentf-mode)
+    (save-place-mode +1)
     (server-running-p)
     (volatile-highlights-mode)
     (which-key-mode)
