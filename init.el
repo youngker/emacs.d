@@ -584,6 +584,20 @@
   (dolist (hook '(css-mode-hook html-mode-hook sass-mode-hook))
     (add-hook hook #'rainbow-mode)))
 
+(use-package projectile
+  :commands
+  (projectile-find-file projectile-switch-project)
+  :config
+  (projectile-global-mode))
+
+(use-package counsel-projectile
+  :bind
+  (("C-c p p" . counsel-projectile-switch-project)
+   ("C-c p b" . counsel-projectile-switch-to-buffer)
+   ("C-c p f" . counsel-projectile-find-file))
+  :config
+  (counsel-projectile-on))
+
 
 ;;; Syntax check
 
@@ -718,8 +732,8 @@
   :diminish git-gutter-mode
   :commands global-git-gutter-mode
   :bind
-  (("C-c n" . git-gutter:next-hunk)
-   ("C-c p" . git-gutter:previous-hunk))
+  (("C-c s n" . git-gutter:next-hunk)
+   ("C-c s p" . git-gutter:previous-hunk))
   :config
   (global-git-gutter-mode +1))
 
