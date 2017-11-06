@@ -134,9 +134,11 @@
 
 ;;; Themes
 
-(use-package base16-theme
+(use-package nord-theme
   :config
-  (load-theme 'base16-dracula t))
+  (set-face-background 'modeline-inactive "#000000")
+  (set-face-background 'region "#7f7f7f")
+  (load-theme 'nord t))
 
 
 ;;;
