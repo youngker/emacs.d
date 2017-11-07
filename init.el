@@ -135,9 +135,9 @@
 ;;; Themes
 
 (use-package nord-theme
+  :ensure nil
+  :load-path "themes"
   :config
-  (set-face-background 'modeline-inactive "#000000")
-  (set-face-background 'region "#7f7f7f")
   (load-theme 'nord t))
 
 
