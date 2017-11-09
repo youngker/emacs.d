@@ -588,6 +588,10 @@
    `(magit-process-ok ((,class (:foreground ,nord14 :weight normal))))
    `(magit-section-heading ((,class (:foreground ,nord7 :weight normal))))
    `(magit-section-highlight ((,class (:background ,nord2))))
+   `(magit-diff-added ((,class (:foreground ,nord14))))
+   `(magit-diff-added-highlight ((,class (:foreground ,nord14 :background ,nord2))))
+   `(magit-diff-removed ((,class (:foreground ,nord11))))
+   `(magit-diff-removed-highlight ((,class (:foreground ,nord11 :background ,nord2))))
 
    ;; > MU4E
    `(mu4e-header-marks-face ((,class (:foreground ,nord9))))
