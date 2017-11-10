@@ -633,8 +633,10 @@
    `(neo-vc-up-to-date-face ((,class (:foreground ,nord4))))
    `(neo-vc-user-face ((,class (:foreground ,nord4))))
 
+   `(highlight-symbol-face ((,class (:foreground ,nord13))))
+   
    ;; > ivy-mode
-   `(ivy-current-match ((,class (:background ,nord8 :foreground ,nord10))))
+   `(ivy-current-match ((,class (:background ,nord10 :foreground ,nord4))))
    `(ivy-minibuffer-match-face-1 ((,class (:foreground ,nord10))))
    `(ivy-minibuffer-match-face-2 ((,class (:foreground ,nord10))))
    `(ivy-minibuffer-match-face-3 ((,class (:foreground ,nord10))))
