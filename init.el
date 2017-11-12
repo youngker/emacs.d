@@ -323,8 +323,10 @@
 
 (use-package swiper
   :bind
-  (("M-i" . swiper)
-   ("M-I" . swiper-all)))
+  ("C-s" . swiper)
+  :config
+  (bind-keys :map ivy-minibuffer-map
+    ("C-w" . ivy-yank-word)))
 
 
 ;;; helm
