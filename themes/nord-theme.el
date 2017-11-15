@@ -172,7 +172,7 @@
    `(ediff-odd-diff-Ancestor ((,class (:background ,nord2))))
    `(ediff-odd-diff-B ((,class (:background ,nord2))))
    `(ediff-odd-diff-C ((,class (:background ,nord2))))
-   
+
    ;; > diff
    `(diff-added ((,class (:foreground ,nord14))))
    `(diff-changed ((,class (:foreground ,nord13))))
@@ -499,7 +499,7 @@
    `(diff-hl-change ((,class (:background ,nord13))))
    `(diff-hl-insert ((,class (:background ,nord14))))
    `(diff-hl-delete ((,class (:background ,nord11))))
-   
+
    ;; > Evil
    `(evil-ex-info ((,class (:foreground ,nord8))))
    `(evil-ex-substitute-replacement ((,class (:foreground ,nord9))))
@@ -633,8 +633,8 @@
    `(neo-vc-up-to-date-face ((,class (:foreground ,nord4))))
    `(neo-vc-user-face ((,class (:foreground ,nord4))))
 
-   `(highlight-symbol-face ((,class (:foreground ,nord13))))
-   
+   `(highlight-symbol-face ((,class (:foreground ,nord13 :background ,nord1))))
+
    ;; > ivy-mode
    `(ivy-current-match ((,class (:background ,nord10 :foreground ,nord4))))
    `(ivy-minibuffer-match-face-1 ((,class (:foreground ,nord10))))

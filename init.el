@@ -547,7 +547,12 @@
   :init
   (dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
     (add-hook hook #'highlight-symbol-mode)
-    (add-hook hook #'highlight-symbol-nav-mode)))
+    (add-hook hook #'highlight-symbol-nav-mode))
+  :config
+  (setq highlight-symbol-colors
+        '("brightgreen" "brightyellow" "brightblue" "brightmagenta"
+          "brightcyan" "brightred" "brightblack "cyan))
+  (setq highlight-symbol-foreground-color "yellow"))
 
 (use-package diff-hl
   :commands global-diff-hl-mode
@@ -592,7 +597,7 @@
   :commands
   (projectile-find-file projectile-switch-project)
   :config
-  (projectile-global-mode))
+  (projectile-mode))
 
 (use-package counsel-projectile
   :bind
