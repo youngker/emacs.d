@@ -289,7 +289,6 @@
   (defun ivy-setup-hook ()
     (auto-compile-on-load-mode)
     (dired-details-install)
-    (global-git-gutter-mode)
     ;;(global-auto-complete-mode)
     (global-company-mode)
     (global-diff-hl-mode)
@@ -558,7 +557,8 @@
   :commands global-diff-hl-mode
   :config
   (global-diff-hl-mode +1)
-  (setq diff-hl-draw-borders nil))
+  (diff-hl-margin-mode)
+  (setq diff-hl-side 'right))
 
 (use-package eopengrok
   :bind
@@ -738,6 +738,7 @@
   ("C-x g" . magit-status))
 
 (use-package git-gutter
+  :disabled t
   :diminish git-gutter-mode
   :commands global-git-gutter-mode
   :bind
