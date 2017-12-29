@@ -127,7 +127,7 @@
 (eval-when-compile
   (require 'use-package))
 (require 'bind-key)
-(require 'diminish nil t)
+
 (setq use-package-verbose t)
 (setq use-package-always-ensure t)
 
@@ -142,6 +142,9 @@
 
 
 ;;;
+
+(use-package diminish
+  :commands diminish)
 
 (use-package server
   :ensure nil
