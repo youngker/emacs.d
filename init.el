@@ -573,11 +573,11 @@
    ("C-c s b" . eopengrok-resume)))
 
 (use-package google-translate
+  :defines google-translate-translation-directions-alist
   :bind
   ("C-c t" . google-translate-smooth-translate)
-  :config
-  (use-package google-translate-smooth-ui :ensure nil)
-  ;; (setq google-translate-output-destination 'popup)
+  :init
+  (setq google-translate-output-destination 'popup)
   (setq google-translate-translation-directions-alist
         '(("en" . "ko") ("ko" . "en"))))
 
@@ -1114,7 +1114,13 @@
 (use-package haskell-mode
   :mode ("\\.hs\\'" . haskell-mode))
 
+(use-package intero
+  :after haskell-mode
+  :init
+  (add-hook 'haskell-mode-hook 'intero-mode))
+
 (use-package dante
+  :disabled t
   :after haskell-mode
   :commands 'dante-mode
   :init
