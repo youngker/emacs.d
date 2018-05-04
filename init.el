@@ -291,7 +291,6 @@
   :preface
   (defun ivy-setup-hook ()
     (auto-compile-on-load-mode)
-    (dired-details-install)
     ;;(global-auto-complete-mode)
     (global-company-mode)
     (global-diff-hl-mode)
@@ -720,13 +719,6 @@
   :commands paren-activate
   :config
   (paren-activate))
-
-(use-package dired-details
-  :commands dired-details-install
-  :init
-  (setq-default dired-details-hidden-string "--- ")
-  :config
-  (dired-details-install))
 
 (use-package default-text-scale
   :bind
