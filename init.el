@@ -508,6 +508,7 @@
   :diminish yas-minor-mode
   :commands yas-global-mode
   :config
+  (use-package yasnippet-snippets)
   (setq yas-verbosity 1)
   (setq yas-wrap-around-region t)
   (yas-global-mode +1))
@@ -964,6 +965,7 @@
     (setq rtags-display-result-backend 'helm)))
 
 (use-package irony
+  :disabled t
   :diminish irony-mode
   :commands irony-mode
   :preface
