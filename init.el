@@ -40,7 +40,7 @@
 (setq frame-title-format '(buffer-file-name "%f" ("%b")))
 (setq default-frame-alist (append '((width . 80)
                                     (height . 40)
-                                    (font . "Fira Mono 9"))
+                                    (font . "Source Code Pro 9"))
                                   default-frame-alist))
 
 ;; sane defaults
@@ -327,7 +327,8 @@
   ("C-s" . swiper)
   :config
   (bind-keys :map ivy-minibuffer-map
-    ("C-w" . ivy-yank-word)))
+    ("C-w" . ivy-yank-word)
+    ("C-r" . ivy-previous-line-or-history)))
 
 
 ;;; helm
@@ -507,6 +508,8 @@
 (use-package yasnippet
   :diminish yas-minor-mode
   :commands yas-global-mode
+  :bind
+  ("C-M-y" . company-yasnippet)
   :config
   (use-package yasnippet-snippets)
   (setq yas-verbosity 1)
