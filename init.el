@@ -90,6 +90,7 @@
 (savehist-mode +1)
 (show-paren-mode +1)
 (winner-mode +1)
+(xterm-mouse-mode +1)
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; locale
@@ -1000,6 +1001,20 @@
   :commands modern-c++-font-lock-mode
   :init
   (add-hook 'c++-mode-hook 'modern-c++-font-lock-mode))
+
+(use-package cmake-mode
+  :mode (("CMake[^/\\]*\\.txt\\'" . cmake-mode)
+         ("\\.cmake\\'" . cmake-mode)))
+
+(use-package cmake-project
+  :commands maybe-cmake-project-hook
+  :preface
+  (defun maybe-cmake-project-hook ()
+    (if (file-exists-p "CMakeLists.txt")
+        (cmake-project-mode)))
+  :init
+  (add-hook 'c-mode-hook 'maybe-cmake-project-hook)
+  (add-hook 'c++-mode-hook 'maybe-cmake-project-hook))
 
 
 ;; Markdown
