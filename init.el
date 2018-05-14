@@ -40,7 +40,7 @@
 (setq frame-title-format '(buffer-file-name "%f" ("%b")))
 (setq default-frame-alist (append '((width . 80)
                                     (height . 40)
-                                    (font . "Source Code Pro 9"))
+                                    (font . "Courier New Bold 9"))
                                   default-frame-alist))
 
 ;; sane defaults
@@ -1015,6 +1015,9 @@
   :init
   (add-hook 'c-mode-hook 'maybe-cmake-project-hook)
   (add-hook 'c++-mode-hook 'maybe-cmake-project-hook))
+
+(use-package clang-format
+  :commands clang-format-buffer)
 
 
 ;; Markdown
