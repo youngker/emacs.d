@@ -321,7 +321,9 @@
    ("C-x C-i" . counsel-imenu)
    ("C-x f" . counsel-recentf)
    ("M-x" . counsel-M-x)
-   ("M-y" . counsel-yank-pop)))
+   ("M-y" . counsel-yank-pop))
+  :init
+  (add-hook 'imenu-after-jump-hook #'recenter-top-bottom))
 
 (use-package swiper
   :bind
