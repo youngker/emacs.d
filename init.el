@@ -40,7 +40,7 @@
 (setq frame-title-format '(buffer-file-name "%f" ("%b")))
 (setq default-frame-alist (append '((width . 80)
                                     (height . 40)
-                                    (font . "Courier New Bold 9"))
+                                    (font . "Monaco 11"))
                                   default-frame-alist))
 
 ;; sane defaults
@@ -138,8 +138,14 @@
 (use-package nord-theme
   :ensure nil
   :load-path "themes"
-  :config
-  (load-theme 'nord t))
+  :preface
+  (defun run-after-make-frame-hooks (frame)
+    (if (and (daemonp) (window-system frame))
+        (with-selected-frame frame
+          (load-theme 'nord t))
+      (load-theme 'nord t)))
+  :init
+  (add-hook 'after-make-frame-functions 'run-after-make-frame-hooks))
 
 
 ;;;
