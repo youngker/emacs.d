@@ -1047,7 +1047,13 @@
   (use-package cljsbuild-mode)
   (use-package elein))
 
+(use-package inf-clojure
+  :commands inf-clojure-minor-mode
+  :init
+  (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode))
+
 (use-package cider
+  :disabled t
   :commands cider-mode
   :init
   (with-eval-after-load 'clojure-mode
