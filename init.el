@@ -1,11 +1,11 @@
 ;;; init.el --- youngker's configuration
 
-;; Copyright (C) 2017 Youngjoo Lee
+;; Copyright (C) 2019 Youngjoo Lee
 
 ;; Author: Youngjoo Lee <youngker@gmail.com>
-;; Version: 0.2.0
+;; Version: 0.3.0
 ;; Keywords: convenience
-;; Package-Requires: ((emacs "24.5"))
+;; Package-Requires: ((emacs "26.1"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -134,6 +134,7 @@
 
 
 ;;; Themes
+;; use true color for terminal
 (deftheme my-nord)
 (let ((class '((class color) (min-colors 89)))
       (nord00 "#2E3440")
@@ -1791,7 +1792,7 @@
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
-     (sh . t)
+     (shell . t)
      (python . t)
      (plantuml . t))))
 
