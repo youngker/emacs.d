@@ -1615,13 +1615,6 @@
   (with-eval-after-load 'clojure-mode
     (add-hook 'clojure-mode-hook #'flycheck-clojure-setup)))
 
-(use-package clojure-cheatsheet
-  :commands clojure-cheatsheet
-  :init
-  (with-eval-after-load 'clojure-mode
-    (bind-keys :map clojure-mode-map
-      ("C-c C-h" . clojure-cheatsheet))))
-
 
 ;; Go
 
@@ -1781,7 +1774,7 @@
   (setq org-time-stamp-custom-formats
         '("<%d-%m-%Y %a>" . "<%d-%m-%Y %a %H:%M>"))
 
-  (setq org-ellipsis "⤵")
+  (setq org-ellipsis "...")
 
   ;; Align org tags before saving.
   (add-hook 'org-mode-hook
@@ -1795,17 +1788,6 @@
      (shell . t)
      (python . t)
      (plantuml . t))))
-
-;; LaTeX export
-(use-package ox-latex
-  :ensure nil
-  :defer t
-  :commands -repeat
-  :config
-  (setq org-latex-pdf-process
-        (-repeat 3 "pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f"))
-  (add-to-list 'org-latex-packages-alist '("" "minted"))
-  (setq org-latex-listings 'minted))
 
 ;; Integration with beamer
 (use-package ox-beamer
@@ -1832,7 +1814,9 @@
   (defun org-bullets-mode-hook ()
     (org-bullets-mode +1))
   :init
-  (add-hook 'org-mode-hook #'org-bullets-mode-hook))
+  (add-hook 'org-mode-hook #'org-bullets-mode-hook)
+  :config
+  (setq org-bullets-bullet-list '("•")))
 
 
 ;;; key bindings
