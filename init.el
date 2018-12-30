@@ -1,4 +1,4 @@
-;;; init.el --- youngker's configuration
+;;; init.el --- youngker's configuration -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019 Youngjoo Lee
 
@@ -676,7 +676,8 @@
 
 (use-package server
   :ensure nil
-  :commands server-running-p
+  :commands (server-running-p
+             server-start)
   :config
   (unless (server-running-p)
     (server-start)))
@@ -691,7 +692,8 @@
 
 (use-package page-break-lines
   :diminish page-break-lines-mode
-  :commands global-page-break-lines-mode
+  :commands (global-page-break-lines-mode
+             page-break-lines-mode)
   :config
   (global-page-break-lines-mode)
   (page-break-lines-mode))
@@ -706,7 +708,8 @@
 
 (use-package subword
   :diminish subword-mode
-  :commands subword-mode
+  :commands (subword-mode
+             global-subword-mode)
   :init
   (add-hook 'prog-mode-hook #'subword-mode)
   :config
@@ -745,6 +748,7 @@
             mac-option-modifier
             mac-command-modifier
             ns-function-modifier)
+  :commands exec-path-from-shell-initialize
   :config
   (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-initialize))
@@ -816,6 +820,7 @@
 
 (use-package ivy
   :diminish ivy-mode
+  :commands ivy-mode
   :preface
   (defun ivy-setup-hook ()
     (auto-compile-on-load-mode)
@@ -853,6 +858,8 @@
   (add-hook 'imenu-after-jump-hook #'recenter-top-bottom))
 
 (use-package swiper
+  :functions (ivy-yank-word
+              ivy-previous-line-or-history)
   :bind
   ("C-s" . swiper)
   :config
@@ -948,6 +955,7 @@
 
 (use-package smex
   :after ivy
+  :commands smex-initialize
   ;; :bind
   ;; (("M-x" . smex)
   ;;  ("M-X" . smex-major-mode-commands))
@@ -1130,8 +1138,9 @@
     (add-hook hook #'rainbow-mode)))
 
 (use-package projectile
+  :diminish projectile-mode
   :commands
-  (projectile-find-file projectile-switch-project)
+  (projectile-mode projectile-find-file projectile-switch-project)
   :config
   (projectile-mode))
 
@@ -1139,9 +1148,7 @@
   :bind
   (("C-c p p" . counsel-projectile-switch-project)
    ("C-c p b" . counsel-projectile-switch-to-buffer)
-   ("C-c p f" . counsel-projectile-find-file))
-  :config
-  (counsel-projectile-on))
+   ("C-c p f" . counsel-projectile-find-file)))
 
 
 ;;; Syntax check
@@ -1189,7 +1196,10 @@
 (use-package company
   :diminish company-mode
   :defines company-dabbrev-downcase
-  :commands global-company-mode
+  :commands (global-company-mode
+             company-select-previous
+             company-select-next
+             company-complete-common-or-cycle)
   :init
   :config
   (setq company-dabbrev-downcase nil
@@ -1282,6 +1292,7 @@
 ;;; pdf
 
 (use-package pdf-tools
+  :disabled t
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :config
   (use-package pdf-annot :ensure nil)
@@ -1321,6 +1332,8 @@
 (use-package lisp-mode
   :defer t
   :ensure nil
+  :commands (lisp-indent-defform
+             lisp-indent-specform)
   :defines calculate-lisp-indent-last-sexp
   :preface
   (defvar lisp-mode-hook-list
@@ -1538,7 +1551,8 @@
          ("\\.cmake\\'" . cmake-mode)))
 
 (use-package cmake-project
-  :commands maybe-cmake-project-hook
+  :commands (maybe-cmake-project-hook
+             cmake-project-mode)
   :preface
   (defun maybe-cmake-project-hook ()
     (if (file-exists-p "CMakeLists.txt")
@@ -1636,7 +1650,8 @@
 
 (use-package go-mode
   :mode ("\\.go\\'" . go-mode)
-  :commands gofmt-before-save
+  :commands (gofmt-before-save
+             godef-jump)
   :preface
   (defun go-mode-setup-hook ()
     (setq tab-width 4)
@@ -1685,18 +1700,21 @@
   (setq electric-indent-mode +1))
 
 (use-package racer
-  :commands rust-mode
+  :commands (rust-mode
+             racer-mode)
   :init
   (add-hook 'rust-mode-hook #'racer-mode)
   (add-hook 'racer-mode-hook #'eldoc-mode))
 
 (use-package flycheck-rust
-  :commands rust-mode
+  :commands (rust-mode
+             flycheck-rust-setup)
   :init
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 (use-package cargo
-  :commands rust-mode
+  :commands (rust-mode
+             cargo-minor-mode)
   :init
   (add-hook 'rust-mode-hook #'cargo-minor-mode))
 
@@ -1710,6 +1728,7 @@
 
 (use-package org
   :ensure org-plus-contrib
+  :commands org-babel-do-load-languages
   :bind
   (("C-c a" . org-agenda)
    ("C-c l" . org-store-link)
@@ -1717,7 +1736,8 @@
    ("C-c k" . org-capture))
   :config
   (use-package org-capture
-    :ensure nil)
+    :ensure nil
+    :commands org-capture)
   (use-package ox-reveal
     :init
     (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
