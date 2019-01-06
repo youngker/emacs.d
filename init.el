@@ -34,9 +34,11 @@
 ;;; Basic preferences
 
 (tooltip-mode -1)
-(tool-bar-mode -1)
 (menu-bar-mode -1)
-(scroll-bar-mode -1)
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
 (setq frame-title-format '(buffer-file-name "%f" ("%b")))
 (setq default-frame-alist (append '((width . 80)
                                     (height . 40)
@@ -754,7 +756,6 @@
   (exec-path-from-shell-initialize))
 
 (when (equal system-type 'darwin)
-  (menu-bar-mode +1)
   (setq mac-option-modifier 'super)
   (setq mac-command-modifier 'meta)
   (setq ns-function-modifier 'hyper))
