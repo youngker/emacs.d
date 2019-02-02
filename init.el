@@ -137,7 +137,7 @@
 
 ;;; Themes
 ;; use true color for terminal
-(deftheme my-nord)
+
 (let ((class '((class color) (min-colors 89)))
       (nord00 "#2E3440")
       (nord01 "#3B4252")
@@ -156,7 +156,7 @@
       (nord14 "#A3BE8C")
       (nord15 "#B48EAD"))
   (custom-theme-set-faces
-   'my-nord
+   'user
    `(normal ((,class (:weight normal))))
    `(normal-italic ((,class (:weight normal :slant italic))))
    `(default ((,class (:foreground ,nord04 :background ,nord00))))
@@ -311,7 +311,7 @@
    `(term-color-magenta ((,class (:foreground ,nord15 :background ,nord15))))
    `(tool-bar ((,class (:foreground ,nord04 :background ,nord03))))
    `(tooltip ((,class (:foreground ,nord00 :background ,nord04))))
-   `(trailing-whitespace ((,class (:foreground ,nord03))))
+   `(trailing-whitespace ((,class (:background ,nord11))))
    `(tty-menu-disabled-face ((,class (:foreground ,nord01))))
    `(tty-menu-enabled-face ((,class (:background ,nord02 foreground ,nord04))))
    `(tty-menu-selected-face ((,class (:foreground ,nord08 :underline t))))
@@ -918,45 +918,16 @@
   (use-package helm-descbinds)
   (use-package helm-swoop)
   (use-package helm-codesearch)
-  ;; (helm-autoresize-mode +1)
 
   (setq helm-M-x-fuzzy-match        t
         helm-M-x-requires-pattern   nil
-        ;; helm-autoresize-max-height  30
-        ;; helm-autoresize-min-height 30
         helm-buffers-fuzzy-matching t
-        ;; helm-display-header-line    nil
         helm-ff-skip-boring-files   t
         helm-idle-delay             0.0
         helm-imenu-fuzzy-match      t
         helm-input-idle-delay       0.01
         helm-quick-update           t
-        helm-semantic-fuzzy-match   t)
-
-  ;; (defvar helm-source-header-default-background
-  ;;   (face-attribute 'helm-source-header :background))
-  ;; (defvar helm-source-header-default-foreground
-  ;;   (face-attribute 'helm-source-header :foreground))
-  ;; (defvar helm-source-header-default-box
-  ;;   (face-attribute 'helm-source-header :box))
-
-  ;; (defun helm-toggle-header-line ()
-  ;;   (if (> (length helm-sources) 1)
-  ;;       (set-face-attribute 'helm-source-header
-  ;;                           nil
-  ;;                           :foreground helm-source-header-default-foreground
-  ;;                           :background helm-source-header-default-background
-  ;;                           :box helm-source-header-default-box
-  ;;                           :height 1.0)
-  ;;     (set-face-attribute 'helm-source-header
-  ;;                         nil
-  ;;                         :foreground (face-attribute 'helm-selection :background)
-  ;;                         :background (face-attribute 'helm-selection :background)
-  ;;                         :box nil
-  ;;                         :height 0.1)))
-
-  ;; (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line)
-  )
+        helm-semantic-fuzzy-match   t))
 
 
 ;;; Tool
