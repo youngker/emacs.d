@@ -42,7 +42,7 @@
 (setq frame-title-format '(buffer-file-name "%f" ("%b")))
 (setq default-frame-alist (append '((width . 80)
                                     (height . 40)
-                                    (font . "Monaco 11"))
+                                    (font . "Operator Mono SSm Medium-11"))
                                   default-frame-alist))
 
 ;; sane defaults
@@ -767,10 +767,8 @@
 ;;; Ido
 
 (use-package ido
-  :disabled t
   :bind
   (("C-x C-f" . ido-find-file)
-   ("C-x f"   . ido-recent-file)
    ("C-x b"   . ido-switch-buffer)
    ("C-x B"   . ido-switch-buffer-other-window))
   :commands (ido-fallback-command
@@ -779,27 +777,34 @@
              ido-select-text
              ido-exit-minibuffer)
   :preface
-  (defun ido-recent-file ()
-    "Find a recent file."
-    (interactive)
-    (recentf-mode +1)
-    (let ((file (ido-completing-read
-                 "Choose recent file: "
-                 (mapcar 'abbreviate-file-name recentf-list) nil t)))
-      (when file
-        (find-file file))))
+  (defun my-ido-setup-hook ()
+    (auto-compile-on-load-mode)
+    ;;(global-auto-complete-mode)
+    (global-company-mode)
+    (global-diff-hl-mode)
+    (global-page-break-lines-mode)
+    (global-whitespace-cleanup-mode)
+    (popwin-mode)
+    (recentf-mode)
+    (save-place-mode +1)
+    (server-running-p)
+    (volatile-highlights-mode)
+    (which-key-mode)
+    (yas-global-mode))
+  :init
+  (add-hook 'ido-setup-hook #'my-ido-setup-hook)
   :config
   (ido-mode +1)
   (ido-everywhere +1)
   (icomplete-mode +1)
   (setq ido-auto-merge-work-directories-length -1
-        ido-case-fold nil
+        ido-case-fold t
         ido-create-new-buffer 'always
         ido-default-file-method 'selected-window
         ido-enable-flex-matching t
         ido-enable-prefix nil
-        ido-enable-prefix nil
         ido-max-prospects 10
+        ido-use-virtual-buffers t
         ido-use-faces nil
         ido-use-filename-at-point nil)
   (define-key ido-file-completion-map (kbd "C-\\") 'backward-kill-word)
@@ -811,18 +816,32 @@
     (flx-ido-mode +1))
 
   (use-package ido-vertical-mode
+    :disabled t
     :config
     (ido-vertical-mode)
     (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right))
 
-  (use-package ido-ubiquitous
+  (use-package ido-complete-space-or-hyphen
     :config
-    (ido-ubiquitous-mode +1)))
+    (ido-complete-space-or-hyphen-mode +1))
+
+  (use-package ido-completing-read+
+    :config
+    (ido-ubiquitous-mode +1))
+
+  (use-package ido-yes-or-no
+    :config
+    (ido-yes-or-no-mode +1))
+
+  (use-package crm-custom
+    :config
+    (crm-custom-mode +1)))
 
 
 ;;; ivy
 
 (use-package ivy
+  :disabled t
   :diminish ivy-mode
   :commands ivy-mode
   :preface
@@ -852,6 +871,7 @@
         ivy-format-function 'ivy-format-function-arrow))
 
 (use-package counsel
+  :disabled t
   :bind
   (("C-x C-f" . counsel-find-file)
    ("C-x C-i" . counsel-imenu)
@@ -862,6 +882,7 @@
   (add-hook 'imenu-after-jump-hook #'recenter-top-bottom))
 
 (use-package swiper
+  :disabled t
   :functions (ivy-yank-word
               ivy-previous-line-or-history)
   :bind
@@ -874,22 +895,11 @@
 
 ;;; helm
 
-(use-package helm-codesearch
-  :bind
-  (("C-c h f" . helm-codesearch-find-file)
-   ("C-c h t" . helm-codesearch-find-pattern)
-   ("C-c h I" . helm-codesearch-create-csearchindex)
-   ("C-c h b" . helm-resume)))
-
 (use-package helm
-  :disabled t
   :defines (helm-idle-delay helm-quick-update)
   :bind
   (("C-x C-i" . helm-imenu)
-   ("C-c g"   . helm-find-files)
-   ("M-i"     . helm-swoop)
-   ("C-c M-i" . helm-multi-swoop)
-   ("C-x M-i" . helm-multi-swoop-all)
+   ("C-c s"   . helm-swoop)
    ("C-c h w" . helm-descbinds)
    ("C-c h f" . helm-codesearch-find-file)
    ("C-c h t" . helm-codesearch-find-pattern)
@@ -908,12 +918,6 @@
   (use-package helm-descbinds)
   (use-package helm-swoop)
   (use-package helm-codesearch)
-
-  (bind-keys :map helm-map
-    ("<tab>" . helm-execute-persistent-action)
-    ("C-i"   . helm-execute-persistent-action)
-    ("C-z"   . helm-select-action))
-
   ;; (helm-autoresize-mode +1)
 
   (setq helm-M-x-fuzzy-match        t
@@ -921,48 +925,47 @@
         ;; helm-autoresize-max-height  30
         ;; helm-autoresize-min-height 30
         helm-buffers-fuzzy-matching t
-        helm-display-header-line    nil
+        ;; helm-display-header-line    nil
         helm-ff-skip-boring-files   t
         helm-idle-delay             0.0
         helm-imenu-fuzzy-match      t
         helm-input-idle-delay       0.01
         helm-quick-update           t
-        helm-recentf-fuzzy-match    t
         helm-semantic-fuzzy-match   t)
 
-  (defvar helm-source-header-default-background
-    (face-attribute 'helm-source-header :background))
-  (defvar helm-source-header-default-foreground
-    (face-attribute 'helm-source-header :foreground))
-  (defvar helm-source-header-default-box
-    (face-attribute 'helm-source-header :box))
+  ;; (defvar helm-source-header-default-background
+  ;;   (face-attribute 'helm-source-header :background))
+  ;; (defvar helm-source-header-default-foreground
+  ;;   (face-attribute 'helm-source-header :foreground))
+  ;; (defvar helm-source-header-default-box
+  ;;   (face-attribute 'helm-source-header :box))
 
-  (defun helm-toggle-header-line ()
-    (if (> (length helm-sources) 1)
-        (set-face-attribute 'helm-source-header
-                            nil
-                            :foreground helm-source-header-default-foreground
-                            :background helm-source-header-default-background
-                            :box helm-source-header-default-box
-                            :height 1.0)
-      (set-face-attribute 'helm-source-header
-                          nil
-                          :foreground (face-attribute 'helm-selection :background)
-                          :background (face-attribute 'helm-selection :background)
-                          :box nil
-                          :height 0.1)))
+  ;; (defun helm-toggle-header-line ()
+  ;;   (if (> (length helm-sources) 1)
+  ;;       (set-face-attribute 'helm-source-header
+  ;;                           nil
+  ;;                           :foreground helm-source-header-default-foreground
+  ;;                           :background helm-source-header-default-background
+  ;;                           :box helm-source-header-default-box
+  ;;                           :height 1.0)
+  ;;     (set-face-attribute 'helm-source-header
+  ;;                         nil
+  ;;                         :foreground (face-attribute 'helm-selection :background)
+  ;;                         :background (face-attribute 'helm-selection :background)
+  ;;                         :box nil
+  ;;                         :height 0.1)))
 
-  (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line))
+  ;; (add-hook 'helm-before-initialize-hook 'helm-toggle-header-line)
+  )
 
 
 ;;; Tool
 
 (use-package smex
-  :after ivy
   :commands smex-initialize
-  ;; :bind
-  ;; (("M-x" . smex)
-  ;;  ("M-X" . smex-major-mode-commands))
+  :bind
+  (("M-x" . smex)
+   ("M-X" . smex-major-mode-commands))
   :config
   (smex-initialize))
 
@@ -1109,6 +1112,7 @@
   (setq diff-hl-side 'right))
 
 (use-package eopengrok
+  :disabled t
   :bind
   (("C-c s i" . eopengrok-create-index)
    ("C-c s I" . eopengrok-create-index-with-enable-projects)
@@ -1145,14 +1149,25 @@
   :diminish projectile-mode
   :commands
   (projectile-mode projectile-find-file projectile-switch-project)
+  :bind
+  ("C-c p h" . helm-projectile)
   :config
-  (projectile-mode))
+  (projectile-mode)
+  (use-package helm-projectile
+    :config
+    (helm-projectile-on)))
 
 (use-package counsel-projectile
+  :disabled t
   :bind
   (("C-c p p" . counsel-projectile-switch-project)
    ("C-c p b" . counsel-projectile-switch-to-buffer)
    ("C-c p f" . counsel-projectile-find-file)))
+
+(use-package dired
+  :ensure nil
+  :init
+  (add-hook 'dired-mode-hook 'dired-hide-details-mode))
 
 
 ;;; Syntax check
@@ -1280,7 +1295,9 @@
 
 (use-package magit
   :bind
-  ("C-x g" . magit-status))
+  ("C-x g" . magit-status)
+  :config
+  (setq magit-completing-read-function 'magit-ido-completing-read))
 
 (use-package git-gutter
   :disabled t
@@ -1768,10 +1785,10 @@
           (sequence "WAITING(w@)" "HOLD(h@)" "|" "CANCELLED(c)")))
 
   (setq org-todo-keyword-faces
-        '(("NEXT" :foreground "blue" :weight bold)
-          ("WAITING" :foreground "orange" :weight bold)
-          ("HOLD" :foreground "magenta" :weight bold)
-          ("CANCELLED" :foreground "forest green" :weight bold)))
+        '(("NEXT" :foreground "#5E81AC" :weight bold)
+          ("WAITING" :foreground "#D08770" :weight bold)
+          ("HOLD" :foreground "#BF616A" :weight bold)
+          ("CANCELLED" :foreground "#A3BE8C" :weight bold)))
 
   (setq org-capture-templates
         (let ((refile-file (concat org-directory "/notes.org")))
