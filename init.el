@@ -39,10 +39,13 @@
   (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
-(setq frame-title-format '(buffer-file-name "%f" ("%b")))
+(setq frame-title-format
+      '("emacs%@" (:eval (system-name)) ": "
+        (:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name)) "%b")) " [%*]"))
 (setq default-frame-alist (append '((width . 80)
                                     (height . 40)
-                                    (font . "Operator Mono SSm Medium-11"))
+                                    (font . "Operator Mono SSm Bold-11"))
                                   default-frame-alist))
 
 ;; sane defaults
@@ -166,7 +169,7 @@
    `(font-lock-comment-face ((,class (:foreground ,nord03 :slant italic))))
    `(font-lock-comment-delimiter-face ((,class (:foreground ,nord03))))
    `(font-lock-constant-face ((,class (:foreground ,nord09))))
-   `(font-lock-doc-face ((,class (:foreground ,nord03))))
+   `(font-lock-doc-face ((,class (:foreground ,nord03 :slant italic))))
    `(font-lock-function-name-face ((,class (:foreground ,nord08))))
    `(font-lock-keyword-face ((,class (:foreground ,nord09))))
    `(font-lock-negation-char-face ((,class (:foreground ,nord09))))
@@ -1833,9 +1836,11 @@
 
 ;;; key bindings
 
+(bind-key "C-c e" #'ediff-buffers)
+(bind-key "C-c r" #'revert-buffer)
 (bind-key "C-x k" #'kill-this-buffer)
 (bind-key "C-x m" #'eshell)
-(bind-key "C-c r" #'revert-buffer)
+(bind-key "C-x C-b" #'ibuffer)
 
 
 ;;; registers
