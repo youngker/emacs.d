@@ -40,9 +40,9 @@
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
 (setq frame-title-format
-      '("emacs%@" (:eval (system-name)) ": "
+      '((:eval (system-name)) ": "
         (:eval (if (buffer-file-name)
-                   (abbreviate-file-name (buffer-file-name)) "%b")) " [%*]"))
+                   (abbreviate-file-name (buffer-file-name)) "%b"))))
 (setq default-frame-alist (append '((width . 80)
                                     (height . 40)
                                     (font . "Operator Mono SSm Bold-11"))
@@ -1832,6 +1832,44 @@
   (add-hook 'org-mode-hook #'org-bullets-mode-hook)
   :config
   (setq org-bullets-bullet-list '("•")))
+
+
+;;; xterm-frobs.el
+
+(defvar xterm-screen-dcs-encapsulation
+  (not (null (or (getenv "STY")
+                 (save-match-data
+                   (string-match "^screen\\(\\|-.*\\)$" (getenv "TERM")))))))
+
+(defun xterm-send-escape-sequence (string)
+  "Send STRING to terminal."
+  (cond ((and xterm-screen-dcs-encapsulation
+              (save-match-data (string-match "\e[P\\\\]" string)))
+         (save-match-data
+           (let ((pos 0)
+                 (substrings nil))
+             (while (string-match "\e\\(P\\|\\\\\\)" string pos)
+               (setq substrings
+                     (cons "\e\\"
+                           (cons (substring string pos (match-beginning 1))
+                                 (cons "\eP" substrings))))
+               (setq pos (match-beginning 1)))
+             (setq substrings (cons (substring string pos) substrings))
+             (setq string (mapconcat 'identity (nreverse substrings) "")))))
+        (xterm-screen-dcs-encapsulation
+         (setq string (format "\eP%s\e\\" string))))
+  (send-string-to-terminal string))
+
+(defun terminal-title-hook ()
+  "Terminal title hook."
+  (if (not window-system)
+      (xterm-send-escape-sequence
+       (format "\e]2;%s\a"
+               (concat (system-name) ": "
+                       (if (buffer-file-name)
+                           (abbreviate-file-name (buffer-file-name))
+                         (buffer-name)))))))
+(add-hook 'post-command-hook #'terminal-title-hook)
 
 
 ;;; key bindings
