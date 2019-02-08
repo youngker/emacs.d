@@ -520,12 +520,12 @@
    `(helm-buffer-file ((,class (:foreground ,nord08))))
    `(helm-buffer-not-saved ((,class (:foreground ,nord13))))
    `(helm-buffer-process ((,class (:foreground ,nord10))))
-   `(helm-candidate-number ((,class (:foreground ,nord04 :weight normal))))
+   `(helm-candidate-number ((,class (:foreground ,nord13 :weight normal))))
    `(helm-candidate-number-suspended ((,class (:foreground ,nord04))))
    `(helm-ff-directory ((,class (:foreground ,nord09 :weight normal))))
    `(helm-ff-dirs ((,class (:foreground ,nord09))))
-   `(helm-ff-dotted-director ((,class (:foreground ,nord09 :underline t))))
-   `(helm-ff-dotted-symlink-director ((,class (:foreground ,nord07 :weight normal))))
+   `(helm-ff-dotted-directory ((,class (:foreground ,nord09))))
+   `(helm-ff-dotted-symlink-directory ((,class (:foreground ,nord07 :weight normal))))
    `(helm-ff-executable ((,class (:foreground ,nord08))))
    `(helm-ff-file ((,class (:foreground ,nord04))))
    `(helm-ff-invalid-symlink ((,class (:foreground ,nord11 :weight normal))))
@@ -686,7 +686,7 @@
   (global-diff-hl-mode)
   (global-page-break-lines-mode)
   (global-whitespace-cleanup-mode)
-  (popwin-mode)
+  (shackle-mode)
   (recentf-mode)
   (save-place-mode +1)
   (server-running-p)
@@ -901,7 +901,7 @@
    ("M-x"     . helm-M-x)
    ("M-y"     . helm-show-kill-ring))
   :init
-  (add-hook 'helm-mode-hook #'my-setup-hook)
+  (add-hook 'helm-after-initialize-hook #'my-setup-hook)
   :config
   (use-package helm-command :ensure nil)
   (use-package helm-semantic :ensure nil)
@@ -918,6 +918,9 @@
   (setq helm-M-x-fuzzy-match        t
         helm-M-x-requires-pattern   nil
         helm-buffers-fuzzy-matching t
+        helm-display-function       'pop-to-buffer
+        helm-ff--auto-update-state t
+        helm-ff-auto-update-initial-value t
         helm-ff-skip-boring-files   t
         helm-idle-delay             0.0
         helm-imenu-fuzzy-match      t
@@ -977,6 +980,7 @@
   (win-switch-set-keys '("p") 'previous-window))
 
 (use-package popwin
+  :disabled t
   :commands popwin-mode
   :config
   (popwin-mode +1)
@@ -999,6 +1003,22 @@
            :dedicated t :position bottom :stick t :noselect nil)
           ("^\*WoMan.+\*$"
            :regexp t :position bottom))))
+
+(use-package shackle
+  :commands shackle-mode
+  :config
+  (shackle-mode +1)
+  (setq shackle-rules
+        '(((svg-2048-mode circe-query-mode) :same t)
+          ("*Help*" :align t :select t)
+          ("\\`\\*helm.*?\\*\\'" :regexp t :align t)
+          ((compilation-mode "\\`\\*firestarter\\*\\'"
+                             "\\`\\*magit-diff: .*?\\'") :regexp t :noselect t)
+          ("\\`\\*cider-repl .*" :regexp t :align t :size 0.2)
+          ((inferior-scheme-mode "*shell*" "*eshell*") :popup t))
+        shackle-default-rule '(:select t)
+        shackle-default-size 0.4
+        shackle-inhibit-window-quit-on-same-windows t))
 
 (use-package undo-tree
   :bind
