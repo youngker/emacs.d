@@ -678,6 +678,21 @@
 
 
 ;;;
+(defun my-setup-hook ()
+  "My setup hook."
+  (auto-compile-on-load-mode)
+  ;;(global-auto-complete-mode)
+  (global-company-mode)
+  (global-diff-hl-mode)
+  (global-page-break-lines-mode)
+  (global-whitespace-cleanup-mode)
+  (popwin-mode)
+  (recentf-mode)
+  (save-place-mode +1)
+  (server-running-p)
+  (volatile-highlights-mode)
+  (which-key-mode)
+  (yas-global-mode))
 
 (use-package diminish
   :commands diminish)
@@ -770,6 +785,7 @@
 ;;; Ido
 
 (use-package ido
+  :disabled t
   :bind
   (("C-x C-f" . ido-find-file)
    ("C-x b"   . ido-switch-buffer)
@@ -779,23 +795,8 @@
              ido-everywhere
              ido-select-text
              ido-exit-minibuffer)
-  :preface
-  (defun my-ido-setup-hook ()
-    (auto-compile-on-load-mode)
-    ;;(global-auto-complete-mode)
-    (global-company-mode)
-    (global-diff-hl-mode)
-    (global-page-break-lines-mode)
-    (global-whitespace-cleanup-mode)
-    (popwin-mode)
-    (recentf-mode)
-    (save-place-mode +1)
-    (server-running-p)
-    (volatile-highlights-mode)
-    (which-key-mode)
-    (yas-global-mode))
   :init
-  (add-hook 'ido-setup-hook #'my-ido-setup-hook)
+  (add-hook 'ido-setup-hook #'my-setup-hook)
   :config
   (ido-mode +1)
   (ido-everywhere +1)
@@ -847,27 +848,12 @@
   :disabled t
   :diminish ivy-mode
   :commands ivy-mode
-  :preface
-  (defun ivy-setup-hook ()
-    (auto-compile-on-load-mode)
-    ;;(global-auto-complete-mode)
-    (global-company-mode)
-    (global-diff-hl-mode)
-    (global-page-break-lines-mode)
-    (global-whitespace-cleanup-mode)
-    (popwin-mode)
-    (recentf-mode)
-    (save-place-mode +1)
-    (server-running-p)
-    (volatile-highlights-mode)
-    (which-key-mode)
-    (yas-global-mode))
   :bind
   (("C-x b" . ivy-switch-buffer)
    ("C-x B" . ivy-switch-buffer-other-window)
    ("C-c C-r" . ivy-resume))
   :init
-  (add-hook 'ivy-mode-hook #'ivy-setup-hook)
+  (add-hook 'ivy-mode-hook #'my-setup-hook)
   :config
   (ivy-mode +1)
   (setq ivy-use-virtual-buffers t
@@ -902,13 +888,20 @@
   :defines (helm-idle-delay helm-quick-update)
   :bind
   (("C-x C-i" . helm-imenu)
+   ("C-x C-f" . helm-find-files)
+   ("C-x f"   . helm-recentf)
+   ("C-x b"   . helm-mini)
+   ("C-x r b" . helm-filtered-bookmarks)
    ("C-c s"   . helm-swoop)
    ("C-c h w" . helm-descbinds)
    ("C-c h f" . helm-codesearch-find-file)
    ("C-c h t" . helm-codesearch-find-pattern)
    ("C-c h I" . helm-codesearch-create-csearchindex)
    ("C-c h b" . helm-resume)
+   ("M-x"     . helm-M-x)
    ("M-y"     . helm-show-kill-ring))
+  :init
+  (add-hook 'helm-mode-hook #'my-setup-hook)
   :config
   (use-package helm-command :ensure nil)
   (use-package helm-semantic :ensure nil)
@@ -936,6 +929,7 @@
 ;;; Tool
 
 (use-package smex
+  :disabled t
   :commands smex-initialize
   :bind
   (("M-x" . smex)
