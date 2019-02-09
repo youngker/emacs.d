@@ -30,7 +30,6 @@
 
 (defconst start-time (current-time))
 
-
 ;;; Basic preferences
 
 (tooltip-mode -1)
@@ -39,14 +38,6 @@
   (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
-(setq frame-title-format
-      '((:eval (system-name)) ": "
-        (:eval (if (buffer-file-name)
-                   (abbreviate-file-name (buffer-file-name)) "%b"))))
-(setq default-frame-alist (append '((width . 80)
-                                    (height . 40)
-                                    (font . "Operator Mono SSm Bold-11"))
-                                  default-frame-alist))
 
 ;; sane defaults
 (setq-default
@@ -60,11 +51,13 @@
  ediff-window-setup-function 'ediff-setup-windows-plain
  electric-indent-mode nil
  fill-column 80
+ font-use-system-font t
  gc-cons-threshold 50000000
  global-auto-revert-non-file-buffers t
  history-length 1000
  indent-tabs-mode nil
  inhibit-startup-message t
+ initial-scratch-message nil
  initial-major-mode 'text-mode
  large-file-warning-threshold 100000000
  make-backup-files nil
@@ -86,6 +79,12 @@
  visible-bell nil
  visible-cursor nil
  x-select-enable-clipboard t)
+
+(setq default-frame-alist
+      (append '((width . 80)
+                (height . 40)
+                (font . "Operator Mono SSm Medium:pixelsize=15"))
+              default-frame-alist))
 
 (auto-compression-mode +1)
 (blink-cursor-mode -1)
@@ -111,7 +110,6 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-
 ;;; Bootstrap `use-package'
 
 (setq package-archives
@@ -137,7 +135,6 @@
 (setq use-package-verbose t)
 (setq use-package-always-ensure t)
 
-
 ;;; Themes
 ;; use true color for terminal
 
@@ -676,23 +673,49 @@
    `(org-agenda-done ((,class (:foreground ,nord14))))
    `(org-verbatim ((,class (:foreground ,nord07))))))
 
-
 ;;;
-(defun my-setup-hook ()
-  "My setup hook."
-  (auto-compile-on-load-mode)
-  ;;(global-auto-complete-mode)
-  (global-company-mode)
-  (global-diff-hl-mode)
-  (global-page-break-lines-mode)
-  (global-whitespace-cleanup-mode)
-  (shackle-mode)
-  (recentf-mode)
-  (save-place-mode +1)
-  (server-running-p)
-  (volatile-highlights-mode)
-  (which-key-mode)
-  (yas-global-mode))
+
+(use-package term
+  :ensure nil
+  :preface
+  ;; from xterm-frobs.el
+  (defvar xterm-screen-dcs-encapsulation
+    (not (null (or (getenv "STY")
+                   (save-match-data
+                     (string-match "^screen\\(\\|-.*\\)$" (getenv "TERM")))))))
+
+  (defun xterm-send-escape-sequence (string)
+    (cond ((and xterm-screen-dcs-encapsulation
+                (save-match-data (string-match "\e[P\\\\]" string)))
+           (save-match-data
+             (let ((pos 0)
+                   (substrings nil))
+               (while (string-match "\e\\(P\\|\\\\\\)" string pos)
+                 (setq substrings
+                       (cons "\e\\"
+                             (cons (substring string pos (match-beginning 1))
+                                   (cons "\eP" substrings))))
+                 (setq pos (match-beginning 1)))
+               (setq substrings (cons (substring string pos) substrings))
+               (setq string (mapconcat 'identity (nreverse substrings) "")))))
+          (xterm-screen-dcs-encapsulation
+           (setq string (format "\eP%s\e\\" string))))
+    (send-string-to-terminal string))
+
+  (defun terminal-title-hook ()
+    (if (not window-system)
+        (xterm-send-escape-sequence
+         (format "\e]2;%s\a"
+                 (concat (system-name) ": "
+                         (if (buffer-file-name)
+                             (abbreviate-file-name (buffer-file-name))
+                           (buffer-name)))))))
+  :init
+  (setq frame-title-format
+        '((:eval (system-name)) ": "
+          (:eval (if (buffer-file-name)
+                     (abbreviate-file-name (buffer-file-name)) "%b"))))
+  (add-hook 'post-command-hook #'terminal-title-hook))
 
 (use-package diminish
   :commands diminish)
@@ -762,8 +785,7 @@
         uniquify-after-kill-buffer-p t
         uniquify-ignore-buffers-re "^\\*"))
 
-
-;;; Mac
+;;; macos
 
 (use-package exec-path-from-shell
   :if (equal system-type 'darwin)
@@ -781,8 +803,23 @@
   (setq mac-command-modifier 'meta)
   (setq ns-function-modifier 'hyper))
 
-
-;;; Ido
+(defun my-setup-hook ()
+  "My setup hook."
+  (auto-compile-on-load-mode)
+  ;;(global-auto-complete-mode)
+  (global-company-mode)
+  (global-diff-hl-mode)
+  (global-page-break-lines-mode)
+  (global-whitespace-cleanup-mode)
+  (shackle-mode)
+  (recentf-mode)
+  (save-place-mode +1)
+  (server-running-p)
+  (volatile-highlights-mode)
+  (which-key-mode)
+  (yas-global-mode))
+
+;;; ido
 
 (use-package ido
   :disabled t
@@ -841,7 +878,6 @@
     :config
     (crm-custom-mode +1)))
 
-
 ;;; ivy
 
 (use-package ivy
@@ -881,25 +917,29 @@
     ("C-w" . ivy-yank-word)
     ("C-r" . ivy-previous-line-or-history)))
 
-
 ;;; helm
 
 (use-package helm
   :defines (helm-idle-delay helm-quick-update)
   :bind
-  (("C-x C-i" . helm-imenu)
-   ("C-x C-f" . helm-find-files)
-   ("C-x f"   . helm-recentf)
-   ("C-x b"   . helm-mini)
-   ("C-x r b" . helm-filtered-bookmarks)
-   ("C-c s"   . helm-swoop)
-   ("C-c h w" . helm-descbinds)
-   ("C-c h f" . helm-codesearch-find-file)
-   ("C-c h t" . helm-codesearch-find-pattern)
-   ("C-c h I" . helm-codesearch-create-csearchindex)
-   ("C-c h b" . helm-resume)
-   ("M-x"     . helm-M-x)
-   ("M-y"     . helm-show-kill-ring))
+  (("C-x C-i"   . helm-imenu)
+   ("C-c h o"   . helm-occur)
+   ("C-c h a"   . helm-apropos)
+   ("C-c h m"   . helm-man-woman)
+   ("C-c h r"   . helm-regex)
+   ("C-c h SPC" . helm-all-mark-rings)
+   ("C-x C-f"   . helm-find-files)
+   ("C-x f"     . helm-recentf)
+   ("C-x b"     . helm-mini)
+   ("C-x r b"   . helm-filtered-bookmarks)
+   ("C-c s"     . helm-swoop)
+   ("C-c h w"   . helm-descbinds)
+   ("C-c h f"   . helm-codesearch-find-file)
+   ("C-c h t"   . helm-codesearch-find-pattern)
+   ("C-c h I"   . helm-codesearch-create-csearchindex)
+   ("C-c h b"   . helm-resume)
+   ("M-x"       . helm-M-x)
+   ("M-y"       . helm-show-kill-ring))
   :init
   (add-hook 'helm-after-initialize-hook #'my-setup-hook)
   :config
@@ -919,17 +959,18 @@
         helm-M-x-requires-pattern   nil
         helm-buffers-fuzzy-matching t
         helm-display-function       'pop-to-buffer
-        helm-ff--auto-update-state t
+        helm-ff--auto-update-state  t
         helm-ff-auto-update-initial-value t
         helm-ff-skip-boring-files   t
         helm-idle-delay             0.0
         helm-imenu-fuzzy-match      t
         helm-input-idle-delay       0.01
         helm-quick-update           t
-        helm-semantic-fuzzy-match   t))
+        helm-semantic-fuzzy-match   t
+        helm-apropos-fuzzy-match    t
+        helm-lisp-fuzzy-completion  t))
 
-
-;;; Tool
+;;; tool
 
 (use-package smex
   :disabled t
@@ -1011,6 +1052,7 @@
   (setq shackle-rules
         '(((svg-2048-mode circe-query-mode) :same t)
           ("*Help*" :align t :select t)
+          ("*Google Translate*" :align t :select t)
           ("\\`\\*helm.*?\\*\\'" :regexp t :align t)
           ((compilation-mode "\\`\\*firestarter\\*\\'"
                              "\\`\\*magit-diff: .*?\\'") :regexp t :noselect t)
@@ -1117,7 +1159,7 @@
   :bind
   ("C-c t" . google-translate-smooth-translate)
   :init
-  (setq google-translate-output-destination 'popup)
+  ;; (setq google-translate-output-destination 'popup)
   (setq google-translate-translation-directions-alist
         '(("en" . "ko") ("ko" . "en"))))
 
@@ -1157,17 +1199,11 @@
   :init
   (add-hook 'dired-mode-hook 'dired-hide-details-mode))
 
-
-;;; Syntax check
-
 (use-package flycheck
   :commands flycheck-mode
   :config
   (defalias 'flycheck-show-error-at-point-soon
     'flycheck-show-error-at-point))
-
-
-;;; Lisp tools
 
 (use-package rainbow-delimiters
   :commands rainbow-delimiters-mode
@@ -1196,9 +1232,6 @@
   (eval-after-load 'paredit
     ;; need a binding that works in the terminal
     '(define-key paredit-mode-map (kbd "M-)") 'paredit-forward-slurp-sexp)))
-
-
-;;; Auto complete
 
 (use-package company
   :diminish company-mode
@@ -1257,8 +1290,6 @@
   (global-auto-complete-mode t)
   (add-to-list 'ac-dictionary-directories (concat user-emacs-directory "dict")))
 
-
-
 (use-package eval-sexp-fu
   :disabled t
   :commands turn-on-eval-sexp-fu-flash-mode
@@ -1278,9 +1309,6 @@
   ("C-M-=" . default-text-scale-increase)
   ("C-M--" . default-text-scale-decrease))
 
-
-;;; git
-
 (use-package magit
   :bind
   ("C-x g" . magit-status)
@@ -1296,9 +1324,6 @@
    ("C-c s p" . git-gutter:previous-hunk))
   :config
   (global-git-gutter-mode +1))
-
-
-;;; pdf
 
 (use-package pdf-tools
   :disabled t
@@ -1320,10 +1345,7 @@
               (pdf-isearch-minor-mode)
               (pdf-outline-minor-mode))))
 
-
-;;; Languages
-
-
+;;; languages
 ;; Lisp
 
 (eval-after-load "eldoc"
@@ -1430,8 +1452,7 @@
                      (setq-local lisp-indent-function
                                  #'redefine-lisp-indent-function)))))
 
-
-;; C / C++
+;; c/c++
 
 (use-package google-c-style
   :commands (google-set-c-style
@@ -1573,16 +1594,14 @@
 (use-package clang-format
   :commands clang-format-buffer)
 
-
-;; Markdown
+;; markdown
 
 (use-package markdown-mode
   :mode (("\\`README\\.md\\'" . gfm-mode)
          ("\\.md\\'"          . markdown-mode)
          ("\\.markdown\\'"    . markdown-mode)))
 
-
-;; Clojure
+;; clojure
 
 (use-package clojure-mode
   :mode ("\\.clj\\'" "\\.cljs\\'" "\\.cljc\\'")
@@ -1638,8 +1657,7 @@
   (with-eval-after-load 'clojure-mode
     (add-hook 'clojure-mode-hook #'flycheck-clojure-setup)))
 
-
-;; Go
+;; go
 
 (use-package go-eldoc
   :commands go-eldoc-setup
@@ -1674,15 +1692,15 @@
     ("M-." . godef-jump)
     ("C-c C-c" . compile)))
 
-
-;; Swift
+;; swift
+
 (use-package swift-mode
   :mode ("\\.swift\\'" . swift-mode)
   :init
   (add-hook 'swift-mode-hook 'flycheck-mode))
 
-
-;; Haskell
+;; haskell
+
 (use-package haskell-mode
   :mode ("\\.hs\\'" . haskell-mode))
 
@@ -1699,8 +1717,8 @@
   (add-hook 'haskell-mode-hook 'dante-mode)
   (add-hook 'haskell-mode-hook 'flycheck-mode))
 
-
-;; Rust
+;; rust
+
 (use-package rust-mode
   :mode ("\\.rs\\'" . rust-mode)
   :init
@@ -1727,13 +1745,12 @@
   :init
   (add-hook 'rust-mode-hook #'cargo-minor-mode))
 
-
-;; Qml
+;; qml
+
 (use-package qml-mode
   :mode ("\\.qml\\'" . qml-mode))
 
-
-;;; Org
+;;; org
 
 (use-package org
   :ensure org-plus-contrib
@@ -1819,6 +1836,7 @@
      (plantuml . t))))
 
 ;; Integration with beamer
+
 (use-package ox-beamer
   :ensure nil
   :defer t
@@ -1847,45 +1865,6 @@
   :config
   (setq org-bullets-bullet-list '("•")))
 
-
-;;; xterm-frobs.el
-
-(defvar xterm-screen-dcs-encapsulation
-  (not (null (or (getenv "STY")
-                 (save-match-data
-                   (string-match "^screen\\(\\|-.*\\)$" (getenv "TERM")))))))
-
-(defun xterm-send-escape-sequence (string)
-  "Send STRING to terminal."
-  (cond ((and xterm-screen-dcs-encapsulation
-              (save-match-data (string-match "\e[P\\\\]" string)))
-         (save-match-data
-           (let ((pos 0)
-                 (substrings nil))
-             (while (string-match "\e\\(P\\|\\\\\\)" string pos)
-               (setq substrings
-                     (cons "\e\\"
-                           (cons (substring string pos (match-beginning 1))
-                                 (cons "\eP" substrings))))
-               (setq pos (match-beginning 1)))
-             (setq substrings (cons (substring string pos) substrings))
-             (setq string (mapconcat 'identity (nreverse substrings) "")))))
-        (xterm-screen-dcs-encapsulation
-         (setq string (format "\eP%s\e\\" string))))
-  (send-string-to-terminal string))
-
-(defun terminal-title-hook ()
-  "Terminal title hook."
-  (if (not window-system)
-      (xterm-send-escape-sequence
-       (format "\e]2;%s\a"
-               (concat (system-name) ": "
-                       (if (buffer-file-name)
-                           (abbreviate-file-name (buffer-file-name))
-                         (buffer-name)))))))
-(add-hook 'post-command-hook #'terminal-title-hook)
-
-
 ;;; key bindings
 
 (bind-key "C-c e" #'ediff-buffers)
@@ -1894,12 +1873,10 @@
 (bind-key "C-x m" #'eshell)
 (bind-key "C-x C-b" #'ibuffer)
 
-
 ;;; registers
 
 (set-register ?i `(file . ,(concat user-emacs-directory "init.el")))
 
-
 ;;; Elapsed time
 
 (add-hook 'after-init-hook
