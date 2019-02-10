@@ -955,7 +955,7 @@
   (use-package helm-descbinds)
   (use-package helm-swoop)
   (use-package helm-codesearch)
-  (defmethod helm-setup-user-source ((source helm-source-multi-occur))
+  (cl-defmethod helm-setup-user-source ((source helm-source-multi-occur))
     (setf (slot-value source 'follow) 1))
   (setq helm-M-x-fuzzy-match        t
         helm-M-x-requires-pattern   nil
@@ -1113,7 +1113,8 @@
   :diminish which-key-mode
   :commands which-key-mode
   :config
-  (which-key-mode +1))
+  (which-key-mode +1)
+  (which-key-setup-side-window-right))
 
 (use-package visual-regexp
   :bind
