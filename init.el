@@ -1050,14 +1050,13 @@
   :config
   (shackle-mode +1)
   (setq shackle-rules
-        '(((svg-2048-mode circe-query-mode) :same t)
-          ("*Help*" :align t :select t)
+        '(("*Help*" :align t :select t)
           ("*Google Translate*" :align t :select t)
-          ("\\`\\*helm.*?\\*\\'" :regexp t :align t)
-          ((compilation-mode "\\`\\*firestarter\\*\\'"
-                             "\\`\\*magit-diff: .*?\\'") :regexp t :noselect t)
+          (" *undo-tree*" :align right :size 0.1)
+          ((grep-mode compilation-mode) :align t :select t)
+          ("\\`\\*helm.*?\\*\\'" :popup t :regexp t :align t)
           ("\\`\\*cider-repl .*" :regexp t :align t :size 0.2)
-          ((inferior-scheme-mode "*shell*" "*eshell*") :popup t))
+          ((inferior-scheme-mode "*shell*" "*eshell*") :popup t :align t))
         shackle-default-rule '(:select t)
         shackle-default-size 0.4
         shackle-inhibit-window-quit-on-same-windows t))
@@ -1180,7 +1179,9 @@
   :commands
   (projectile-mode projectile-find-file projectile-switch-project)
   :bind
-  ("C-c p h" . helm-projectile)
+  (("C-c p h" . helm-projectile)
+   ("C-c p f" . helm-projectile-find-file)
+   ("C-c p t" . helm-projectile-rg))
   :config
   (projectile-mode)
   (use-package helm-projectile
@@ -1344,6 +1345,17 @@
               (pdf-links-minor-mode)
               (pdf-isearch-minor-mode)
               (pdf-outline-minor-mode))))
+
+(use-package eshell
+  :ensure nil
+  :bind
+  ("C-x m" . eshell))
+
+(use-package eshell-prompt-extras
+  :after esh-opt
+  :config
+  (setq eshell-highlight-prompt nil
+        eshell-prompt-function 'epe-theme-lambda))
 
 ;;; languages
 ;; Lisp
@@ -1593,6 +1605,27 @@
 
 (use-package clang-format
   :commands clang-format-buffer)
+
+(use-package gdb-mi
+  :ensure nil
+  :bind
+  (("C-c g r" . gdb-restore-windows)
+   ("C-c g m" . gdb-display-memory-buffer)
+   ("C-c g a" . gdb-display-disassembly-buffer))
+  :config
+  (setq gdb-delete-out-of-scope t
+        gdb-many-windows t
+        gdb-non-stop-setting t
+        gdb-show-changed-values t
+        gdb-show-main t
+        gdb-stack-buffer-addresses t
+        gdb-stack-buffer-locations t
+        gdb-switch-when-another-stopped t
+        gdb-thread-buffer-addresses t
+        gdb-thread-buffer-arguments t
+        gdb-thread-buffer-locations t
+        gdb-thread-buffer-verbose-names t
+        gdb-use-colon-colon-notation t))
 
 ;; markdown
 
@@ -1870,7 +1903,6 @@
 (bind-key "C-c e" #'ediff-buffers)
 (bind-key "C-c r" #'revert-buffer)
 (bind-key "C-x k" #'kill-this-buffer)
-(bind-key "C-x m" #'eshell)
 (bind-key "C-x C-b" #'ibuffer)
 
 ;;; registers
