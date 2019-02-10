@@ -64,6 +64,7 @@
  next-error-highlight t
  next-error-highlight-no-select t
  query-replace-highlight t
+ recenter-redisplay nil
  require-final-newline t
  ring-bell-function #'ignore
  scroll-conservatively 100000
@@ -954,7 +955,8 @@
   (use-package helm-descbinds)
   (use-package helm-swoop)
   (use-package helm-codesearch)
-
+  (defmethod helm-setup-user-source ((source helm-source-multi-occur))
+    (setf (slot-value source 'follow) 1))
   (setq helm-M-x-fuzzy-match        t
         helm-M-x-requires-pattern   nil
         helm-buffers-fuzzy-matching t
@@ -962,9 +964,9 @@
         helm-ff--auto-update-state  t
         helm-ff-auto-update-initial-value t
         helm-ff-skip-boring-files   t
-        helm-idle-delay             0.0
+        helm-idle-delay             0.1
         helm-imenu-fuzzy-match      t
-        helm-input-idle-delay       0.01
+        helm-input-idle-delay       0.1
         helm-quick-update           t
         helm-semantic-fuzzy-match   t
         helm-apropos-fuzzy-match    t
