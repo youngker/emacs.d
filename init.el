@@ -549,10 +549,6 @@
    `(helm-selection ((,class (:inherit highlight))))
    `(helm-selection-line ((,class (:background ,nord02))))
    `(helm-source-header ((,class (:height 1.44 :foreground ,nord08 :background ,nord02))))
-   `(helm-swoop-line-number-face ((,class (:foreground ,nord04 :background ,nord00))))
-   `(helm-swoop-target-word-face ((,class (:foreground ,nord00 :background ,nord07))))
-   `(helm-swoop-target-line-face ((,class (:background ,nord13 :foreground ,nord03))))
-   `(helm-swoop-target-line-block-face ((,class (:background ,nord13 :foreground ,nord03))))
    `(helm-separator ((,class (:background ,nord02))))
    `(helm-visible-mark ((,class (:background ,nord02))))
    `(helm-codesearch-file-face ((,class (:foreground ,nord14 :slant italic))))
@@ -933,7 +929,6 @@
    ("C-x f"     . helm-recentf)
    ("C-x b"     . helm-mini)
    ("C-x r b"   . helm-filtered-bookmarks)
-   ("C-c s"     . helm-swoop)
    ("C-c h w"   . helm-descbinds)
    ("C-c h f"   . helm-codesearch-find-file)
    ("C-c h t"   . helm-codesearch-find-pattern)
@@ -953,7 +948,6 @@
     :commands (async-bytecomp-get-allowed-pkgs
                async-byte-recompile-directory))
   (use-package helm-descbinds)
-  (use-package helm-swoop)
   (use-package helm-codesearch)
   (cl-defmethod helm-setup-user-source ((source helm-source-multi-occur))
     (setf (slot-value source 'follow) 1))
@@ -970,7 +964,10 @@
         helm-quick-update           t
         helm-semantic-fuzzy-match   t
         helm-apropos-fuzzy-match    t
-        helm-lisp-fuzzy-completion  t))
+        helm-lisp-fuzzy-completion  t)
+  (bind-keys :map isearch-mode-map
+    ("C-o" . helm-occur-from-isearch)
+    ("M-o" . helm-multi-occur-from-isearch)))
 
 ;;; tool
 
