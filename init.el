@@ -1176,17 +1176,17 @@
 
 (use-package projectile
   :diminish projectile-mode
-  :commands
-  (projectile-mode projectile-find-file projectile-switch-project)
+  :defer t
+  :config
+  (projectile-mode))
+
+(use-package helm-projectile
   :bind
   (("C-c p h" . helm-projectile)
    ("C-c p f" . helm-projectile-find-file)
    ("C-c p t" . helm-projectile-rg))
   :config
-  (projectile-mode)
-  (use-package helm-projectile
-    :config
-    (helm-projectile-on)))
+  (helm-projectile-on))
 
 (use-package counsel-projectile
   :disabled t
@@ -1353,6 +1353,8 @@
 
 (use-package eshell-prompt-extras
   :after esh-opt
+  :defines (eshell-highlight-prompt
+            eshell-prompt-function)
   :config
   (setq eshell-highlight-prompt nil
         eshell-prompt-function 'epe-theme-lambda))
