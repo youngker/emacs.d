@@ -1307,12 +1307,13 @@
 
 (use-package default-text-scale
   :bind
-  ("C-M-=" . default-text-scale-increase)
-  ("C-M--" . default-text-scale-decrease))
+  (("C-M-=" . default-text-scale-increase)
+   ("C-M--" . default-text-scale-decrease)))
 
 (use-package magit
   :bind
-  ("C-x g" . magit-status)
+  (("C-x g"   . magit-status)
+   ("C-c m b" . magit-blame-addition))
   :config
   (setq magit-completing-read-function 'magit-ido-completing-read))
 
@@ -1614,9 +1615,19 @@
   (("C-c g r" . gdb-restore-windows)
    ("C-c g m" . gdb-display-memory-buffer)
    ("C-c g a" . gdb-display-disassembly-buffer))
+  :init
+  ;; Force gdb-mi to not dedicate any windows
+  (advice-add 'gdb-display-buffer
+              :around (lambda (orig-fun &rest r)
+                        (let ((window (apply orig-fun r)))
+                          (set-window-dedicated-p window nil)
+                          window)))
+  (advice-add 'gdb-set-window-buffer
+              :around (lambda (orig-fun name &optional ignore-dedicated window)
+                        (funcall orig-fun name ignore-dedicated window)
+                        (set-window-dedicated-p window nil)))
   :config
-  (setq gdb-delete-out-of-scope t
-        gdb-many-windows t
+  (setq gdb-many-windows t
         gdb-non-stop-setting t
         gdb-show-changed-values t
         gdb-show-main t
