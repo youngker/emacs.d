@@ -944,7 +944,6 @@
     (setf (slot-value source 'follow) 1))
   (setq helm-split-window-inside-p           t
         helm-buffers-fuzzy-matching           t
-        helm-move-to-line-cycle-in-source     t
         helm-ff-search-library-in-sexp        t
         helm-ff-file-name-history-use-recentf t)
   (bind-keys :map isearch-mode-map
@@ -1894,6 +1893,28 @@
   (add-hook 'org-mode-hook #'org-bullets-mode-hook)
   :config
   (setq org-bullets-bullet-list '("•")))
+
+(use-package compile
+  :bind (("C-c x" . compile)
+         ("M-O"   . show-compilation))
+  :preface
+  (defun show-compilation ()
+    (interactive)
+    (let ((it
+           (catch 'found
+             (dolist (buf (buffer-list))
+               (when (string-match "\\*compilation\\*" (buffer-name buf))
+                 (throw 'found buf))))))
+      (if it
+          (display-buffer it)
+        (call-interactively 'compile))))
+
+  (defun compilation-ansi-color-process-output ()
+    (ansi-color-process-output nil)
+    (set (make-local-variable 'comint-last-output-start)
+         (point-marker)))
+
+  :hook (compilation-filter . compilation-ansi-color-process-output))
 
 ;;; key bindings
 
