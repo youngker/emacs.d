@@ -813,7 +813,7 @@
   (save-place-mode +1)
   (server-running-p)
   (volatile-highlights-mode)
-  (which-key-mode)
+  ;;(which-key-mode)
   (yas-global-mode))
 
 ;;; ido
@@ -917,7 +917,6 @@
 ;;; helm
 
 (use-package helm
-  :defines (helm-idle-delay helm-quick-update)
   :bind
   (("C-x C-i"   . helm-imenu)
    ("C-c h o"   . helm-occur)
@@ -937,37 +936,21 @@
    ("M-x"       . helm-M-x)
    ("M-y"       . helm-show-kill-ring))
   :init
-  (add-hook 'helm-after-initialize-hook #'my-setup-hook)
+  (add-hook 'helm-mode-hook #'my-setup-hook)
   :config
-  (use-package helm-command :ensure nil)
-  (use-package helm-semantic :ensure nil)
-  (use-package helm-ring :ensure nil)
-  (use-package helm-config
-    :ensure nil
-    :demand t
-    :commands (async-bytecomp-get-allowed-pkgs
-               async-byte-recompile-directory))
   (use-package helm-descbinds)
   (use-package helm-codesearch)
   (cl-defmethod helm-setup-user-source ((source helm-source-multi-occur))
     (setf (slot-value source 'follow) 1))
-  (setq helm-M-x-fuzzy-match        t
-        helm-M-x-requires-pattern   nil
-        helm-buffers-fuzzy-matching t
-        helm-display-function       'pop-to-buffer
-        helm-ff--auto-update-state  t
-        helm-ff-auto-update-initial-value t
-        helm-ff-skip-boring-files   t
-        helm-idle-delay             0.1
-        helm-imenu-fuzzy-match      t
-        helm-input-idle-delay       0.1
-        helm-quick-update           t
-        helm-semantic-fuzzy-match   t
-        helm-apropos-fuzzy-match    t
-        helm-lisp-fuzzy-completion  t)
+  (setq helm-split-window-inside-p           t
+        helm-buffers-fuzzy-matching           t
+        helm-move-to-line-cycle-in-source     t
+        helm-ff-search-library-in-sexp        t
+        helm-ff-file-name-history-use-recentf t)
   (bind-keys :map isearch-mode-map
     ("C-o" . helm-occur-from-isearch)
-    ("M-o" . helm-multi-occur-from-isearch)))
+    ("M-o" . helm-multi-occur-from-isearch))
+  (helm-mode +1))
 
 ;;; tool
 
@@ -1107,6 +1090,7 @@
    ("C-c C-<"     . mc/mark-all-like-this)))
 
 (use-package which-key
+  :disabled t
   :diminish which-key-mode
   :commands which-key-mode
   :config
