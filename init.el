@@ -917,6 +917,7 @@
 ;;; helm
 
 (use-package helm
+  :diminish helm-mode
   :bind
   (("C-x C-i"   . helm-imenu)
    ("C-c h o"   . helm-occur)
@@ -1922,6 +1923,7 @@
 (bind-key "C-c r" #'revert-buffer)
 (bind-key "C-x k" #'kill-this-buffer)
 (bind-key "C-x C-b" #'ibuffer)
+(bind-key "C-c C-l" #'display-line-numbers-mode)
 
 ;;; registers
 
