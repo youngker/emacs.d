@@ -679,7 +679,8 @@
   (defvar xterm-screen-dcs-encapsulation
     (not (null (or (getenv "STY")
                    (save-match-data
-                     (string-match "^screen\\(\\|-.*\\)$" (getenv "TERM")))))))
+                     (string-match "^screen\\(\\|-.*\\)$"
+                                   (or (getenv "TERM") "dumb")))))))
 
   (defun xterm-send-escape-sequence (string)
     (cond ((and xterm-screen-dcs-encapsulation
