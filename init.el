@@ -1334,10 +1334,25 @@
 
 (use-package eshell
   :ensure nil
+  :defines (eshell-highlight-prompt
+            eshell-prompt-function
+            eshell-prompt-regexp)
+  :functions eshell/pwd
+  :preface
+  (defun my-eshell-prompt-function ()
+    (concat "\n"
+            (propertize (user-login-name) 'face '(:foreground "#D08770")) " at "
+            (propertize (system-name) 'face '(:foreground "#EBCB8B")) " in "
+            (propertize (eshell/pwd) 'face '(:foreground "#A3BE8C")) "\n$ "))
   :bind
-  ("C-x m" . eshell))
+  ("C-x m" . eshell)
+  :init
+  (setq eshell-highlight-prompt nil
+        eshell-prompt-function 'my-eshell-prompt-function
+        eshell-prompt-regexp "^$ "))
 
 (use-package eshell-prompt-extras
+  :disabled t
   :after esh-opt
   :defines (eshell-highlight-prompt
             eshell-prompt-function)
