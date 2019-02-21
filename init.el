@@ -1938,8 +1938,8 @@
 (bind-key "C-c e" #'ediff-buffers)
 (bind-key "C-c r" #'revert-buffer)
 (bind-key "C-x k" #'kill-this-buffer)
+(bind-key "C-c n" #'display-line-numbers-mode)
 (bind-key "C-x C-b" #'ibuffer)
-(bind-key "C-c C-l" #'display-line-numbers-mode)
 
 ;;; registers
 
