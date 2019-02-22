@@ -668,7 +668,18 @@
    `(org-agenda-date-weekend ((,class (:foreground ,nord09))))
    `(org-agenda-date-today ((,class (:foreground ,nord08 :weight normal))))
    `(org-agenda-done ((,class (:foreground ,nord14))))
-   `(org-verbatim ((,class (:foreground ,nord07))))))
+   `(org-verbatim ((,class (:foreground ,nord07))))
+   `(eshell-ls-archive ((,class (:bold t :foreground ,nord12))))
+   `(eshell-ls-backup ((,class (:foreground ,nord03))))
+   `(eshell-ls-clutter ((,class (:foreground ,nord04))))
+   `(eshell-ls-directory ((,class (:bold t :foreground ,nord11))))
+   `(eshell-ls-executable ((,class (:foreground ,nord14))))
+   `(eshell-ls-missing ((,class (:foreground ,nord07))))
+   `(eshell-ls-product ((,class (:foreground ,nord13))))
+   `(eshell-ls-readonly ((,class (:foreground ,nord03))))
+   `(eshell-ls-special ((,class (:foreground ,nord13))))
+   `(eshell-ls-symlink ((,class (:underline t :foreground ,nord08))))
+   `(eshell-ls-unreadable ((,class (:foreground ,nord15))))))
 
 ;;;
 
@@ -1352,7 +1363,7 @@
   :bind
   ("C-x m" . eshell)
   :init
-  (add-hook 'shell-mode-hook (lambda () (setq show-trailing-whitespace nil)))
+  (add-hook 'eshell-mode-hook (lambda () (setq show-trailing-whitespace nil)))
   (setq eshell-highlight-prompt nil
         eshell-prompt-function 'my-eshell-prompt-function
         eshell-prompt-regexp "^$ "))
