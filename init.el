@@ -1770,7 +1770,8 @@
 (use-package intero
   :after haskell-mode
   :init
-  (add-hook 'haskell-mode-hook 'intero-mode))
+  (add-hook 'haskell-mode-hook 'intero-mode)
+  (add-hook 'intero-repl-mode-hook (lambda () (setq show-trailing-whitespace nil))))
 
 (use-package dante
   :disabled t
