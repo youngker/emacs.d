@@ -953,8 +953,8 @@
   :config
   (use-package helm-descbinds)
   (use-package helm-codesearch)
-  (cl-defmethod helm-setup-user-source ((source helm-source-multi-occur))
-    (setf (slot-value source 'follow) 1))
+  ;; (cl-defmethod helm-setup-user-source ((source helm-source-multi-occur))
+  ;;   (setf (slot-value source 'follow) 1))
   (setq helm-split-window-inside-p           t
         helm-buffers-fuzzy-matching           t
         helm-ff-search-library-in-sexp        t
@@ -1930,8 +1930,8 @@
   (setq org-bullets-bullet-list '("•")))
 
 (use-package compile
-  :bind (("C-c x" . compile)
-         ("M-O"   . show-compilation))
+  :bind
+  ("C-c x" . compile)
   :preface
   (defun show-compilation ()
     (interactive)
