@@ -1839,6 +1839,12 @@
     (setq org-plantuml-jar-path (concat user-emacs-directory
                                         "lib/plantuml.jar")))
 
+  (use-package org-tempo
+    :ensure nil
+    :init
+    (setq org-structure-template-alist
+          (eval (car (get 'org-structure-template-alist 'standard-value)))))
+
   ;; Add some new modules.
   (add-to-list 'org-modules 'org-habit)
 
