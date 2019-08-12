@@ -119,6 +119,7 @@
         ("melpa-stable" . "https://stable.melpa.org/packages/")
         ("org" . "http://orgmode.org/elpa/")))
 (setq package-enable-at-startup nil)
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (package-initialize 'noactivate)
 
 (unless (package-installed-p 'use-package)
