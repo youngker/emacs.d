@@ -1782,6 +1782,12 @@
   (add-hook 'haskell-mode-hook 'dante-mode)
   (add-hook 'haskell-mode-hook 'flycheck-mode))
 
+(use-package hindent
+  :diminish hindent-mode
+  :hook (haskell-mode . hindent-mode)
+  :init
+  (setq hindent-reformat-buffer-on-save t))
+
 ;; rust
 
 (use-package rust-mode
