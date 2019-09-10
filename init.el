@@ -111,31 +111,28 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-;;; Bootstrap `use-package'
+(if (version< emacs-version "27")
+    (package-initialize))
 
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")
-        ("org" . "http://orgmode.org/elpa/")))
-(setq package-enable-at-startup nil)
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-(package-initialize 'noactivate)
+        ("org" . "https://orgmode.org/elpa/")))
 
+(if (and (version< emacs-version "26.3") (>= libgnutls-version 30600))
+    (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
+
+;;; Bootstrap `use-package'
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-
-(package-initialize)
-;; (let ((default-directory (concat user-emacs-directory "elpa/")))
-;;   (normal-top-level-add-subdirs-to-load-path))
-
 (eval-when-compile
   (require 'use-package))
 (require 'bind-key)
-
 (setq use-package-verbose t)
 (setq use-package-always-ensure t)
+(setq package-enable-at-startup t)
 
 ;;; Themes
 ;; use true color for terminal
@@ -1050,6 +1047,9 @@
           (" *undo-tree*" :align right :size 0.1)
           ((grep-mode compilation-mode) :align t :select t)
           ("\\`\\*helm.*?\\*\\'" :popup t :regexp t :align t)
+          ("*xref*" :popup t :regexp t :align t)
+          ("*Flycheck errors*" :popup t :regexp t :align t)
+          ("*Flymake diagnostics .*" :popup t :regexp t :align t)
           ("\\`\\*cider-repl .*" :regexp t :align t :size 0.2)
           ((inferior-scheme-mode "*shell*" "*eshell*") :popup t :align t))
         shackle-default-rule '(:select t)
@@ -1202,6 +1202,13 @@
   :config
   (defalias 'flycheck-show-error-at-point-soon
     'flycheck-show-error-at-point))
+
+(use-package flymake
+  :ensure nil
+  :bind
+  (("C-c ! n" . flymake-goto-next-error)
+   ("C-c ! p" . flymake-goto-prev-error)
+   ("C-c ! l" . flymake-show-diagnostics-buffer)))
 
 (use-package rainbow-delimiters
   :commands rainbow-delimiters-mode
@@ -1378,6 +1385,11 @@
   (setq eshell-highlight-prompt nil
         eshell-prompt-function 'epe-theme-lambda))
 
+(use-package xref
+  :ensure nil
+  :bind
+  (:map xref--xref-buffer-mode-map
+   ("C-j" . xref-show-location-at-point)))
 ;;; languages
 ;; Lisp
 
@@ -1511,7 +1523,7 @@
                                        (member-init-intro . +)))))
     (c-set-style "my-c-style")
     (vr-c++-indentation-setup)
-    (flycheck-mode +1)
+    (flymake-mode +1)
     (modern-c++-font-lock-mode +1))
 
   (defun vr-c++-looking-at-lambda_as_param ()
@@ -1827,10 +1839,10 @@
   :ensure org-plus-contrib
   :commands org-babel-do-load-languages
   :bind
-  (("C-c a" . org-agenda)
-   ("C-c l" . org-store-link)
-   ("C-c b" . org-iswitchb)
-   ("C-c k" . org-capture))
+  (("C-c o a" . org-agenda)
+   ("C-c o l" . org-store-link)
+   ("C-c o b" . org-iswitchb)
+   ("C-c o k" . org-capture))
   :config
   (use-package org-capture
     :ensure nil
@@ -1964,6 +1976,30 @@
 
   :hook (compilation-filter . compilation-ansi-color-process-output))
 
+(use-package lsp-mode
+  :hook (c++-mode . lsp)
+  :commands lsp
+  :disabled t
+  :bind
+  (("C-c l r" . lsp-find-references)
+   ("C-c l d" . lsp-find-definition)
+   ("C-c l i" . lsp-find-implementation))
+  :init
+  (setq lsp-ui-doc-enable nil
+        lsp-ui-imenu-enable nil
+        lsp-ui-peek-enable nil
+        lsp-ui-sideline-enable nil
+        lsp-auto-guess-root t
+        lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error")))
+
+(use-package lsp-ui
+  :commands lsp-ui-mode)
+(use-package company-lsp
+  :commands company-lsp)
+(use-package helm-lsp
+  :commands helm-lsp-workspace-symbol)
+(use-package lsp-treemacs
+  :commands lsp-treemacs-errors-list)
 ;;; key bindings
 
 (bind-key "C-c e" #'ediff-buffers)
