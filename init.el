@@ -1119,7 +1119,7 @@
   :commands
   (highlight-symbol-mode highlight-symbol-nav-mode)
   :bind
-  ("C-c c" . highlight-symbol)
+  ("C-c C-c" . highlight-symbol)
   :init
   (dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
     (add-hook hook #'highlight-symbol-mode)
@@ -1427,7 +1427,7 @@
     "Lisp mode."
     (auto-fill-mode +1)
     (eldoc-mode +1)
-    (flycheck-mode +1)
+    (flymake-mode +1)
     (paredit-mode +1)
     (paren-activate)
     (rainbow-delimiters-mode +1)
@@ -1636,13 +1636,21 @@
   (add-hook 'c-mode-hook 'maybe-cmake-project-hook)
   (add-hook 'c++-mode-hook 'maybe-cmake-project-hook))
 
+(use-package cmake-font-lock
+  :disabled t
+  :after cc-mode cmake-font-lock
+  :hook (cmake-mode . cmake-font-lock-activate))
+
 (use-package clang-format
-  :commands clang-format-buffer)
+  :commands clang-format-buffer
+  :bind
+  ("C-c c r" . clang-format-buffer))
 
 (use-package gdb-mi
   :ensure nil
   :bind
-  (("C-c g r" . gdb-restore-windows)
+  (("C-c c d" . gdb)
+   ("C-c g r" . gdb-restore-windows)
    ("C-c g m" . gdb-display-memory-buffer)
    ("C-c g a" . gdb-display-disassembly-buffer))
   :init
@@ -1782,17 +1790,17 @@
 
 (use-package intero
   :after haskell-mode
-  :init
-  (add-hook 'haskell-mode-hook 'intero-mode)
-  (add-hook 'intero-repl-mode-hook (lambda () (setq show-trailing-whitespace nil))))
+  :hook
+  ((haskell-mode . intero-mode)
+   (intero-repl-mode . (lambda () (setq show-trailing-whitespace nil)))))
 
 (use-package dante
   :disabled t
   :after haskell-mode
   :commands 'dante-mode
-  :init
-  (add-hook 'haskell-mode-hook 'dante-mode)
-  (add-hook 'haskell-mode-hook 'flycheck-mode))
+  :hook
+  ((haskell-mode . dante-mode)
+   (haskell-mode . flycheck-mode)))
 
 (use-package hindent
   :diminish hindent-mode
@@ -1956,7 +1964,7 @@
 
 (use-package compile
   :bind
-  ("C-c x" . compile)
+  ("C-c c c" . show-compilation)
   :preface
   (defun show-compilation ()
     (interactive)
