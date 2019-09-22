@@ -117,8 +117,7 @@
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")
-        ("melpa-stable" . "https://stable.melpa.org/packages/")
-        ("org" . "https://orgmode.org/elpa/")))
+        ("melpa-stable" . "https://stable.melpa.org/packages/")))
 
 (if (and (version< emacs-version "26.3") (>= libgnutls-version 30600))
     (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
@@ -1512,7 +1511,7 @@
                    (tab-width . 4)
                    (c-basic-offset . 4)
                    (indent-tabs-mode . nil)
-                   (c-auto-newline . t)
+                   (c-auto-newline . nil)
                    (c-electric-flag . t)
                    (c-offsets-alist . ((access-label . -)
                                        (case-label . 0)
@@ -1844,7 +1843,6 @@
 ;;; org
 
 (use-package org
-  :ensure org-plus-contrib
   :commands org-babel-do-load-languages
   :bind
   (("C-c o a" . org-agenda)
@@ -1987,7 +1985,6 @@
 (use-package lsp-mode
   :hook (c++-mode . lsp)
   :commands lsp
-  :disabled t
   :bind
   (("C-c l r" . lsp-find-references)
    ("C-c l d" . lsp-find-definition)
