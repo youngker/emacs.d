@@ -795,11 +795,9 @@
 
 (use-package exec-path-from-shell
   :if (equal system-type 'darwin)
-  :defines (exec-path-from-shell-check-startup-files
-            mac-option-modifier
+  :defines (mac-option-modifier
             mac-command-modifier
             ns-function-modifier)
-  :commands exec-path-from-shell-initialize
   :config
   (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-initialize))
@@ -945,21 +943,19 @@
    ("C-c h b"   . helm-resume)
    ("M-x"       . helm-M-x)
    ("M-y"       . helm-show-kill-ring))
-  :init
-  (add-hook 'helm-mode-hook #'my-setup-hook)
   :config
   (use-package helm-descbinds)
   (use-package helm-codesearch)
   ;; (cl-defmethod helm-setup-user-source ((source helm-source-multi-occur))
   ;;   (setf (slot-value source 'follow) 1))
-  (setq helm-split-window-inside-p           t
+  (setq helm-split-window-inside-p            t
         helm-buffers-fuzzy-matching           t
         helm-ff-search-library-in-sexp        t
         helm-ff-file-name-history-use-recentf t)
   (bind-keys :map isearch-mode-map
     ("C-o" . helm-occur-from-isearch)
     ("M-o" . helm-multi-occur-from-isearch))
-  (helm-mode +1))
+  (my-setup-hook))
 
 ;;; tool
 
@@ -1389,6 +1385,18 @@
   :bind
   (:map xref--xref-buffer-mode-map
    ("C-j" . xref-show-location-at-point)))
+
+(use-package window-number
+  :commands window-number-mode
+  :bind
+  ("C-x o" . my-window-number-switch)
+  :preface
+  (defun my-window-number-switch ()
+    (interactive)
+    (window-number-mode +1)
+    (window-number-switch)
+    (window-number-mode -1)))
+
 ;;; languages
 ;; Lisp
 
