@@ -1114,7 +1114,7 @@
   :commands
   (highlight-symbol-mode highlight-symbol-nav-mode)
   :bind
-  ("C-c C-c" . highlight-symbol)
+  ("C-c '" . highlight-symbol)
   :init
   (dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
     (add-hook hook #'highlight-symbol-mode)
@@ -1387,6 +1387,7 @@
    ("C-j" . xref-show-location-at-point)))
 
 (use-package window-number
+  :disabled t
   :commands window-number-mode
   :bind
   ("C-x o" . my-window-number-switch)
@@ -1633,6 +1634,7 @@
          ("\\.cmake\\'" . cmake-mode)))
 
 (use-package cmake-project
+  :diminish cmake-project-mode
   :commands (maybe-cmake-project-hook
              cmake-project-mode)
   :preface
@@ -1795,8 +1797,11 @@
 (use-package haskell-mode
   :mode ("\\.hs\\'" . haskell-mode))
 
+(use-package lsp-haskell)
+
 (use-package intero
   :after haskell-mode
+  :disabled t
   :hook
   ((haskell-mode . intero-mode)
    (intero-repl-mode . (lambda () (setq show-trailing-whitespace nil)))))
@@ -1991,19 +1996,22 @@
   :hook (compilation-filter . compilation-ansi-color-process-output))
 
 (use-package lsp-mode
-  :hook (c++-mode . lsp)
+  :hook ((c++-mode . lsp)
+         (haskell-mode . lsp))
   :commands lsp
   :bind
   (("C-c l r" . lsp-find-references)
    ("C-c l d" . lsp-find-definition)
    ("C-c l i" . lsp-find-implementation))
   :init
-  (setq lsp-ui-doc-enable nil
-        lsp-ui-imenu-enable nil
-        lsp-ui-peek-enable nil
-        lsp-ui-sideline-enable nil
-        lsp-auto-guess-root t
-        lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error")))
+  (setq lsp-auto-guess-root t
+        lsp-clients-clangd-args '("-j=4" "-background-index" "-log=error")
+        lsp-enable-indentation nil
+        lsp-enable-on-type-formatting nil
+        lsp-ui-doc-enable t
+        lsp-ui-imenu-enable t
+        lsp-ui-peek-enable t
+        lsp-ui-sideline-enable t))
 
 (use-package lsp-ui
   :commands lsp-ui-mode)
