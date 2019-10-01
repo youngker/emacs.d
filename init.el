@@ -1172,58 +1172,14 @@
                    (c-electric-flag . t)
                    (c-offsets-alist . ((access-label . -)
                                        (case-label . 0)
+                                       (inlambda . 0)
                                        (statement-case-intro . +)
                                        (statement-case-open . 0)
-                                       ;;(arglist-cont-nonempty . +)
-                                       ;;(arglist-cont . +)
                                        (member-init-intro . +)))))
     (c-set-style "my-c-style")
     (vr-c++-indentation-setup)
     (flymake-mode +1)
     (modern-c++-font-lock-mode +1))
-
-  (defun vr-c++-looking-at-lambda_as_param ()
-    "Return t if text after point matches '[...](' or '[...]{'"
-    (looking-at ".*[,(][ \t]*\\[[^]]*\\][ \t]*[({][^}]*?[ \t]*[({][^}]*?$"))
-
-  (defun vr-c++-looking-at-lambda_in_uniform_init ()
-    "Return t if text after point matches '{[...](' or '{[...]{'"
-    (looking-at ".*{[ \t]*\\[[^]]*\\][ \t]*[({][^}]*?[ \t]*[({][^}]*?$"))
-
-  (defun vr-c++-indentation-examine (langelem looking-at-p)
-    (and (equal major-mode 'c++-mode)
-         (ignore-errors
-           (save-excursion
-             (goto-char (c-langelem-pos langelem))
-             (funcall looking-at-p)))))
-
-  (defun vr-c++-indentation-setup ()
-    (c-set-offset
-     'block-close
-     (lambda (langelem)
-       (if (vr-c++-indentation-examine
-            langelem
-            #'vr-c++-looking-at-lambda_in_uniform_init)
-           '-
-         0)))
-
-    (c-set-offset
-     'statement-block-intro
-     (lambda (langelem)
-       (if (vr-c++-indentation-examine
-            langelem
-            #'vr-c++-looking-at-lambda_in_uniform_init)
-           0
-         '+)))
-
-    (defadvice c-lineup-arglist (around my activate)
-      "Improve indentation of continued C++11 lambda function opened as argument."
-      (setq ad-return-value
-            (if (vr-c++-indentation-examine
-                 langelem
-                 #'vr-c++-looking-at-lambda_as_param)
-                0
-              ad-do-it))))
   :init
   (add-hook 'c-mode-common-hook #'c-mode-common-setup-hook))
 
