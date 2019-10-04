@@ -1056,6 +1056,7 @@
   ("C-c =" . er/expand-region))
 
 (use-package flycheck
+  :disabled t
   :commands flycheck-mode
   :config
   (defalias 'flycheck-show-error-at-point-soon
@@ -1068,6 +1069,7 @@
     (add-hook 'clojure-mode-hook #'flycheck-clojure-setup)))
 
 (use-package flycheck-rust
+  :disabled t
   :commands (rust-mode
              flycheck-rust-setup)
   :init
@@ -1177,7 +1179,6 @@
                                        (statement-case-open . 0)
                                        (member-init-intro . +)))))
     (c-set-style "my-c-style")
-    (vr-c++-indentation-setup)
     (flymake-mode +1)
     (modern-c++-font-lock-mode +1))
   :init
@@ -1477,7 +1478,8 @@
 
 (use-package lsp-mode
   :hook ((c++-mode . lsp)
-         (haskell-mode . lsp))
+         (haskell-mode . lsp)
+         (rust-mode . lsp))
   :commands lsp
   :bind
   (("C-c l r" . lsp-find-references)
@@ -1723,6 +1725,7 @@
   :mode ("\\.qml\\'" . qml-mode))
 
 (use-package racer
+  :disabled t
   :commands (rust-mode
              racer-mode)
   :init
@@ -1785,8 +1788,6 @@
 
 (use-package rust-mode
   :mode ("\\.rs\\'" . rust-mode)
-  :init
-  (add-hook 'rust-mode-hook #'flycheck-mode)
   :config
   (setq electric-indent-mode +1))
 
