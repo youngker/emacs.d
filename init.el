@@ -819,6 +819,10 @@
 (use-package cargo
   :commands (rust-mode
              cargo-minor-mode)
+  :bind
+  (:map cargo-minor-mode
+   (("M-1" . cargo-process-build)
+    ("M-2" . cargo-process-run)))
   :init
   (add-hook 'rust-mode-hook #'cargo-minor-mode))
 
@@ -1078,9 +1082,9 @@
 (use-package flymake
   :ensure nil
   :bind
-  (("C-c ! n" . flymake-goto-next-error)
-   ("C-c ! p" . flymake-goto-prev-error)
-   ("C-c ! l" . flymake-show-diagnostics-buffer)))
+  (("M-3" . flymake-goto-next-error)
+   ("M-4" . flymake-goto-prev-error)
+   ("M-5" . flymake-show-diagnostics-buffer)))
 
 (use-package gdb-mi
   :ensure nil
@@ -1246,7 +1250,7 @@
   :commands
   (highlight-symbol-mode highlight-symbol-nav-mode)
   :bind
-  ("C-c '" . highlight-symbol)
+  ("C-." . highlight-symbol)
   :init
   (dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
     (add-hook hook #'highlight-symbol-mode)
