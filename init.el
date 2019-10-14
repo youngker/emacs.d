@@ -676,7 +676,8 @@
    `(eshell-ls-readonly ((,class (:foreground ,nord03))))
    `(eshell-ls-special ((,class (:foreground ,nord13))))
    `(eshell-ls-symlink ((,class (:underline t :foreground ,nord08))))
-   `(eshell-ls-unreadable ((,class (:foreground ,nord15))))))
+   `(eshell-ls-unreadable ((,class (:foreground ,nord15))))
+   `(lsp-ui-sideline-code-action ((,class (:foreground ,nord11))))))
 
 (when (equal system-type 'darwin)
   (setq mac-option-modifier 'super)
@@ -815,6 +816,10 @@
   :commands avy-setup-default
   :config
   (avy-setup-default))
+
+(use-package ace-window
+  :bind
+  ("C-x o" . ace-window))
 
 (use-package cargo
   :commands (rust-mode
@@ -1820,9 +1825,10 @@
           (" *undo-tree*" :align right :size 0.1)
           ((grep-mode compilation-mode) :align t :select t)
           ("\\`\\*helm.*?\\*\\'" :popup t :regexp t :align t)
-          ("*xref*" :popup t :regexp t :align t)
+          ("*xref*" :popup t :regexp t :align t :select t)
+          ("*Cargo .*" :popup t :regexp t :align t :select t)
           ("*Flycheck errors*" :popup t :regexp t :align t)
-          ("*Flymake diagnostics .*" :popup t :regexp t :align t)
+          ("*Flymake diagnostics .*" :popup t :regexp t :align t :select t)
           ("\\`\\*cider-repl .*" :regexp t :align t :size 0.2)
           ((inferior-scheme-mode "*shell*" "*eshell*") :popup t :align t))
         shackle-default-rule '(:select t)
