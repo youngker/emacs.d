@@ -677,7 +677,8 @@
    `(eshell-ls-special ((,class (:foreground ,nord13))))
    `(eshell-ls-symlink ((,class (:underline t :foreground ,nord08))))
    `(eshell-ls-unreadable ((,class (:foreground ,nord15))))
-   `(lsp-ui-sideline-code-action ((,class (:foreground ,nord11))))))
+   `(lsp-ui-sideline-code-action ((,class (:foreground ,nord11))))
+   `(aw-leading-char-face ((,class (:foreground ,nord14))))))
 
 (when (equal system-type 'darwin)
   (setq mac-option-modifier 'super)
@@ -1335,6 +1336,15 @@
   (use-package crm-custom
     :config
     (crm-custom-mode +1)))
+
+(use-package ielm
+  :ensure nil
+  :commands ielm
+  :hook
+  (ielm-mode . (lambda () (setq show-trailing-whitespace nil)))
+  :config
+  (setq ielm-header "")
+  (setq ielm-prompt "=> "))
 
 (use-package inf-clojure
   :commands inf-clojure-minor-mode
