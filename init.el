@@ -678,7 +678,8 @@
    `(eshell-ls-symlink ((,class (:underline t :foreground ,nord08))))
    `(eshell-ls-unreadable ((,class (:foreground ,nord15))))
    `(lsp-ui-sideline-code-action ((,class (:foreground ,nord11))))
-   `(aw-leading-char-face ((,class (:foreground ,nord14))))))
+   `(aw-leading-char-face ((,class (:foreground ,nord11))))
+   `(popup-tip-face ((,class (:background ,nord03 :foreground ,nord06))))))
 
 (when (equal system-type 'darwin)
   (setq mac-option-modifier 'super)
@@ -1091,6 +1092,10 @@
   (("M-3" . flymake-goto-next-error)
    ("M-4" . flymake-goto-prev-error)
    ("M-5" . flymake-show-diagnostics-buffer)))
+
+(use-package flymake-diagnostic-at-point
+  :after flymake
+  :hook (flymake-mode . flymake-diagnostic-at-point-mode))
 
 (use-package gdb-mi
   :ensure nil
