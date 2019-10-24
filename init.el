@@ -987,6 +987,10 @@
   :init
   (add-hook 'dired-mode-hook 'dired-hide-details-mode))
 
+(use-package dired-git-info
+  :bind (:map dired-mode-map
+         (")" . dired-git-info-mode)))
+
 (use-package eldoc
   :ensure nil
   :diminish eldoc-mode
