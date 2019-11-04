@@ -84,7 +84,7 @@
 (setq default-frame-alist
       (append '((width . 80)
                 (height . 40)
-                (font . "Operator Mono SSm Medium:pixelsize=15"))
+                (font . "Operator Mono SSm Book"))
               default-frame-alist))
 
 (auto-compression-mode +1)
@@ -1198,6 +1198,7 @@
                                        (statement-case-open . 0)
                                        (member-init-intro . +)))))
     (c-set-style "my-c-style")
+    (local-unset-key (kbd "C-c ."))
     (flymake-mode +1)
     (modern-c++-font-lock-mode +1))
   :init
@@ -1265,7 +1266,7 @@
   :commands
   (highlight-symbol-mode highlight-symbol-nav-mode)
   :bind
-  ("C-." . highlight-symbol)
+  ("C-c ." . highlight-symbol)
   :init
   (dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
     (add-hook hook #'highlight-symbol-mode)
@@ -1361,6 +1362,7 @@
   (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode))
 
 (use-package intero
+  :disabled t
   :after haskell-mode
   :hook
   ((haskell-mode . intero-mode)
@@ -1502,7 +1504,9 @@
                                  #'redefine-lisp-indent-function)))))
 
 (use-package lsp-haskell
-  :after haskell-mode)
+  :after haskell-mode
+  :config
+  (setq lsp-prefer-flymake nil))
 
 (use-package lsp-mode
   :hook ((c++-mode . lsp)
@@ -1717,6 +1721,13 @@
               (pdf-links-minor-mode)
               (pdf-isearch-minor-mode)
               (pdf-outline-minor-mode))))
+
+(use-package plantuml-mode
+  :commands plantuml-mode
+  :config
+  (setq plantuml-jar-path (concat user-emacs-directory
+                                  "lib/plantuml.jar"))
+  (setq plantuml-default-exec-mode 'jar))
 
 (use-package popwin
   :disabled t
