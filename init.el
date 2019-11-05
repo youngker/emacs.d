@@ -1214,6 +1214,7 @@
         '(("en" . "ko") ("ko" . "en"))))
 
 (use-package haskell-mode
+  :hook (haskell-mode . (lambda () (setq tab-width 4)))
   :mode ("\\.hs\\'" . haskell-mode))
 
 (use-package helm
@@ -1285,6 +1286,7 @@
   (highlight-tail-mode))
 
 (use-package hindent
+  :disabled t
   :diminish hindent-mode
   :hook (haskell-mode . hindent-mode)
   :init
