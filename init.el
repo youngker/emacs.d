@@ -123,6 +123,7 @@
     (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
 ;;; Bootstrap `use-package'
+(require 'package)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -807,6 +808,7 @@
   (add-to-list 'ac-dictionary-directories (concat user-emacs-directory "dict")))
 
 (use-package autorevert
+  :ensure nil
   :commands auto-revert-mode
   :diminish auto-revert-mode
   :init
@@ -920,6 +922,7 @@
   :commands company-lsp)
 
 (use-package compile
+  :ensure nil
   :bind
   ("C-c c c" . show-compilation)
   :preface
@@ -977,7 +980,7 @@
   :config
   (global-diff-hl-mode +1)
   (diff-hl-margin-mode)
-  (setq diff-hl-side 'right))
+  (setq diff-hl-side 'left))
 
 (use-package diminish
   :commands diminish)
@@ -1566,6 +1569,7 @@
    ("C-c C-<"     . mc/mark-all-like-this)))
 
 (use-package org
+  :ensure nil
   :commands org-babel-do-load-languages
   :bind
   (("C-c o a" . org-agenda)
@@ -1588,6 +1592,7 @@
                                         "lib/plantuml.jar")))
 
   (use-package org-tempo
+    :disabled t
     :ensure nil
     :init
     (setq org-structure-template-alist
@@ -1776,7 +1781,8 @@
 (use-package rainbow-delimiters
   :commands rainbow-delimiters-mode
   :config
-  (use-package color :ensure nil
+  (use-package color
+    :ensure nil
     :commands color-saturate-name
     :demand t
     :config
@@ -1799,6 +1805,7 @@
     (add-hook hook #'rainbow-mode)))
 
 (use-package recentf
+  :ensure nil
   :commands recentf-mode
   :config
   (recentf-mode +1)
@@ -1833,6 +1840,7 @@
   (setq electric-indent-mode +1))
 
 (use-package saveplace
+  :ensure nil
   :commands save-place-mode
   :config
   (setq-default
@@ -1880,6 +1888,7 @@
   :disabled t)
 
 (use-package subword
+  :ensure nil
   :diminish subword-mode
   :commands (subword-mode
              global-subword-mode)
