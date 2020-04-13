@@ -5,7 +5,7 @@
 ;; Author: Youngjoo Lee <youngker@gmail.com>
 ;; Version: 0.3.0
 ;; Keywords: convenience
-;; Package-Requires: ((emacs "26.1"))
+;; Package-Requires: ((emacs "26.3"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -1874,6 +1874,16 @@
         shackle-default-rule '(:select t)
         shackle-default-size 0.4
         shackle-inhibit-window-quit-on-same-windows t))
+
+(use-package slime
+  :commands slime-mode
+  :config
+  (setq inferior-lisp-program "sbcl" ;;"lx86cl64"
+        slime-contribs '(slime-fancy)))
+
+(use-package slime-company
+  :init
+  (setq slime-company-competion 'fuzzy))
 
 (use-package smex
   :disabled t
