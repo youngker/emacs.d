@@ -1582,7 +1582,7 @@
     :commands org-capture)
   (use-package ox-reveal
     :init
-    (setq org-reveal-root "http://cdn.jsdelivr.net/reveal.js/3.0.0/")
+    (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
     (setq org-reveal-mathjax t))
 
   (use-package ob-plantuml
