@@ -527,6 +527,7 @@
    `(helm-ff-invalid-symlink ((,class (:foreground ,nord11 :weight normal))))
    `(helm-ff-prefix ((,class (:foreground ,nord00 :background ,nord09))))
    `(helm-ff-symlink ((,class (:foreground ,nord07))))
+   `(helm-ff-file-extension ((,class (:foreground ,nord13))))
    `(helm-grep-cmd-line ((,class (:foreground ,nord04 :background ,nord00))))
    `(helm-grep-file ((,class (:foreground ,nord08))))
    `(helm-grep-finish ((,class (:foreground ,nord05))))
@@ -1592,7 +1593,6 @@
                                         "lib/plantuml.jar")))
 
   (use-package org-tempo
-    :disabled t
     :ensure nil
     :init
     (setq org-structure-template-alist
@@ -1656,6 +1656,7 @@
    '((emacs-lisp . t)
      (shell . t)
      (python . t)
+     (dot . t)
      (plantuml . t))))
 
 (use-package org-bullets
