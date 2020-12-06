@@ -1105,6 +1105,10 @@
   :after flymake
   :hook (flymake-mode . flymake-diagnostic-at-point-mode))
 
+(use-package geiser
+  :hook
+  (geiser-repl-mode . lisp-mode-setup-hook))
+
 (use-package gdb-mi
   :ensure nil
   :bind
@@ -1847,6 +1851,10 @@
   (setq-default
    ;;save-place t
    save-place-file (concat user-emacs-directory "place")))
+
+(use-package scheme
+  :ensure nil
+  :hook (scheme-mode . lisp-mode-setup-hook))
 
 (use-package server
   :ensure nil
