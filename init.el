@@ -1097,9 +1097,9 @@
 (use-package flymake
   :ensure nil
   :bind
-  (("M-3" . flymake-goto-next-error)
-   ("M-4" . flymake-goto-prev-error)
-   ("M-5" . flymake-show-diagnostics-buffer)))
+  (("C-c f n" . flymake-goto-next-error)
+   ("C-c f p" . flymake-goto-prev-error)
+   ("C-c f l" . flymake-show-diagnostics-buffer)))
 
 (use-package flymake-diagnostic-at-point
   :after flymake
@@ -1213,13 +1213,17 @@
   (add-hook 'c-mode-common-hook #'c-mode-common-setup-hook))
 
 (use-package google-translate
-  :defines google-translate-translation-directions-alist
   :bind
   ("C-c t" . google-translate-smooth-translate)
-  :init
+  :preface
+  (defun google-translate--search-tkk ()
+    "Search TKK."
+    (list 430675 2721866130))
+  :custom
+  (google-translate-backend-method 'curl)
   ;; (setq google-translate-output-destination 'popup)
-  (setq google-translate-translation-directions-alist
-        '(("en" . "ko") ("ko" . "en"))))
+  (google-translate-translation-directions-alist
+   '(("en" . "ko") ("ko" . "en"))))
 
 (use-package haskell-mode
   :hook (haskell-mode . (lambda () (setq tab-width 4)))
