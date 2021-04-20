@@ -96,6 +96,9 @@
 (show-paren-mode +1)
 (winner-mode +1)
 (xterm-mouse-mode +1)
+(unless window-system
+  (global-set-key (kbd "<mouse-4>") 'mwheel-scroll)
+  (global-set-key (kbd "<mouse-5>") 'mwheel-scroll))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; locale
@@ -1978,6 +1981,11 @@
           (:eval (if (buffer-file-name)
                      (abbreviate-file-name (buffer-file-name)) "%b"))))
   (add-hook 'post-command-hook #'terminal-title-hook))
+
+(use-package typescript-mode
+  :mode ("\\.ts\\'" "\\.tsx\\'")
+  :init
+  (setq typescript-indent-level 2))
 
 (use-package undo-tree
   :bind
