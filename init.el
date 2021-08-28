@@ -52,7 +52,7 @@
  electric-indent-mode nil
  fill-column 80
  font-use-system-font t
- gc-cons-threshold 50000000
+ gc-cons-threshold 100000000
  global-auto-revert-non-file-buffers t
  history-length 1000
  indent-tabs-mode nil
@@ -64,6 +64,7 @@
  next-error-highlight t
  next-error-highlight-no-select t
  query-replace-highlight t
+ read-process-output-max (* 1024 1024)
  recenter-redisplay nil
  require-final-newline t
  ring-bell-function #'ignore
@@ -922,9 +923,6 @@
     ("C-n" . company-select-next)
     ("TAB" . company-complete-common-or-cycle)))
 
-(use-package company-lsp
-  :commands company-lsp)
-
 (use-package compile
   :ensure nil
   :bind
@@ -1519,30 +1517,69 @@
     (add-hook hook (lambda ()
                      (setq-local lisp-indent-function
                                  #'redefine-lisp-indent-function)))))
-
 (use-package lsp-haskell
-  :after haskell-mode
+  :hook (hoskell-mode . lsp)
   :config
   (setq lsp-prefer-flymake nil))
 
 (use-package lsp-mode
-  :hook ((c++-mode . lsp)
+  :hook ((lsp-mode . lsp-ui-mode)
+         (c++-mode . lsp)
          (haskell-mode . lsp)
          (rust-mode . lsp))
   :commands lsp
-  :bind
-  (("C-c l r" . lsp-find-references)
-   ("C-c l d" . lsp-find-definition)
-   ("C-c l i" . lsp-find-implementation))
+  ;; :bind
+  ;; (("C-c l r" . lsp-find-references)
+  ;;  ("C-c l d" . lsp-find-definition)
+  ;;  ("C-c l i" . lsp-find-implementation))
   :init
-  (setq lsp-auto-guess-root t
-        lsp-clients-clangd-args '("-j=1" "-background-index" "-log=error")
-        lsp-enable-indentation nil
-        lsp-enable-on-type-formatting nil
-        lsp-ui-doc-enable t
-        lsp-ui-imenu-enable t
-        lsp-ui-peek-enable t
-        lsp-ui-sideline-enable t))
+  (setq
+   lsp-keymap-prefix "C-c l"
+   lsp-idle-delay 0.6
+   lsp-auto-guess-root t
+   lsp-eldoc-render-all t
+   ;; clang
+   lsp-clients-clangd-args '("-j=1" "-background-index" "-log=error")
+   ;; rust
+   lsp-rust-analyzer-cargo-watch-command "clippy"
+   lsp-rust-analyzer-server-display-inlay-hints t
+   ;; highlighting
+   lsp-enable-symbol-highlighting nil
+   ;; doc
+   lsp-ui-doc-enable t
+   lsp-ui-doc-show-with-cursor nil
+   lsp-ui-doc-show-with-mouse nil
+   ;; lenses
+   lsp-lens-enable t
+   ;; headerline
+   lsp-headerline-breadcrumb-enable t
+   ;; sideline
+   lsp-ui-sideline-enable t
+   lsp-ui-sideline-show-hover t
+   lsp-ui-sideline-show-code-actions t
+   ;; modeline
+   lsp-modeline-code-actions-enable t
+   ;; flycheck
+   lsp-diagnostics-provider :flycheck
+   ;; sideline diagnostics
+   lsp-ui-sideline-enable t
+   lsp-ui-sideline-show-diagnostics t
+   ;; eldoc
+   lsp-eldoc-enable-hover t
+   ;; modeline diagnostics
+   lsp-modeline-diagnostics-enable t
+   ;; signature help
+   lsp-signature-auto-activate t
+   ;; signature help doc
+   lsp-signature-render-documentation t
+   ;; completion
+   lsp-completion-provider :company-mode
+   ;; completion ttem detail
+   lsp-completion-show-detail t
+   ;; completion item kind
+   lsp-completion-show-kind t
+   lsp-ui-peek-always-show t
+   ))
 
 (use-package lsp-treemacs
   :commands lsp-treemacs-errors-list)
@@ -1898,6 +1935,7 @@
         slime-contribs '(slime-fancy)))
 
 (use-package slime-company
+  :after (slime company)
   :init
   (setq slime-company-competion 'fuzzy))
 
