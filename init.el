@@ -1617,6 +1617,9 @@
    ("C-<"         . mc/mark-previous-like-this)
    ("C-c C-<"     . mc/mark-all-like-this)))
 
+(use-package nix-mode
+  :mode "\\.nix\\'")
+
 (use-package org
   :ensure nil
   :commands org-babel-do-load-languages
