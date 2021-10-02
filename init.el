@@ -1518,9 +1518,12 @@
                      (setq-local lisp-indent-function
                                  #'redefine-lisp-indent-function)))))
 (use-package lsp-haskell
-  :hook (hoskell-mode . lsp)
+  :after lsp
+  :demand t
   :config
-  (setq lsp-prefer-flymake nil))
+  (setq lsp-prefer-flymake nil)
+  :custom
+  (lsp-haskell-formatting-provider "brittany"))
 
 (use-package lsp-mode
   :hook ((lsp-mode . lsp-ui-mode)
