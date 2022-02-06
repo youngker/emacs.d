@@ -1251,6 +1251,7 @@
    ("M-x"       . helm-M-x)
    ("M-y"       . helm-show-kill-ring))
   :config
+  (require 'helm-mode)
   (use-package helm-descbinds)
   (use-package helm-codesearch)
   ;; (cl-defmethod helm-setup-user-source ((source helm-source-multi-occur))
