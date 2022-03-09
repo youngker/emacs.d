@@ -100,6 +100,9 @@
 (unless window-system
   (global-set-key (kbd "<mouse-4>") 'mwheel-scroll)
   (global-set-key (kbd "<mouse-5>") 'mwheel-scroll))
+(when (featurep 'ns)
+  (global-set-key (kbd "<mouse-4>") (kbd "<wheel-up>"))
+  (global-set-key (kbd "<mouse-5>") (kbd "<wheel-down>")))
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; locale
