@@ -118,24 +118,21 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-(if (version< emacs-version "27")
-    (package-initialize))
+;;; Bootstrap `use-package'
+(require 'package)
 
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")))
 
-(if (and (version< emacs-version "26.3") (>= libgnutls-version 30600))
-    (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
-
-;;; Bootstrap `use-package'
-(require 'package)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+
 (eval-when-compile
   (require 'use-package))
+
 (require 'bind-key)
 (setq use-package-verbose t)
 (setq use-package-always-ensure t)
@@ -771,7 +768,8 @@
 
 (use-package aggressive-indent
   :commands aggressive-indent-mode
-  :diminish aggressive-indent-mode
+  :diminish
+  :hook ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . aggressive-indent-mode)
   :config
   (aggressive-indent-mode t))
 
@@ -785,7 +783,7 @@
 
 (use-package auto-complete
   :disabled t
-  :diminish auto-complete-mode
+  :diminish
   :commands global-auto-complete-mode
   :functions ac-flyspell-workaround
   :init
@@ -818,7 +816,7 @@
 (use-package autorevert
   :ensure nil
   :commands auto-revert-mode
-  :diminish auto-revert-mode
+  :diminish
   :init
   (add-hook 'find-file-hook `(lambda () (auto-revert-mode +1))))
 
@@ -874,7 +872,6 @@
 (use-package clojure-mode
   :mode ("\\.clj\\'" "\\.cljs\\'" "\\.cljc\\'")
   :init
-  (add-hook 'clojure-mode-hook #'lisp-mode-setup-hook)
   (add-hook 'clojure-mode-hook #'subword-mode)
   :config
   (use-package cljsbuild-mode)
@@ -890,7 +887,7 @@
          ("\\.cmake\\'" . cmake-mode)))
 
 (use-package cmake-project
-  :diminish cmake-project-mode
+  :diminish
   :commands (maybe-cmake-project-hook
              cmake-project-mode)
   :preface
@@ -902,7 +899,7 @@
   (add-hook 'c++-mode-hook 'maybe-cmake-project-hook))
 
 (use-package company
-  :diminish company-mode
+  :diminish
   :defines company-dabbrev-downcase
   :commands (global-company-mode
              company-select-previous
@@ -1001,12 +998,11 @@
 
 (use-package eldoc
   :ensure nil
-  :diminish eldoc-mode
-  :hook
-  ((c-mode-common emacs-lisp-mode) . eldoc-mode))
+  :diminish
+  :hook ((c-mode-common emacs-lisp-mode) . eldoc-mode))
 
 (use-package elisp-slime-nav
-  :diminish elisp-slime-nav-mode
+  :diminish
   :commands elisp-slime-nav-mode)
 
 (use-package eopengrok
@@ -1103,7 +1099,8 @@
   :bind
   (("C-c f n" . flymake-goto-next-error)
    ("C-c f p" . flymake-goto-prev-error)
-   ("C-c f l" . flymake-show-diagnostics-buffer)))
+   ("C-c f l" . flymake-show-buffer-diagnostics))
+  :hook ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . flymake-mode))
 
 (use-package flymake-diagnostic-at-point
   :after flymake
@@ -1147,7 +1144,7 @@
 
 (use-package git-gutter
   :disabled t
-  :diminish git-gutter-mode
+  :diminish
   :commands global-git-gutter-mode
   :bind
   (("C-c s n" . git-gutter:next-hunk)
@@ -1234,7 +1231,7 @@
   :mode ("\\.hs\\'" . haskell-mode))
 
 (use-package helm
-  :diminish helm-mode
+  :diminish
   :bind
   (("C-x C-i"   . helm-imenu)
    ("C-c h o"   . helm-occur)
@@ -1280,7 +1277,7 @@
   (helm-projectile-on))
 
 (use-package highlight-symbol
-  :diminish highlight-symbol-mode
+  :diminish
   :commands
   (highlight-symbol-mode highlight-symbol-nav-mode)
   :bind
@@ -1297,14 +1294,14 @@
 
 (use-package highlight-tail
   :disabled t
-  :diminish highlight-tail-mode
+  :diminish
   :config
   (setq highlight-tail-steps 16)
   (highlight-tail-mode))
 
 (use-package hindent
   :disabled t
-  :diminish hindent-mode
+  :diminish
   :hook (haskell-mode . hindent-mode)
   :init
   (setq hindent-reformat-buffer-on-save t))
@@ -1389,7 +1386,7 @@
 
 (use-package irony
   :disabled t
-  :diminish irony-mode
+  :diminish
   :commands irony-mode
   :preface
   (defun my-irony-mode-hook ()
@@ -1417,7 +1414,7 @@
 
 (use-package ivy
   :disabled t
-  :diminish ivy-mode
+  :diminish
   :commands ivy-mode
   :bind
   (("C-x b" . ivy-switch-buffer)
@@ -1435,31 +1432,13 @@
   :ensure nil
   :commands (lisp-indent-defform
              lisp-indent-specform)
+  :hook ((lisp-mode emacs-lisp-mode)
+         . (lambda () (add-hook 'after-save-hook #'check-parens nil t)))
   :defines calculate-lisp-indent-last-sexp
   :preface
-  (defvar lisp-mode-hook-list
-    '(lisp-mode-hook
-      inferior-lisp-mode-hook
-      lisp-interaction-mode-hook
-      slime-repl-mode-hook))
-
   (defvar elisp-mode-hook-list
     '(emacs-lisp-mode-hook
-      inferior-emacs-lisp-mode-hook
       ielm-mode-hook))
-
-  (defun lisp-mode-setup-hook ()
-    "Lisp mode."
-    (auto-fill-mode +1)
-    (eldoc-mode +1)
-    (flymake-mode +1)
-    (paredit-mode +1)
-    (paren-activate)
-    (rainbow-delimiters-mode +1)
-    ;;(redshank-mode +1)
-    ;;(turn-on-eval-sexp-fu-flash-mode)
-    (aggressive-indent-mode)
-    (add-hook 'after-save-hook #'check-parens nil t))
 
   (defun elisp-mode-setup-hook ()
     "Elisp mode."
@@ -1512,11 +1491,7 @@
                  (funcall method indent-point state))))))))
 
   :init
-  (dolist (hook lisp-mode-hook-list)
-    (add-hook hook #'lisp-mode-setup-hook))
-
   (dolist (hook elisp-mode-hook-list)
-    (add-hook hook #'lisp-mode-setup-hook)
     (add-hook hook #'elisp-mode-setup-hook)
     (add-hook hook (lambda ()
                      (setq-local lisp-indent-function
@@ -1524,8 +1499,6 @@
 (use-package lsp-haskell
   :after lsp
   :demand t
-  :config
-  (setq lsp-prefer-flymake nil)
   :custom
   (lsp-haskell-formatting-provider "brittany"))
 
@@ -1608,11 +1581,12 @@
 
 (use-package mic-paren
   :commands paren-activate
+  :hook ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . paren-activate)
   :config
   (paren-activate))
 
 (use-package modern-cpp-font-lock
-  :diminish modern-c++-font-lock-mode
+  :diminish
   :commands modern-c++-font-lock-mode
   :init
   (add-hook 'c++-mode-hook 'modern-c++-font-lock-mode))
@@ -1746,7 +1720,7 @@
                  "\\end{block}\\end{onlyenv}")))
 
 (use-package page-break-lines
-  :diminish page-break-lines-mode
+  :diminish
   :commands (global-page-break-lines-mode
              page-break-lines-mode)
   :config
@@ -1754,15 +1728,16 @@
   (page-break-lines-mode))
 
 (use-package paredit
-  :diminish paredit-mode
+  :diminish
   :commands paredit-mode
+  :hook ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . paredit-mode)
   :config
   (eval-after-load 'paredit
     ;; need a binding that works in the terminal
     '(define-key paredit-mode-map (kbd "M-)") 'paredit-forward-slurp-sexp)))
 
 (use-package paredit-everywhere
-  :diminish paredit-everywhere-mode
+  :diminish
   :commands paredit-everywhere-mode
   :init
   (add-hook 'prog-mode-hook #'paredit-everywhere-mode)
@@ -1821,7 +1796,7 @@
            :regexp t :position bottom))))
 
 (use-package projectile
-  :diminish projectile-mode
+  :diminish
   :defer t
   :config
   (projectile-mode))
@@ -1839,6 +1814,7 @@
 
 (use-package rainbow-delimiters
   :commands rainbow-delimiters-mode
+  :hook ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . rainbow-delimiters-mode)
   :config
   (use-package color
     :ensure nil
@@ -1852,7 +1828,7 @@
        (cl-callf color-saturate-name (face-foreground face) 20)))))
 
 (use-package rainbow-mode
-  :diminish rainbow-mode
+  :diminish
   :commands rainbow-mode
   :preface
   (defun enable-rainbow-mode ()
@@ -1874,7 +1850,7 @@
 
 (use-package redshank
   :disabled t
-  :diminish redshank-mode
+  :diminish
   :commands redshank-mode)
 
 (use-package rtags
@@ -1905,10 +1881,6 @@
   (setq-default
    ;;save-place t
    save-place-file (concat user-emacs-directory "place")))
-
-(use-package scheme
-  :ensure nil
-  :hook (scheme-mode . lisp-mode-setup-hook))
 
 (use-package server
   :ensure nil
@@ -1963,7 +1935,7 @@
 
 (use-package subword
   :ensure nil
-  :diminish subword-mode
+  :diminish
   :commands (subword-mode
              global-subword-mode)
   :init
@@ -2038,7 +2010,7 @@
 (use-package undo-tree
   :bind
   ("C-x u" . undo-tree-visualize)
-  :diminish undo-tree-mode
+  :diminish
   :commands global-undo-tree-mode
   :config
   (global-undo-tree-mode))
@@ -2057,14 +2029,14 @@
   ("M-/" . vr/replace))
 
 (use-package volatile-highlights
-  :diminish volatile-highlights-mode
+  :diminish
   :commands volatile-highlights-mode
   :config
   (volatile-highlights-mode t))
 
 (use-package which-key
   :disabled t
-  :diminish which-key-mode
+  :diminish
   :commands which-key-mode
   :config
   (which-key-mode +1)
@@ -2107,7 +2079,7 @@
    ("C-j" . xref-show-location-at-point)))
 
 (use-package yasnippet
-  :diminish yas-minor-mode
+  :diminish
   :commands yas-global-mode
   :bind
   ("C-M-y" . company-yasnippet)
