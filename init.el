@@ -785,7 +785,6 @@
   :disabled t
   :diminish
   :commands global-auto-complete-mode
-  :functions ac-flyspell-workaround
   :init
   (dolist (hook '(prog-mode-hook org-mode-hook markdown-mode-hook))
     (add-hook hook #'auto-complete-mode))
@@ -816,7 +815,7 @@
 (use-package autorevert
   :ensure nil
   :commands auto-revert-mode
-  :diminish
+  :diminish auto-revert-mode
   :init
   (add-hook 'find-file-hook `(lambda () (auto-revert-mode +1))))
 
@@ -900,7 +899,6 @@
 
 (use-package company
   :diminish
-  :defines company-dabbrev-downcase
   :commands (global-company-mode
              company-select-previous
              company-select-next
@@ -1020,9 +1018,6 @@
 
 (use-package eshell
   :ensure nil
-  :defines (eshell-highlight-prompt
-            eshell-prompt-function
-            eshell-prompt-regexp)
   :functions (magit-get-current-branch
               eshell/pwd)
   :preface
@@ -1046,8 +1041,6 @@
 (use-package eshell-prompt-extras
   :disabled t
   :after esh-opt
-  :defines (eshell-highlight-prompt
-            eshell-prompt-function)
   :config
   (setq eshell-highlight-prompt nil
         eshell-prompt-function 'epe-theme-lambda))
@@ -1063,9 +1056,6 @@
 
 (use-package exec-path-from-shell
   :if (equal system-type 'darwin)
-  :defines (mac-option-modifier
-            mac-command-modifier
-            ns-function-modifier)
   :config
   (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-initialize))
@@ -1105,10 +1095,6 @@
 (use-package flymake-diagnostic-at-point
   :after flymake
   :hook (flymake-mode . flymake-diagnostic-at-point-mode))
-
-(use-package geiser
-  :hook
-  (geiser-repl-mode . lisp-mode-setup-hook))
 
 (use-package gdb-mi
   :ensure nil
@@ -1188,7 +1174,6 @@
 (use-package google-c-style
   :commands (google-set-c-style
              google-make-newline-indent)
-  :functions c-langelem-pos
   :preface
   (defun c-mode-common-setup-hook ()
     (google-set-c-style)
@@ -1950,8 +1935,6 @@
 
 (use-package swiper
   :disabled t
-  :functions (ivy-yank-word
-              ivy-previous-line-or-history)
   :bind
   ("C-s" . swiper)
   :config
@@ -2079,7 +2062,7 @@
    ("C-j" . xref-show-location-at-point)))
 
 (use-package yasnippet
-  :diminish
+  :diminish yas-minor-mode
   :commands yas-global-mode
   :bind
   ("C-M-y" . company-yasnippet)
