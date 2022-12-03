@@ -834,14 +834,12 @@
   ("C-x o" . ace-window))
 
 (use-package cargo
-  :commands (rust-mode
-             cargo-minor-mode)
   :bind
   (:map cargo-minor-mode
    (("M-1" . cargo-process-build)
     ("M-2" . cargo-process-run)))
-  :init
-  (add-hook 'rust-mode-hook #'cargo-minor-mode))
+  :hook
+  (rust-mode . cargo-minor-mode))
 
 (use-package cider
   :disabled t
@@ -1006,7 +1004,8 @@
 (use-package eldoc
   :ensure nil
   :diminish
-  :hook ((c-mode-common emacs-lisp-mode) . eldoc-mode))
+  :hook
+  (prog-mode . eldoc-mode))
 
 (use-package elisp-slime-nav
   :diminish
@@ -1251,10 +1250,11 @@
   (use-package helm-codesearch)
   ;; (cl-defmethod helm-setup-user-source ((source helm-source-multi-occur))
   ;;   (setf (slot-value source 'follow) 1))
-  (setq helm-split-window-inside-p            t
-        helm-buffers-fuzzy-matching           t
+  (setq helm-buffers-fuzzy-matching           t
+        helm-display-header-line              nil
+        helm-ff-file-name-history-use-recentf t
         helm-ff-search-library-in-sexp        t
-        helm-ff-file-name-history-use-recentf t)
+        helm-split-window-inside-p            t)
   (bind-keys :map isearch-mode-map
     ("C-o" . helm-occur-from-isearch)
     ("M-o" . helm-multi-occur-from-isearch))
