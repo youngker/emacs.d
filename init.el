@@ -697,18 +697,19 @@
 
 (defun my-setup-hook ()
   "My setup hook."
+  ;; (global-auto-complete-mode)
+  ;; (which-key-mode)
   (auto-compile-on-load-mode)
-  ;;(global-auto-complete-mode)
   (global-company-mode)
   (global-diff-hl-mode)
   (global-page-break-lines-mode)
+  (global-tree-sitter-mode)
   (global-whitespace-cleanup-mode)
-  (shackle-mode)
   (recentf-mode)
   (save-place-mode +1)
   (server-running-p)
+  (shackle-mode)
   (volatile-highlights-mode)
-  ;;(which-key-mode)
   (yas-global-mode))
 
 ;; https://github.com/alphapapa/unpackaged.el#sort-sexps
@@ -1214,11 +1215,11 @@
   (defun google-translate--search-tkk ()
     "Search TKK."
     (list 430675 2721866130))
-  :custom
-  (google-translate-backend-method 'curl)
+  :init
   ;; (setq google-translate-output-destination 'popup)
-  (google-translate-translation-directions-alist
-   '(("en" . "ko") ("ko" . "en"))))
+  (setq google-translate-backend-method 'curl
+        google-translate-translation-directions-alist
+        '(("en" . "ko") ("ko" . "en"))))
 
 (use-package haskell-mode
   :hook (haskell-mode . (lambda () (setq tab-width 4)))
@@ -1995,6 +1996,15 @@
           (:eval (if (buffer-file-name)
                      (abbreviate-file-name (buffer-file-name)) "%b"))))
   (add-hook 'post-command-hook #'terminal-title-hook))
+
+(use-package tree-sitter
+  :diminish
+  :hook
+  (tree-sitter-after-on . tree-sitter-hl-mode))
+
+(use-package tree-sitter-langs
+  :demand t
+  :after tree-sitter)
 
 (use-package typescript-mode
   :mode ("\\.ts\\'" "\\.tsx\\'")
