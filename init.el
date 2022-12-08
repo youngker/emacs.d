@@ -3,9 +3,9 @@
 ;; Copyright (C) 2019 Youngjoo Lee
 
 ;; Author: Youngjoo Lee <youngker@gmail.com>
-;; Version: 0.3.0
+;; Version: 0.4.0
 ;; Keywords: convenience
-;; Package-Requires: ((emacs "26.3"))
+;; Package-Requires: ((emacs "28.2"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -85,7 +85,7 @@
 (setq default-frame-alist
       (append '((width . 80)
                 (height . 40)
-                (font . "Operator Mono SSm Book"))
+                (font . "Monaco 16"))
               default-frame-alist))
 
 (auto-compression-mode +1)
@@ -691,8 +691,8 @@
    `(xref-match ((,class (:foreground ,nord13))))))
 
 (when (equal system-type 'darwin)
-  (setq mac-option-modifier 'super)
-  (setq mac-command-modifier 'meta)
+  (setq mac-option-modifier 'meta)
+  (setq mac-command-modifier 'super)
   (setq ns-function-modifier 'hyper))
 
 (defun my-setup-hook ()
@@ -835,6 +835,7 @@
   ("C-x o" . ace-window))
 
 (use-package cargo
+  :diminish
   :bind
   (:map cargo-minor-mode
    (("M-1" . cargo-process-build)
@@ -860,6 +861,7 @@
   ("C-c c r" . clang-format-buffer))
 
 (use-package clj-refactor
+  :disabled t
   :commands (clj-refactor-mode
              cljr-add-keybindings-with-prefix)
   :preface
@@ -999,6 +1001,7 @@
 (use-package eglot
   :hook
   (c++-mode . eglot-ensure)
+  (clojure-mode . eglot-ensure)
   (haskell-mode . eglot-ensure)
   (rust-mode . eglot-ensure))
 
@@ -1096,6 +1099,7 @@
 
 (use-package flymake
   :ensure nil
+  :diminish
   :bind
   (("C-c f n" . flymake-goto-next-error)
    ("C-c f p" . flymake-goto-prev-error)
@@ -1265,6 +1269,7 @@
   :commands helm-lsp-workspace-symbol)
 
 (use-package helm-projectile
+  :disabled t
   :bind
   (("C-c p h" . helm-projectile)
    ("C-c p f" . helm-projectile-find-file)
@@ -1369,6 +1374,7 @@
   (setq ielm-prompt "=> "))
 
 (use-package inf-clojure
+  :disabled t
   :commands inf-clojure-minor-mode
   :init
   (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode))
@@ -1998,7 +2004,7 @@
   (add-hook 'post-command-hook #'terminal-title-hook))
 
 (use-package tree-sitter
-  :diminish
+  :diminish "TS"
   :hook
   (tree-sitter-after-on . tree-sitter-hl-mode))
 
