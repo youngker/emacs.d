@@ -835,7 +835,7 @@
   ("C-x o" . ace-window))
 
 (use-package cargo
-  :diminish
+  :diminish cargo-minor-mode
   :bind
   (:map cargo-minor-mode
    (("M-1" . cargo-process-build)
