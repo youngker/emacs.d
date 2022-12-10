@@ -697,8 +697,6 @@
 
 (defun my-setup-hook ()
   "My setup hook."
-  ;; (global-auto-complete-mode)
-  ;; (which-key-mode)
   (auto-compile-on-load-mode)
   (global-company-mode)
   (global-diff-hl-mode)
@@ -948,6 +946,16 @@
 
   :hook (compilation-filter . compilation-ansi-color-process-output))
 
+(use-package consult
+  :after vertico
+  :bind
+  (("C-x C-i" . consult-imenu)
+   ("C-x f"   . consult-recent-file)
+   ("C-c h o" . consult-line)
+   ("C-c h m" . consult-multi-occur)
+   ("C-c h r" . consult-ripgrep)
+   ("C-c h b" . consult-buffer)))
+
 (use-package counsel
   :disabled t
   :bind
@@ -1099,12 +1107,13 @@
 
 (use-package flymake
   :ensure nil
-  :diminish
   :bind
   (("C-c f n" . flymake-goto-next-error)
    ("C-c f p" . flymake-goto-prev-error)
-   ("C-c f l" . flymake-show-buffer-diagnostics))
-  :hook ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . flymake-mode))
+   ("C-c f l" . flymake-show-buffer-diagnostics)
+   (:map flymake-diagnostics-buffer-mode-map
+    ("C-j" . flymake-show-diagnostic)))
+  :hook (prog-mode . flymake-mode))
 
 (use-package flymake-diagnostic-at-point
   :after flymake
@@ -1230,6 +1239,7 @@
   :mode ("\\.hs\\'" . haskell-mode))
 
 (use-package helm
+  :disabled t
   :diminish
   :bind
   (("C-x C-i"   . helm-imenu)
@@ -1604,6 +1614,13 @@
 (use-package nix-mode
   :mode "\\.nix\\'")
 
+(use-package orderless
+  :after vertico
+  :custom
+  (completion-styles '(orderless))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles . (partial-completion))))))
+
 (use-package org
   :ensure nil
   :commands org-babel-do-load-languages
@@ -1799,8 +1816,8 @@
            :regexp t :position bottom))))
 
 (use-package projectile
+  :disabled t
   :diminish
-  :defer t
   :config
   (projectile-mode))
 
@@ -2033,6 +2050,16 @@
         uniquify-separator " • "
         uniquify-after-kill-buffer-p t
         uniquify-ignore-buffers-re "^\\*"))
+
+(use-package vertico
+  :init
+  (vertico-mode)
+  :bind
+  (:map vertico-map
+   ("C-j" . vertico-insert)
+   ("C-l" . vertico-directory-up))
+  :config
+  (my-setup-hook))
 
 (use-package visual-regexp
   :bind
