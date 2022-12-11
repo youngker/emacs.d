@@ -30,6 +30,13 @@
 
 (require 'consult)
 
+(defcustom consult-codesearch-csearchindex ".csearchindex"
+  "Index file for each projects."
+  :type 'string
+  :group 'consult-codesearch)
+
+(defvar consult-codesearch-indexing-buffer "*consult codesearch indexing*")
+
 (defvar consult-codesearch-regexp-type nil)
 
 (defcustom consult-codesearch-args
@@ -70,9 +77,46 @@
                    ,@opts)
             :highlight ,hl))))))
 
+(defun consult-codesearch--search-index ()
+  (setenv "CSEARCHINDEX"
+          (expand-file-name
+           (let* ((start-dir (expand-file-name default-directory))
+                  (index-dir (locate-dominating-file start-dir
+                                                     consult-codesearch-csearchindex)))
+             (if index-dir
+                 (concat index-dir consult-codesearch-csearchindex)
+               (error "Can't find csearchindex"))))))
+
+(defun consult-codesearch-create-index (dir)
+  (interactive "DIndex files in directory: ")
+  (setenv "CSEARCHINDEX"
+          (expand-file-name (concat dir consult-codesearch-csearchindex)))
+
+  (let* ((buf consult-codesearch-indexing-buffer)
+         (proc (apply 'start-process "codesearch"
+                      buf "cindex" (list (expand-file-name dir)))))
+    (set-process-filter proc
+                        (lambda (process output)
+                          (with-current-buffer (process-buffer process)
+                            (let ((buffer-read-only nil))
+                              (insert output)))))
+    (set-process-sentinel proc
+                          (lambda (process event)
+                            (with-current-buffer (process-buffer process)
+                              (when (string= event "finished\n")
+                                (let ((buffer-read-only nil))
+                                  (insert "\nIndexing finished"))))))
+    (with-current-buffer buf
+      (local-set-key (kbd "q") 'quit-window)
+      (let ((buffer-read-only nil))
+        (erase-buffer))
+      (setq buffer-read-only t)
+      (pop-to-buffer buf))))
+
 ;;;###autoload
 (defun consult-codesearch (&optional dir initial)
   (interactive "P")
+  (consult-codesearch--search-index)
   (setq consult--grep-match-regexp consult-codesearch--grep-match-regexp)
   (consult--grep "Codesearch" #'consult-codesearch-builder dir initial)
   (setq consult--grep-match-regexp consult--grep-match-regexp-org))

@@ -814,7 +814,8 @@
 (use-package consult-codesearch
   :load-path "lisp"
   :bind
-  ("C-c h t" . consult-codesearch))
+  ("C-c h t" . consult-codesearch)
+  ("C-c h I" . consult-codesearch-create-index))
 
 (use-package default-text-scale
   :bind
@@ -952,24 +953,20 @@
 
 (use-package go-mode
   :mode ("\\.go\\'" . go-mode)
-  :commands (gofmt-before-save
-             godef-jump)
   :preface
   (defun go-mode-setup-hook ()
     (setq tab-width 4)
     (setq gofmt-command "goimports")
     (setq compile-command "go build -v && go test -v && go vet")
     (add-hook 'before-save-hook #'gofmt-before-save))
-  :init
-  (add-hook 'go-mode-hook #'go-mode-setup-hook)
+  :hook
+  (go-mode . go-mode-setup-hook)
   :config
   (bind-keys :map go-mode-map
     ("M-." . godef-jump)
     ("C-c C-c" . compile)))
 
 (use-package google-c-style
-  :commands (google-set-c-style
-             google-make-newline-indent)
   :preface
   (defun c-mode-common-setup-hook ()
     (google-set-c-style)
@@ -991,8 +988,8 @@
     (local-unset-key (kbd "C-c ."))
     (flymake-mode +1)
     (modern-c++-font-lock-mode +1))
-  :init
-  (add-hook 'c-mode-common-hook #'c-mode-common-setup-hook))
+  :hook
+  (c-mode-common . c-mode-common-setup-hook))
 
 (use-package google-translate
   :defines google-translate-translation-directions-alist
@@ -1014,14 +1011,11 @@
 
 (use-package highlight-symbol
   :diminish
-  :commands
-  (highlight-symbol-mode highlight-symbol-nav-mode)
   :bind
   ("C-c ." . highlight-symbol)
-  :init
-  (dolist (hook '(prog-mode-hook html-mode-hook css-mode-hook))
-    (add-hook hook #'highlight-symbol-mode)
-    (add-hook hook #'highlight-symbol-nav-mode))
+  :hook
+  ((prog-mode html-mode css-mode) . highlight-symbol-mode)
+  ((prog-mode html-mode css-mode) . highlight-symbol-nav-mode)
   :config
   (setq highlight-symbol-colors
         '("#BF616A" "#D08770" "#EBCB8B" "#A3BE8C" "#B48EAD"
@@ -1029,6 +1023,7 @@
   (setq highlight-symbol-foreground-color "#D8DEE9"))
 
 (use-package helm-codesearch
+  :disabled t
   :bind
   (("C-c h f" . helm-codesearch-find-file)
    ("C-c h t" . helm-codesearch-find-pattern)
@@ -1045,9 +1040,8 @@
 
 (use-package inf-clojure
   :disabled t
-  :commands inf-clojure-minor-mode
-  :init
-  (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode))
+  :hook
+  (clojure-mode . inf-clojure-minor-mode))
 
 (use-package lisp-mode
   :defer t
@@ -1139,9 +1133,8 @@
 
 (use-package modern-cpp-font-lock
   :diminish
-  :commands modern-c++-font-lock-mode
-  :init
-  (add-hook 'c++-mode-hook 'modern-c++-font-lock-mode))
+  :hook
+  (c++-mode . modern-c++-font-lock-mode))
 
 (use-package multiple-cursors
   :bind
@@ -1297,10 +1290,8 @@
 
 (use-package paredit-everywhere
   :diminish
-  :commands paredit-everywhere-mode
-  :init
-  (add-hook 'prog-mode-hook #'paredit-everywhere-mode)
-  (add-hook 'css-mode-hook #'paredit-everywhere-mode))
+  :hook
+  ((prog-mode css-mode) . paredit-everywhere-mode))
 
 (use-package pdf-tools
   :disabled t
@@ -1349,15 +1340,13 @@
 
 (use-package rainbow-mode
   :diminish
-  :commands rainbow-mode
   :preface
   (defun enable-rainbow-mode ()
     (when (string-match "\\(color-theme-\\|-theme\\|init\\.el\\)" (buffer-name))
-      (rainbow-mode +1)))
-  :init
-  (add-hook 'emacs-lisp-mode-hook #'enable-rainbow-mode)
-  (dolist (hook '(css-mode-hook html-mode-hook sass-mode-hook))
-    (add-hook hook #'rainbow-mode)))
+      (rainbow-mode)))
+  :hook
+  (emacs-lisp-mode . enable-rainbow-mode)
+  ((css-mode html-mode sass-mode) . rainbow-mode))
 
 (use-package recentf
   :ensure nil
