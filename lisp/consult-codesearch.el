@@ -37,7 +37,11 @@
   "Codesearch args."
   :type '(choice string (repeat (choice string expression))))
 
-(defconst consult--grep-match-regexp
+(defconst consult--grep-match-regexp-org
+  "\\`\\(?:\\./\\)?\\([^\n\0]+\\)\0\\([0-9]+\\)\\([-:\0]\\)"
+  "Regexp used to match file and line of grep output.")
+
+(defconst consult-codesearch--grep-match-regexp
   "\\`\\(?:\\./\\)?\\([^\n\0]+\\):\\([0-9]+\\)\\([-:\0]\\)"
   "Regexp used to match file and line of grep output.")
 
@@ -69,7 +73,9 @@
 ;;;###autoload
 (defun consult-codesearch (&optional dir initial)
   (interactive "P")
-  (consult--grep "Codesearch" #'consult-codesearch-builder dir initial))
+  (setq consult--grep-match-regexp consult-codesearch--grep-match-regexp)
+  (consult--grep "Codesearch" #'consult-codesearch-builder dir initial)
+  (setq consult--grep-match-regexp consult--grep-match-regexp-org))
 
 (provide 'consult-codesearch)
 ;;; consult-codesearch.el ends here

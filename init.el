@@ -290,12 +290,6 @@
    `(evil-ex-substitute-matches ((,class (:inherit isearch))))
    `(evil-ex-substitute-replacement ((,class (:foreground ,nord09))))
    `(file-name-shadow ((,class (:inherit shadow))))
-   `(flycheck-error ((,class (:underline (:style wave :color ,nord11)))))
-   `(flycheck-fringe-error ((,class (:foreground ,nord11 :weight normal))))
-   `(flycheck-fringe-info ((,class (:foreground ,nord08 :weight normal))))
-   `(flycheck-fringe-warning ((,class (:foreground ,nord13 :weight normal))))
-   `(flycheck-info ((,class (:underline (:style wave :color ,nord08)))))
-   `(flycheck-warning ((,class (:underline (:style wave :color ,nord13)))))
    `(font-latex-italic-face ((,class (:inherit italic))))
    `(font-latex-italic-face ((,class (:slant italic))))
    `(font-latex-match-reference-keywords ((,class (:foreground ,nord09))))
@@ -321,73 +315,13 @@
    `(git-gutter:deleted ((,class (:foreground ,nord11))))
    `(git-gutter:modified ((,class (:foreground ,nord13))))
    `(header-line ((,class (:foreground ,nord04 :background ,nord02))))
-   `(helm-bookmark-addressbook ((,class (:foreground ,nord07))))
-   `(helm-bookmark-directory ((,class (:foreground ,nord09))))
-   `(helm-bookmark-file ((,class (:foreground ,nord08))))
-   `(helm-bookmark-gnus ((,class (:foreground ,nord10))))
-   `(helm-bookmark-info ((,class (:foreground ,nord14))))
-   `(helm-bookmark-man ((,class (:foreground ,nord04))))
-   `(helm-bookmark-w3m ((,class (:foreground ,nord09))))
-   `(helm-buffer-directory ((,class (:foreground ,nord09))))
-   `(helm-buffer-file ((,class (:foreground ,nord08))))
-   `(helm-buffer-not-saved ((,class (:foreground ,nord13))))
-   `(helm-buffer-process ((,class (:foreground ,nord10))))
-   `(helm-candidate-number ((,class (:foreground ,nord13 :weight normal))))
-   `(helm-candidate-number-suspended ((,class (:foreground ,nord04))))
-   `(helm-codesearch-file-face ((,class (:foreground ,nord14 :slant italic))))
-   `(helm-codesearch-lineno-face ((,class (:foreground ,nord13))))
-   `(helm-codesearch-source-face ((,class (:foreground ,nord03))))
-   `(helm-ff-directory ((,class (:foreground ,nord09 :weight normal))))
-   `(helm-ff-dirs ((,class (:foreground ,nord09))))
-   `(helm-ff-dotted-directory ((,class (:foreground ,nord09))))
-   `(helm-ff-dotted-symlink-directory ((,class (:foreground ,nord07 :weight normal))))
-   `(helm-ff-executable ((,class (:foreground ,nord08))))
-   `(helm-ff-file ((,class (:foreground ,nord04))))
-   `(helm-ff-file-extension ((,class (:foreground ,nord13))))
-   `(helm-ff-invalid-symlink ((,class (:foreground ,nord11 :weight normal))))
-   `(helm-ff-prefix ((,class (:foreground ,nord00 :background ,nord09))))
-   `(helm-ff-symlink ((,class (:foreground ,nord07))))
-   `(helm-grep-cmd-line ((,class (:foreground ,nord04 :background ,nord00))))
-   `(helm-grep-file ((,class (:foreground ,nord08))))
-   `(helm-grep-finish ((,class (:foreground ,nord05))))
-   `(helm-grep-lineno ((,class (:foreground ,nord04))))
-   `(helm-grep-match ((,class (:inherit isearch))))
-   `(helm-grep-running ((,class (:foreground ,nord08))))
-   `(helm-header ((,class (:foreground ,nord09 :background ,nord02))))
-   `(helm-header-line-left-margin ((,class (:foreground ,nord09 :background ,nord02))))
-   `(helm-history-deleted ((,class (:foreground ,nord11))))
-   `(helm-history-remote ((,class (:foreground ,nord04))))
-   `(helm-lisp-completion-info ((,class (:foreground ,nord04 :weight normal))))
-   `(helm-lisp-show-completion ((,class (:inherit isearch))))
-   `(helm-locate-finish ((,class (:foreground ,nord14))))
-   `(helm-match ((,class (:foreground ,nord08))))
-   `(helm-match-item ((,class (:inherit isearch))))
-   `(helm-moccur-buffer ((,class (:foreground ,nord08))))
-   `(helm-resume-need-update ((,class (:foreground ,nord00 :background ,nord13))))
-   `(helm-selection ((,class (:inherit highlight))))
-   `(helm-selection-line ((,class (:background ,nord02))))
-   `(helm-separator ((,class (:background ,nord02))))
-   `(helm-source-header ((,class (:height 1.44 :foreground ,nord08 :background ,nord02))))
-   `(helm-visible-mark ((,class (:background ,nord02))))
    `(help-argument-name ((,class (:foreground ,nord08))))
    `(highlight ((,class (:foreground ,nord08 :background ,nord02))))
    `(highlight-symbol-face ((,class (:foreground ,nord13 :background ,nord01))))
    `(hl-line ((,class (:background ,nord01))))
-   `(ido-first-match ((,class (:foreground ,nord08 :weight normal))))
-   `(ido-only-match ((,class (:foreground ,nord08))))
-   `(ido-subdir ((,class (:foreground ,nord09))))
    `(info-menu-star ((,class (:foreground ,nord09))))
    `(isearch ((,class (:foreground ,nord00 :background ,nord08))))
    `(isearch-fail ((,class (:foreground ,nord11))))
-   `(ivy-action ((,class (:foreground ,nord10))))
-   `(ivy-confirm-face ((,class (:foreground ,nord10))))
-   `(ivy-current-match ((,class (:background ,nord10 :foreground ,nord04))))
-   `(ivy-match-required-face ((,class (:foreground ,nord10))))
-   `(ivy-minibuffer-match-face-1 ((,class (:foreground ,nord10))))
-   `(ivy-minibuffer-match-face-2 ((,class (:foreground ,nord10))))
-   `(ivy-minibuffer-match-face-3 ((,class (:foreground ,nord10))))
-   `(ivy-minibuffer-match-face-4 ((,class (:foreground ,nord10))))
-   `(ivy-virtual ((,class (:foreground ,nord10))))
    `(jdee-bug-breakpoint-cursor ((,class (:background ,nord02))))
    `(jdee-db-active-breakpoint-face ((,class (:background ,nord02 :weight normal))))
    `(jdee-db-requested-breakpoint-face ((,class (:foreground ,nord13 :background ,nord02 :weight normal))))
@@ -437,7 +371,6 @@
    `(link-visited ((,class (:underline t))))
    `(linum ((,class (:foreground ,nord03 :background ,nord00))))
    `(linum-relative-current-face ((,class (:foreground ,nord03 :background ,nord00))))
-   `(lsp-ui-sideline-code-action ((,class (:foreground ,nord11))))
    `(magit-branch ((,class (:foreground ,nord07 :weight normal))))
    `(magit-diff-added ((,class (:foreground ,nord14))))
    `(magit-diff-added-highlight ((,class (:foreground ,nord14 :background ,nord02))))
@@ -695,21 +628,6 @@
   (setq mac-command-modifier 'super)
   (setq ns-function-modifier 'hyper))
 
-(defun my-setup-hook ()
-  "My setup hook."
-  (auto-compile-on-load-mode)
-  (global-company-mode)
-  (global-diff-hl-mode)
-  (global-page-break-lines-mode)
-  (global-tree-sitter-mode)
-  (global-whitespace-cleanup-mode)
-  (recentf-mode)
-  (save-place-mode +1)
-  (server-running-p)
-  (shackle-mode)
-  (volatile-highlights-mode)
-  (yas-global-mode))
-
 ;; https://github.com/alphapapa/unpackaged.el#sort-sexps
 (defun my-sort-sexps (beg end)
   "Sort sexps in region (from BEG to END)."
@@ -757,17 +675,6 @@
 
 ;;; use-package starts
 
-(use-package ac-cider
-  :disabled t
-  :commands ac-cider-setup
-  :init
-  (with-eval-after-load 'cider-mode
-    (add-hook 'cider-mode-hook #'ac-cider-setup)
-    (add-hook 'cider-repl-mode-hook #'ac-cider-setup))
-  :config
-  (with-eval-after-load 'auto-complete
-    '(add-to-list 'ac-modes 'cider-mode)))
-
 (use-package aggressive-indent
   :commands aggressive-indent-mode
   :diminish
@@ -776,43 +683,12 @@
   (aggressive-indent-mode t))
 
 (use-package auto-compile
-  :commands (auto-compile-on-load-mode
-             auto-compile-on-save-mode)
+  :functions (auto-compile-on-load-mode auto-compile-on-save-mode)
+  :init
+  (auto-compile-on-load-mode)
   :config
   (setq load-prefer-newer t)
-  (auto-compile-on-load-mode)
   (auto-compile-on-save-mode))
-
-(use-package auto-complete
-  :disabled t
-  :diminish
-  :commands global-auto-complete-mode
-  :init
-  (dolist (hook '(prog-mode-hook org-mode-hook markdown-mode-hook))
-    (add-hook hook #'auto-complete-mode))
-  :config
-  (use-package auto-complete-config
-    :ensure nil
-    :demand t)
-  (setq ac-auto-start 2
-        ac-candidate-menu-min 0
-        ac-disable-inline t
-        ac-dwim t
-        ac-quick-help-delay 1
-        ac-quick-help-height 60
-        ac-show-menu-immediately-on-auto-complete t
-        ac-use-menu-map t
-        ac-auto-show-menu t)
-  (set-default 'ac-sources
-               '(ac-source-dictionary
-                 ac-source-words-in-buffer
-                 ac-source-words-in-same-mode-buffers
-                 ac-source-semantic
-                 ac-source-yasnippet))
-  (ac-config-default)
-  (ac-flyspell-workaround)
-  (global-auto-complete-mode t)
-  (add-to-list 'ac-dictionary-directories (concat user-emacs-directory "dict")))
 
 (use-package autorevert
   :ensure nil
@@ -841,47 +717,16 @@
   :hook
   (rust-mode . cargo-minor-mode))
 
-(use-package cider
-  :disabled t
-  :commands cider-mode
-  :init
-  (with-eval-after-load 'clojure-mode
-    (add-hook 'clojure-mode-hook #'cider-mode))
-  :config
-  (setq nrepl-hide-special-buffers t
-        cider-repl-pop-to-buffer-on-connect nil
-        cider-repl-use-clojure-font-lock t)
-  (add-hook 'cider-mode-hook #'eldoc-mode))
-
 (use-package clang-format
   :commands clang-format-buffer
   :bind
   ("C-c c r" . clang-format-buffer))
 
-(use-package clj-refactor
-  :disabled t
-  :commands (clj-refactor-mode
-             cljr-add-keybindings-with-prefix)
-  :preface
-  (defun clj-refactor-setup-hook ()
-    (clj-refactor-mode +1)
-    (cljr-add-keybindings-with-prefix "C-c C-m"))
-  :init
-  (with-eval-after-load 'clojure-mode
-    (add-hook 'clojure-mode-hook #'clj-refactor-setup-hook)))
-
 (use-package clojure-mode
   :mode ("\\.clj\\'" "\\.cljs\\'" "\\.cljc\\'")
-  :init
-  (add-hook 'clojure-mode-hook #'subword-mode)
   :config
   (use-package cljsbuild-mode)
   (use-package elein))
-
-(use-package cmake-font-lock
-  :disabled t
-  :after cc-mode cmake-font-lock
-  :hook (cmake-mode . cmake-font-lock-activate))
 
 (use-package cmake-mode
   :mode (("CMake[^/\\]*\\.txt\\'" . cmake-mode)
@@ -889,23 +734,19 @@
 
 (use-package cmake-project
   :diminish
-  :commands (maybe-cmake-project-hook
-             cmake-project-mode)
   :preface
   (defun maybe-cmake-project-hook ()
     (if (file-exists-p "CMakeLists.txt")
         (cmake-project-mode)))
-  :init
-  (add-hook 'c-mode-hook 'maybe-cmake-project-hook)
-  (add-hook 'c++-mode-hook 'maybe-cmake-project-hook))
+  :hook
+  ((c-mode c++-mode) . maybe-cmake-project-hook))
 
 (use-package company
   :diminish
-  :commands (global-company-mode
-             company-select-previous
-             company-select-next
-             company-complete-common-or-cycle)
+  :defines company-dabbrev-downcase
+  :functions global-company-mode
   :init
+  (global-company-mode)
   :config
   (setq company-dabbrev-downcase nil
         company-echo-delay 0
@@ -917,7 +758,6 @@
         company-tooltip-flip-when-above nil
         company-tooltip-limit 10
         company-transformers '(company-sort-by-occurrence))
-  (global-company-mode +1)
   (bind-keys :map company-active-map
     ("C-p" . company-select-previous)
     ("C-n" . company-select-next)
@@ -948,6 +788,7 @@
 
 (use-package consult
   :after vertico
+  :functions consult-line
   :preface
   (defun consult-occur ()
     (interactive)
@@ -975,51 +816,25 @@
   :bind
   ("C-c h t" . consult-codesearch))
 
-(use-package counsel
-  :disabled t
-  :bind
-  (("C-x C-f" . counsel-find-file)
-   ("C-x C-i" . counsel-imenu)
-   ("C-x f" . counsel-recentf)
-   ("M-x" . counsel-M-x)
-   ("M-y" . counsel-yank-pop))
-  :init
-  (add-hook 'imenu-after-jump-hook #'recenter-top-bottom))
-
-(use-package counsel-projectile
-  :disabled t
-  :bind
-  (("C-c p p" . counsel-projectile-switch-project)
-   ("C-c p b" . counsel-projectile-switch-to-buffer)
-   ("C-c p f" . counsel-projectile-find-file)))
-
-(use-package dante
-  :disabled t
-  :after haskell-mode
-  :commands 'dante-mode
-  :hook
-  ((haskell-mode . dante-mode)
-   (haskell-mode . flycheck-mode)))
-
 (use-package default-text-scale
   :bind
   (("C-M-=" . default-text-scale-increase)
    ("C-M--" . default-text-scale-decrease)))
 
 (use-package diff-hl
-  :commands global-diff-hl-mode
+  :init
+  (global-diff-hl-mode)
   :config
-  (global-diff-hl-mode +1)
-  (diff-hl-margin-mode)
-  (setq diff-hl-side 'left))
+  (setq diff-hl-side 'left)
+  (diff-hl-margin-mode))
 
 (use-package diminish
   :commands diminish)
 
 (use-package dired
   :ensure nil
-  :init
-  (add-hook 'dired-mode-hook 'dired-hide-details-mode))
+  :hook
+  (dired-mode . dired-hide-details-mode))
 
 (use-package dired-git-info
   :bind (:map dired-mode-map
@@ -1054,8 +869,8 @@
 
 (use-package eshell
   :ensure nil
-  :functions (magit-get-current-branch
-              eshell/pwd)
+  :defines (eshell-highlight-prompt eshell-prompt-function eshell-prompt-regexp)
+  :functions (magit-get-current-branch eshell/pwd)
   :preface
   (defun my-eshell-prompt-function ()
     (require 'magit)
@@ -1070,28 +885,14 @@
   ("C-x m" . eshell)
   :init
   (add-hook 'eshell-mode-hook (lambda () (setq show-trailing-whitespace nil)))
+  :config
   (setq eshell-highlight-prompt nil
         eshell-prompt-function 'my-eshell-prompt-function
         eshell-prompt-regexp "^$ "))
 
-(use-package eshell-prompt-extras
-  :disabled t
-  :after esh-opt
-  :config
-  (setq eshell-highlight-prompt nil
-        eshell-prompt-function 'epe-theme-lambda))
-
-(use-package eval-sexp-fu
-  :disabled t
-  :commands turn-on-eval-sexp-fu-flash-mode
-  :config
-  (use-package cider-eval-sexp-fu
-    :demand t
-    :commands cider-esf--bounds-of-last-sexp)
-  (setq eval-sexp-fu-flash-duration 0.5))
-
 (use-package exec-path-from-shell
   :if (equal system-type 'darwin)
+  :defines exec-path-from-shell-check-startup-files
   :config
   (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-initialize))
@@ -1099,27 +900,6 @@
 (use-package expand-region
   :bind
   ("C-c =" . er/expand-region))
-
-(use-package flycheck
-  :disabled t
-  :commands flycheck-mode
-  :config
-  (defalias 'flycheck-show-error-at-point-soon
-    'flycheck-show-error-at-point))
-
-(use-package flycheck-clojure
-  :disabled t
-  :commands flycheck-clojure-setup
-  :init
-  (with-eval-after-load 'clojure-mode
-    (add-hook 'clojure-mode-hook #'flycheck-clojure-setup)))
-
-(use-package flycheck-rust
-  :disabled t
-  :commands (rust-mode
-             flycheck-rust-setup)
-  :init
-  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 
 (use-package flymake
   :ensure nil
@@ -1160,23 +940,6 @@
         gdb-thread-buffer-locations t
         gdb-thread-buffer-verbose-names t
         gdb-use-colon-colon-notation t))
-
-(use-package git-gutter
-  :disabled t
-  :diminish
-  :commands global-git-gutter-mode
-  :bind
-  (("C-c s n" . git-gutter:next-hunk)
-   ("C-c s p" . git-gutter:previous-hunk))
-  :config
-  (global-git-gutter-mode +1))
-
-(use-package go-autocomplete
-  :disabled t
-  :defer t
-  :init
-  (with-eval-after-load 'auto-complete
-    '(add-to-list 'ac-modes 'go-mode)))
 
 (use-package go-eldoc
   :commands go-eldoc-setup
@@ -1232,6 +995,7 @@
   (add-hook 'c-mode-common-hook #'c-mode-common-setup-hook))
 
 (use-package google-translate
+  :defines google-translate-translation-directions-alist
   :bind
   ("C-c t" . google-translate-smooth-translate)
   :preface
@@ -1247,59 +1011,6 @@
 (use-package haskell-mode
   :hook (haskell-mode . (lambda () (setq tab-width 4)))
   :mode ("\\.hs\\'" . haskell-mode))
-
-(use-package helm
-  :disabled t
-  :diminish
-  :bind
-  (("C-x C-i"   . helm-imenu)
-   ("C-c h o"   . helm-occur)
-   ("C-c h a"   . helm-apropos)
-   ("C-c h m"   . helm-man-woman)
-   ("C-c h r"   . helm-regex)
-   ("C-c h SPC" . helm-all-mark-rings)
-   ("C-x C-f"   . helm-find-files)
-   ("C-x f"     . helm-recentf)
-   ("C-x b"     . helm-mini)
-   ("C-x r b"   . helm-filtered-bookmarks)
-   ("C-c h w"   . helm-descbinds)
-   ("C-c h b"   . helm-resume)
-   ("M-x"       . helm-M-x)
-   ("M-y"       . helm-show-kill-ring))
-  :config
-  (require 'helm-mode)
-  (use-package helm-descbinds)
-  ;; (cl-defmethod helm-setup-user-source ((source helm-source-multi-occur))
-  ;;   (setf (slot-value source 'follow) 1))
-  (setq helm-buffers-fuzzy-matching           t
-        helm-display-header-line              nil
-        helm-ff-file-name-history-use-recentf t
-        helm-ff-search-library-in-sexp        t
-        helm-split-window-inside-p            t)
-  (bind-keys :map isearch-mode-map
-    ("C-o" . helm-occur-from-isearch)
-    ("M-o" . helm-multi-occur-from-isearch))
-  (my-setup-hook))
-
-(use-package helm-codesearch
-  :disabled t
-  :bind
-  (("C-c h f"   . helm-codesearch-find-file)
-   ("C-c h t"   . helm-codesearch-find-pattern)
-   ("C-c h I"   . helm-codesearch-create-csearchindex)))
-
-(use-package helm-lsp
-  :disabled t
-  :commands helm-lsp-workspace-symbol)
-
-(use-package helm-projectile
-  :disabled t
-  :bind
-  (("C-c p h" . helm-projectile)
-   ("C-c p f" . helm-projectile-find-file)
-   ("C-c p t" . helm-projectile-rg))
-  :config
-  (helm-projectile-on))
 
 (use-package highlight-symbol
   :diminish
@@ -1317,76 +1028,11 @@
           "#5E81AC" "#81A1C1" "#88C0D0" "#8FBCBB"))
   (setq highlight-symbol-foreground-color "#D8DEE9"))
 
-(use-package highlight-tail
-  :disabled t
-  :diminish
-  :config
-  (setq highlight-tail-steps 16)
-  (highlight-tail-mode))
-
-(use-package hindent
-  :disabled t
-  :diminish
-  :hook (haskell-mode . hindent-mode)
-  :init
-  (setq hindent-reformat-buffer-on-save t))
-
-(use-package ido
-  :disabled t
+(use-package helm-codesearch
   :bind
-  (("C-x C-f" . ido-find-file)
-   ("C-x b"   . ido-switch-buffer)
-   ("C-x B"   . ido-switch-buffer-other-window))
-  :commands (ido-fallback-command
-             ido-complete
-             ido-everywhere
-             ido-select-text
-             ido-exit-minibuffer)
-  :init
-  (add-hook 'ido-setup-hook #'my-setup-hook)
-  :config
-  (ido-mode +1)
-  (ido-everywhere +1)
-  (icomplete-mode +1)
-  (setq ido-auto-merge-work-directories-length -1
-        ido-case-fold t
-        ido-create-new-buffer 'always
-        ido-default-file-method 'selected-window
-        ido-enable-flex-matching t
-        ido-enable-prefix nil
-        ido-max-prospects 10
-        ido-use-virtual-buffers t
-        ido-use-faces nil
-        ido-use-filename-at-point nil)
-  (define-key ido-file-completion-map (kbd "C-\\") 'backward-kill-word)
-
-  (use-package flx-ido
-    :demand t
-    :commands (flx-ido-mode flx-ido-reset flx-ido-debug flx-ido-match)
-    :config
-    (flx-ido-mode +1))
-
-  (use-package ido-vertical-mode
-    :disabled t
-    :config
-    (ido-vertical-mode)
-    (setq ido-vertical-define-keys 'C-n-C-p-up-down-left-right))
-
-  (use-package ido-complete-space-or-hyphen
-    :config
-    (ido-complete-space-or-hyphen-mode +1))
-
-  (use-package ido-completing-read+
-    :config
-    (ido-ubiquitous-mode +1))
-
-  (use-package ido-yes-or-no
-    :config
-    (ido-yes-or-no-mode +1))
-
-  (use-package crm-custom
-    :config
-    (crm-custom-mode +1)))
+  (("C-c h f" . helm-codesearch-find-file)
+   ("C-c h t" . helm-codesearch-find-pattern)
+   ("C-c h I" . helm-codesearch-create-csearchindex)))
 
 (use-package ielm
   :ensure nil
@@ -1402,56 +1048,6 @@
   :commands inf-clojure-minor-mode
   :init
   (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode))
-
-(use-package intero
-  :disabled t
-  :after haskell-mode
-  :hook
-  ((haskell-mode . intero-mode)
-   (intero-repl-mode . (lambda () (setq show-trailing-whitespace nil)))))
-
-(use-package irony
-  :disabled t
-  :diminish
-  :commands irony-mode
-  :preface
-  (defun my-irony-mode-hook ()
-    (define-key irony-mode-map
-      [remap completion-at-point] 'counsel-irony)
-    (define-key irony-mode-map
-      [remap complete-symbol] 'counsel-irony))
-  :init
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'c-mode-hook 'irony-mode)
-  (add-hook 'objc-mode-hook 'irony-mode)
-  :config
-  (add-hook 'irony-mode-hook 'my-irony-mode-hook)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
-  (use-package irony-eldoc
-    :commands irony-mode
-    :init
-    (add-hook 'irony-mode-hook 'irony-eldoc))
-  (use-package company-irony
-    :commands irony-mode)
-  (use-package flycheck-irony
-    :commands irony-mode
-    :init
-    (add-hook 'flycheck-mode-hook 'flycheck-irony-setup)))
-
-(use-package ivy
-  :disabled t
-  :diminish
-  :commands ivy-mode
-  :bind
-  (("C-x b" . ivy-switch-buffer)
-   ("C-x B" . ivy-switch-buffer-other-window)
-   ("C-c C-r" . ivy-resume))
-  :init
-  (add-hook 'ivy-mode-hook #'my-setup-hook)
-  :config
-  (ivy-mode +1)
-  (setq ivy-use-virtual-buffers t
-        ivy-format-function 'ivy-format-function-arrow))
 
 (use-package lisp-mode
   :defer t
@@ -1522,79 +1118,6 @@
     (add-hook hook (lambda ()
                      (setq-local lisp-indent-function
                                  #'redefine-lisp-indent-function)))))
-(use-package lsp-haskell
-  :disabled t
-  :after lsp
-  :demand t
-  :custom
-  (lsp-haskell-formatting-provider "brittany"))
-
-(use-package lsp-mode
-  :disabled t
-  :hook ((lsp-mode . lsp-ui-mode)
-         (c++-mode . lsp)
-         (haskell-mode . lsp)
-         (rust-mode . lsp))
-  :commands lsp
-  ;; :bind
-  ;; (("C-c l r" . lsp-find-references)
-  ;;  ("C-c l d" . lsp-find-definition)
-  ;;  ("C-c l i" . lsp-find-implementation))
-  :init
-  (setq
-   lsp-keymap-prefix "C-c l"
-   lsp-idle-delay 0.6
-   lsp-auto-guess-root t
-   lsp-eldoc-render-all t
-   ;; clang
-   lsp-clients-clangd-args '("-j=1" "-background-index" "-log=error")
-   ;; rust
-   lsp-rust-analyzer-cargo-watch-command "clippy"
-   lsp-rust-analyzer-server-display-inlay-hints t
-   ;; highlighting
-   lsp-enable-symbol-highlighting nil
-   ;; doc
-   lsp-ui-doc-enable t
-   lsp-ui-doc-show-with-cursor nil
-   lsp-ui-doc-show-with-mouse nil
-   ;; lenses
-   lsp-lens-enable t
-   ;; headerline
-   lsp-headerline-breadcrumb-enable t
-   ;; sideline
-   lsp-ui-sideline-enable t
-   lsp-ui-sideline-show-hover t
-   lsp-ui-sideline-show-code-actions t
-   ;; modeline
-   lsp-modeline-code-actions-enable t
-   ;; flycheck
-   lsp-diagnostics-provider :flycheck
-   ;; sideline diagnostics
-   lsp-ui-sideline-enable t
-   lsp-ui-sideline-show-diagnostics t
-   ;; eldoc
-   lsp-eldoc-enable-hover t
-   ;; modeline diagnostics
-   lsp-modeline-diagnostics-enable t
-   ;; signature help
-   lsp-signature-auto-activate t
-   ;; signature help doc
-   lsp-signature-render-documentation t
-   ;; completion
-   lsp-completion-provider :company-mode
-   ;; completion ttem detail
-   lsp-completion-show-detail t
-   ;; completion item kind
-   lsp-completion-show-kind t
-   lsp-ui-peek-always-show t))
-
-(use-package lsp-treemacs
-  :disabled t
-  :commands lsp-treemacs-errors-list)
-
-(use-package lsp-ui
-  :disabled t
-  :commands lsp-ui-mode)
 
 (use-package magit
   :bind
@@ -1650,6 +1173,7 @@
     :ensure nil
     :commands org-capture)
   (use-package ox-reveal
+    :defines org-reveal-mathjax
     :init
     (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
     (setq org-reveal-mathjax t))
@@ -1757,10 +1281,9 @@
 
 (use-package page-break-lines
   :diminish
-  :commands (global-page-break-lines-mode
-             page-break-lines-mode)
-  :config
+  :init
   (global-page-break-lines-mode)
+  :config
   (page-break-lines-mode))
 
 (use-package paredit
@@ -1806,47 +1329,8 @@
                                   "lib/plantuml.jar"))
   (setq plantuml-default-exec-mode 'jar))
 
-(use-package popwin
-  :disabled t
-  :commands popwin-mode
-  :config
-  (popwin-mode +1)
-  (setq popwin:special-display-config
-        '(("*Help*"
-           :dedicated t :position bottom :stick t :noselect nil :height 0.4)
-          ("*compilation*"
-           :dedicated t :position bottom :stick t :noselect t :height 0.4)
-          ("*Shell Command Output*"
-           :dedicated t :position bottom :stick t :noselect nil)
-          ("*Async Shell Command*"
-           :dedicated t :position bottom :stick t :noselect nil)
-          ("*undo-tree*"
-           :dedicated t :position bottom :stick t :noselect nil :height 0.4)
-          ("*ert*"
-           :dedicated t :position bottom :stick t :noselect nil)
-          ("*grep*"
-           :dedicated t :position bottom :stick t :noselect nil)
-          ("*nosetests*"
-           :dedicated t :position bottom :stick t :noselect nil)
-          ("^\*WoMan.+\*$"
-           :regexp t :position bottom))))
-
-(use-package projectile
-  :disabled t
-  :diminish
-  :config
-  (projectile-mode))
-
 (use-package qml-mode
   :mode ("\\.qml\\'" . qml-mode))
-
-(use-package racer
-  :disabled t
-  :commands (rust-mode
-             racer-mode)
-  :init
-  (add-hook 'rust-mode-hook #'racer-mode)
-  (add-hook 'racer-mode-hook #'eldoc-mode))
 
 (use-package rainbow-delimiters
   :commands rainbow-delimiters-mode
@@ -1877,33 +1361,12 @@
 
 (use-package recentf
   :ensure nil
-  :commands recentf-mode
+  :init
+  (recentf-mode)
   :config
-  (recentf-mode +1)
   (setq-default
    recentf-max-saved-items 100
    recentf-save-file (concat user-emacs-directory "recentf")))
-
-(use-package redshank
-  :disabled t
-  :diminish
-  :commands redshank-mode)
-
-(use-package rtags
-  :disabled t
-  :bind
-  (("M-." . rtags-find-symbol-at-point)
-   ("M-," . rtags-location-stack-back))
-  :init
-  (add-hook 'c-mode-hook 'rtags-start-process-unless-running)
-  (add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
-  (add-hook 'objc-mode-hook 'rtags-start-process-unless-running)
-  :config
-  (use-package helm-rtags
-    :bind
-    ("M--" . rtags-find-references-at-point)
-    :init
-    (setq rtags-display-result-backend 'helm)))
 
 (use-package rust-mode
   :mode ("\\.rs\\'" . rust-mode)
@@ -1912,7 +1375,8 @@
 
 (use-package saveplace
   :ensure nil
-  :commands save-place-mode
+  :init
+  (save-place-mode)
   :config
   (setq-default
    ;;save-place t
@@ -1920,25 +1384,21 @@
 
 (use-package server
   :ensure nil
-  :commands (server-running-p
-             server-start)
   :config
   (unless (server-running-p)
     (server-start)))
 
 (use-package shackle
-  :commands shackle-mode
+  :init
+  (shackle-mode)
   :config
-  (shackle-mode +1)
   (setq shackle-rules
         '(("*Help*" :align t :select t)
           ("*Google Translate*" :align t :select t)
           (" *undo-tree*" :align right :size 0.1)
           ((grep-mode compilation-mode) :align t :select t)
-          ("\\`\\*helm.*?\\*\\'" :popup t :regexp t :align t)
           ("*xref*" :popup t :regexp t :align t :select t)
           ("*Cargo .*" :popup t :regexp t :align t :select t)
-          ("*Flycheck errors*" :popup t :regexp t :align t)
           ("*Flymake diagnostics .*" :popup t :regexp t :align t :select t)
           ("\\`\\*cider-repl .*" :regexp t :align t :size 0.2)
           ((inferior-scheme-mode "*shell*" "*eshell*") :popup t :align t))
@@ -1954,44 +1414,18 @@
 
 (use-package slime-company
   :after (slime company)
+  :defines slime-company-competion
   :init
   (setq slime-company-competion 'fuzzy))
-
-(use-package smex
-  :disabled t
-  :commands smex-initialize
-  :bind
-  (("M-x" . smex)
-   ("M-X" . smex-major-mode-commands))
-  :config
-  (smex-initialize))
-
-(use-package smooth-scrolling
-  :disabled t)
 
 (use-package subword
   :ensure nil
   :diminish
-  :commands (subword-mode
-             global-subword-mode)
-  :init
-  (add-hook 'prog-mode-hook #'subword-mode)
-  :config
-  (global-subword-mode +1))
+  :hook
+  (prog-mode . subword-mode))
 
 (use-package swift-mode
-  :mode ("\\.swift\\'" . swift-mode)
-  :init
-  (add-hook 'swift-mode-hook 'flycheck-mode))
-
-(use-package swiper
-  :disabled t
-  :bind
-  ("C-s" . swiper)
-  :config
-  (bind-keys :map ivy-minibuffer-map
-    ("C-w" . ivy-yank-word)
-    ("C-r" . ivy-previous-line-or-history)))
+  :mode ("\\.swift\\'" . swift-mode))
 
 (use-package term
   :ensure nil
@@ -2037,7 +1471,9 @@
   (add-hook 'post-command-hook #'terminal-title-hook))
 
 (use-package tree-sitter
-  :diminish "TS"
+  :diminish "ts"
+  :init
+  (global-tree-sitter-mode)
   :hook
   (tree-sitter-after-on . tree-sitter-hl-mode))
 
@@ -2073,9 +1509,7 @@
   :bind
   (:map vertico-map
    ("C-j" . vertico-insert)
-   ("C-l" . vertico-directory-delete-word))
-  :config
-  (my-setup-hook))
+   ("C-l" . vertico-directory-delete-word)))
 
 (use-package visual-regexp
   :bind
@@ -2083,47 +1517,21 @@
 
 (use-package volatile-highlights
   :diminish
-  :commands volatile-highlights-mode
-  :config
-  (volatile-highlights-mode t))
+  :functions volatile-highlights-mode
+  :init (volatile-highlights-mode))
 
 (use-package which-key
-  :disabled t
   :diminish
+  :functions which-key-setup-side-window-right
   :commands which-key-mode
   :config
   (which-key-mode +1)
   (which-key-setup-side-window-right))
 
 (use-package whitespace-cleanup-mode
-  :commands global-whitespace-cleanup-mode
-  :config
+  :functions global-whitespace-cleanup-mode
+  :init
   (global-whitespace-cleanup-mode))
-
-(use-package win-switch
-  :disabled t
-  :bind
-  ("C-x o" . win-switch-dispatch)
-  :commands win-switch-set-keys
-  :config
-  (setq win-switch-feedback-background-color "#6c96af")
-  (setq win-switch-feedback-foreground-color "#000000")
-  (setq win-switch-window-threshold 1)
-  (setq win-switch-idle-time 0.7)
-  (win-switch-set-keys '("o") 'next-window)
-  (win-switch-set-keys '("p") 'previous-window))
-
-(use-package window-number
-  :disabled t
-  :commands window-number-mode
-  :bind
-  ("C-x o" . my-window-number-switch)
-  :preface
-  (defun my-window-number-switch ()
-    (interactive)
-    (window-number-mode +1)
-    (window-number-switch)
-    (window-number-mode -1)))
 
 (use-package xref
   :ensure nil
@@ -2133,14 +1541,15 @@
 
 (use-package yasnippet
   :diminish yas-minor-mode
-  :commands yas-global-mode
+  :functions yas-global-mode
+  :init
+  (yas-global-mode)
   :bind
   ("C-M-y" . company-yasnippet)
   :config
   (use-package yasnippet-snippets)
   (setq yas-verbosity 1)
-  (setq yas-wrap-around-region t)
-  (yas-global-mode +1))
+  (setq yas-wrap-around-region t))
 
 (use-package ztree
   :commands ztree-diff
