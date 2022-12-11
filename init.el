@@ -948,13 +948,27 @@
 
 (use-package consult
   :after vertico
+  :preface
+  (defun consult-occur ()
+    (interactive)
+    (consult-line (thing-at-point 'symbol)))
   :bind
   (("C-x C-i" . consult-imenu)
    ("C-x f"   . consult-recent-file)
-   ("C-c h o" . consult-line)
+   ("C-x r l" . consult-bookmark)
+   ("C-c h o" . consult-occur)
    ("C-c h m" . consult-multi-occur)
    ("C-c h r" . consult-ripgrep)
-   ("C-c h b" . consult-buffer)))
+   ("C-c h b" . consult-buffer)
+   ("C-c h l" . consult-flymake)
+   ("C-c h e" . consult-compile-error)
+   ("C-c h x" . consult-xref)
+   ("M-g M-g" . consult-goto-line)
+   :map minibuffer-local-map
+   ("C-h" . consult-history))
+  :custom
+  (xref-show-definitions-function 'consult-xref)
+  (xref-show-xrefs-function 'consult-xref))
 
 (use-package counsel
   :disabled t
@@ -1008,10 +1022,7 @@
 
 (use-package eglot
   :hook
-  (c++-mode . eglot-ensure)
-  (clojure-mode . eglot-ensure)
-  (haskell-mode . eglot-ensure)
-  (rust-mode . eglot-ensure))
+  ((c++-mode clojure-mode haskell-mode rust-mode) . eglot-ensure))
 
 (use-package eldoc
   :ensure nil
@@ -1107,12 +1118,6 @@
 
 (use-package flymake
   :ensure nil
-  :bind
-  (("C-c f n" . flymake-goto-next-error)
-   ("C-c f p" . flymake-goto-prev-error)
-   ("C-c f l" . flymake-show-buffer-diagnostics)
-   (:map flymake-diagnostics-buffer-mode-map
-    ("C-j" . flymake-show-diagnostic)))
   :hook (prog-mode . flymake-mode))
 
 (use-package flymake-diagnostic-at-point
@@ -1253,16 +1258,12 @@
    ("C-x b"     . helm-mini)
    ("C-x r b"   . helm-filtered-bookmarks)
    ("C-c h w"   . helm-descbinds)
-   ("C-c h f"   . helm-codesearch-find-file)
-   ("C-c h t"   . helm-codesearch-find-pattern)
-   ("C-c h I"   . helm-codesearch-create-csearchindex)
    ("C-c h b"   . helm-resume)
    ("M-x"       . helm-M-x)
    ("M-y"       . helm-show-kill-ring))
   :config
   (require 'helm-mode)
   (use-package helm-descbinds)
-  (use-package helm-codesearch)
   ;; (cl-defmethod helm-setup-user-source ((source helm-source-multi-occur))
   ;;   (setf (slot-value source 'follow) 1))
   (setq helm-buffers-fuzzy-matching           t
@@ -1275,7 +1276,14 @@
     ("M-o" . helm-multi-occur-from-isearch))
   (my-setup-hook))
 
+(use-package helm-codesearch
+  :bind
+  (("C-c h f"   . helm-codesearch-find-file)
+   ("C-c h t"   . helm-codesearch-find-pattern)
+   ("C-c h I"   . helm-codesearch-create-csearchindex)))
+
 (use-package helm-lsp
+  :disabled t
   :commands helm-lsp-workspace-symbol)
 
 (use-package helm-projectile
@@ -1509,6 +1517,7 @@
                      (setq-local lisp-indent-function
                                  #'redefine-lisp-indent-function)))))
 (use-package lsp-haskell
+  :disabled t
   :after lsp
   :demand t
   :custom
@@ -1571,13 +1580,14 @@
    lsp-completion-show-detail t
    ;; completion item kind
    lsp-completion-show-kind t
-   lsp-ui-peek-always-show t
-   ))
+   lsp-ui-peek-always-show t))
 
 (use-package lsp-treemacs
+  :disabled t
   :commands lsp-treemacs-errors-list)
 
 (use-package lsp-ui
+  :disabled t
   :commands lsp-ui-mode)
 
 (use-package magit
@@ -2057,7 +2067,7 @@
   :bind
   (:map vertico-map
    ("C-j" . vertico-insert)
-   ("C-l" . vertico-directory-up))
+   ("C-l" . vertico-directory-delete-word))
   :config
   (my-setup-hook))
 
