@@ -970,6 +970,11 @@
   (xref-show-definitions-function 'consult-xref)
   (xref-show-xrefs-function 'consult-xref))
 
+(use-package consult-codesearch
+  :load-path "lisp"
+  :bind
+  ("C-c h t" . consult-codesearch))
+
 (use-package counsel
   :disabled t
   :bind
@@ -1277,6 +1282,7 @@
   (my-setup-hook))
 
 (use-package helm-codesearch
+  :disabled t
   :bind
   (("C-c h f"   . helm-codesearch-find-file)
    ("C-c h t"   . helm-codesearch-find-pattern)
