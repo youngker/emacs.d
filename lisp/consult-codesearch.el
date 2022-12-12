@@ -30,67 +30,59 @@
 
 (require 'consult)
 
-(defcustom consult-codesearch-csearchindex ".csearchindex"
+(defcustom consult-codesearch-index ".csearchindex"
   "Index file for each projects."
   :type 'string
   :group 'consult-codesearch)
 
 (defvar consult-codesearch-indexing-buffer "*consult codesearch indexing*")
 
-(defvar consult-codesearch-regexp-type nil)
+(defvar consult-codesearch-args nil)
 
-(defcustom consult-codesearch-args
+(defcustom consult-codesearch-file
+  "csearch -l -f"
+  "Find File.")
+
+(defcustom consult-codesearch-pattern
   "csearch -n"
-  "Codesearch args."
-  :type '(choice string (repeat (choice string expression))))
+  "Codesearch.")
 
-(defconst consult--grep-match-regexp-org
-  "\\`\\(?:\\./\\)?\\([^\n\0]+\\)\0\\([0-9]+\\)\\([-:\0]\\)"
-  "Regexp used to match file and line of grep output.")
-
-(defconst consult-codesearch--grep-match-regexp
+(defconst consult-codesearch--match-regexp
   "\\`\\(?:\\./\\)?\\([^\n\0]+\\):\\([0-9]+\\)\\([-:\0]\\)"
-  "Regexp used to match file and line of grep output.")
+  "Regexp used to match file and line of codesearch output.")
 
 (defun consult-codesearch-builder (input)
   "Build command line given INPUT."
   (pcase-let* ((cmd (consult--build-args consult-codesearch-args))
                (`(,arg . ,opts) (consult--command-split input))
                (flags (append cmd opts))
-               (ignore-case (if (or (member "-S" flags) (member "--smart-case" flags))
-                                (let (case-fold-search)
-                                  ;; Case insensitive if there are no uppercase letters
-                                  (not (string-match-p "[[:upper:]]" arg)))
-                              (or (member "-i" flags) (member "--ignore-case" flags)))))
-    (if (or (member "-F" flags) (member "--fixed-strings" flags))
-        `(:command (,@cmd ,arg ,@opts) :highlight
-          ,(apply-partially #'consult--highlight-regexps
-                            (list (regexp-quote arg)) ignore-case))
-      (pcase-let* ((type (or consult-codesearch-regexp-type
-                             (setq consult-codesearch-regexp-type
-                                   (if (consult--grep-lookahead-p (car cmd) "-P") 'pcre 'extended))))
-                   (`(,re . ,hl) (funcall consult--regexp-compiler arg type ignore-case)))
-        (when re
-          `(:command
-            (,@cmd ,@(and (eq type 'pcre) '("-P"))
-                   ,(consult--join-regexps re type)
-                   ,@opts)
-            :highlight ,hl))))))
+               (ignore-case (member "-i" flags))
+               (file (member "-l" cmd))
+               (`(,re . ,hl) (funcall consult--regexp-compiler arg 'extended ignore-case)))
+    (when re
+      `(:command (,@cmd
+                  ,@opts
+                  ,(if file
+                       (concat "(?i)" (consult--join-regexps re 'extended))
+                     (consult--join-regexps re 'extended))
+                  ,@(and file '("$")))
+        :highlight ,hl))))
 
-(defun consult-codesearch--search-index ()
+(defun consult-codesearch--set-index ()
   (setenv "CSEARCHINDEX"
           (expand-file-name
            (let* ((start-dir (expand-file-name default-directory))
                   (index-dir (locate-dominating-file start-dir
-                                                     consult-codesearch-csearchindex)))
+                                                     consult-codesearch-index)))
              (if index-dir
-                 (concat index-dir consult-codesearch-csearchindex)
+                 (concat index-dir consult-codesearch-index)
                (error "Can't find csearchindex"))))))
 
+;;;###autoload
 (defun consult-codesearch-create-index (dir)
   (interactive "DIndex files in directory: ")
   (setenv "CSEARCHINDEX"
-          (expand-file-name (concat dir consult-codesearch-csearchindex)))
+          (expand-file-name (concat dir consult-codesearch-index)))
 
   (let* ((buf consult-codesearch-indexing-buffer)
          (proc (apply 'start-process "codesearch"
@@ -116,10 +108,22 @@
 ;;;###autoload
 (defun consult-codesearch (&optional dir initial)
   (interactive "P")
-  (consult-codesearch--search-index)
-  (setq consult--grep-match-regexp consult-codesearch--grep-match-regexp)
-  (consult--grep "Codesearch" #'consult-codesearch-builder dir initial)
-  (setq consult--grep-match-regexp consult--grep-match-regexp-org))
+  (let ((initial (thing-at-point 'symbol))
+        (consult-codesearch-args consult-codesearch-pattern)
+        (consult--grep-match-regexp consult-codesearch--match-regexp)
+        (idx-path (consult-codesearch--set-index)))
+    (consult--grep "Codesearch" #'consult-codesearch-builder dir initial)))
+
+;;;###autoload
+(defun consult-codesearch-file (&optional dir initial)
+  (interactive "P")
+  (let* ((initial (thing-at-point 'symbol))
+         (consult-codesearch-args consult-codesearch-file)
+         (idx-path (consult-codesearch--set-index))
+         (prompt-dir (consult--directory-prompt "Find" dir))
+         (default-directory (cdr prompt-dir)))
+    (find-file (consult--find (car prompt-dir)
+                              #'consult-codesearch-builder initial))))
 
 (provide 'consult-codesearch)
 ;;; consult-codesearch.el ends here

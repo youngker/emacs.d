@@ -700,7 +700,6 @@
 (use-package avy
   :bind
   ("C-c ;" . avy-goto-char)
-  :commands avy-setup-default
   :config
   (avy-setup-default))
 
@@ -814,6 +813,7 @@
 (use-package consult-codesearch
   :load-path "lisp"
   :bind
+  ("C-c h f" . consult-codesearch-file)
   ("C-c h t" . consult-codesearch)
   ("C-c h I" . consult-codesearch-create-index))
 
