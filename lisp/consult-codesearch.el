@@ -5,7 +5,7 @@
 ;; Author: Youngjoo Lee <youngker@gmail.com>
 ;; Version: 0.1.0
 ;; Keywords: tools
-;; Package-Requires: ((emacs "28.2") (consult "1.7.7"))
+;; Package-Requires: ((emacs "27.1") (consult "0.20"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@
   "\\`\\(?:\\./\\)?\\([^\n\0]+\\):\\([0-9]+\\)\\([-:\0]\\)"
   "Regexp used to match file and line of codesearch output.")
 
-(defun consult-codesearch-builder (input)
+(defun consult-codesearch--builder (input)
   "Build command line given INPUT."
   (pcase-let* ((cmd (consult--build-args consult-codesearch-args))
                (`(,arg . ,opts) (consult--command-split input))
@@ -112,7 +112,7 @@
         (consult-codesearch-args consult-codesearch-pattern)
         (consult--grep-match-regexp consult-codesearch--match-regexp)
         (idx-path (consult-codesearch--set-index)))
-    (consult--grep "Codesearch" #'consult-codesearch-builder dir initial)))
+    (consult--grep "Codesearch" #'consult-codesearch--builder dir initial)))
 
 ;;;###autoload
 (defun consult-codesearch-file (&optional dir initial)
@@ -120,10 +120,10 @@
   (let* ((initial (thing-at-point 'symbol))
          (consult-codesearch-args consult-codesearch-file)
          (idx-path (consult-codesearch--set-index))
-         (prompt-dir (consult--directory-prompt "Find" dir))
+         (prompt-dir (consult--directory-prompt "Codesearch Find" dir))
          (default-directory (cdr prompt-dir)))
     (find-file (consult--find (car prompt-dir)
-                              #'consult-codesearch-builder initial))))
+                              #'consult-codesearch--builder initial))))
 
 (provide 'consult-codesearch)
 ;;; consult-codesearch.el ends here

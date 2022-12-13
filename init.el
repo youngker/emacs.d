@@ -805,7 +805,8 @@
    ("C-c h x" . consult-xref)
    ("M-g M-g" . consult-goto-line)
    :map minibuffer-local-map
-   ("C-h" . consult-history))
+   ("C-c h" . consult-history)
+   ("C-c s" . embark-export))
   :custom
   (xref-show-definitions-function 'consult-xref)
   (xref-show-xrefs-function 'consult-xref))
@@ -1126,10 +1127,8 @@
          ("\\.markdown\\'"    . markdown-mode)))
 
 (use-package mic-paren
-  :commands paren-activate
-  :hook ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . paren-activate)
-  :config
-  (paren-activate))
+  :hook
+  ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . paren-activate))
 
 (use-package modern-cpp-font-lock
   :diminish
