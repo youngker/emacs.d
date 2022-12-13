@@ -83,7 +83,8 @@
   "Create index file at DIR."
   (interactive "DIndex files in directory: ")
   (let ((index-file (concat dir codesearch-csearchindex)))
-    (codesearch-build-index (expand-file-name dir) index-file)))
+    (codesearch-build-index (expand-file-name dir) index-file)
+    (pop-to-buffer codesearch-output-buffer)))
 
 ;;;###autoload
 (defun consult-codesearch (&optional dir initial)
