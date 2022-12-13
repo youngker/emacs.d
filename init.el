@@ -3,7 +3,7 @@
 ;; Copyright (C) 2019 Youngjoo Lee
 
 ;; Author: Youngjoo Lee <youngker@gmail.com>
-;; Version: 0.4.0
+;; Version: 0.5.0
 ;; Keywords: convenience
 ;; Package-Requires: ((emacs "28.2"))
 
@@ -213,6 +213,12 @@
    `(completions-annotations ((,class (:foreground ,nord09))))
    `(completions-common-part ((,class (:foreground ,nord08 :weight normal))))
    `(completions-first-difference ((,class (:foreground ,nord11))))
+   `(consult-grep-context ((,class (:background ,nord11 :foreground ,nord13))))
+   `(consult-highlight-match ((,class (:background ,nord11 :foreground ,nord04))))
+   `(consult-line-number ((,class (:foreground ,nord13))))
+   `(consult-preview-cursor ((,class (:background ,nord13 :foreground ,nord02))))
+   `(consult-preview-insertion ((,class (:background ,nord02))))
+   `(consult-preview-match ((,class (:background ,nord11 :foreground ,nord04))))
    `(cursor ((,class (:background ,nord04))))
    `(custom-button ((,class (:background ,nord00 :foreground ,nord08 :box (:line-width 2 :color ,nord04 :style sunken-button)))))
    `(custom-button-mouse ((,class (:background ,nord04 :foreground ,nord00 :box (:line-width 2 :color ,nord04 :style sunken-button)))))
@@ -692,10 +698,9 @@
 
 (use-package autorevert
   :ensure nil
-  :commands auto-revert-mode
   :diminish auto-revert-mode
-  :init
-  (add-hook 'find-file-hook `(lambda () (auto-revert-mode +1))))
+  :hook
+  (find-file . (lambda () (auto-revert-mode))))
 
 (use-package avy
   :bind
@@ -794,12 +799,12 @@
     (consult-line (thing-at-point 'symbol)))
   :bind
   (("C-x C-i" . consult-imenu)
+   ("C-x b"   . consult-buffer)
    ("C-x f"   . consult-recent-file)
    ("C-x r l" . consult-bookmark)
    ("C-c h o" . consult-occur)
    ("C-c h m" . consult-multi-occur)
    ("C-c h r" . consult-ripgrep)
-   ("C-c h b" . consult-buffer)
    ("C-c h l" . consult-flymake)
    ("C-c h e" . consult-compile-error)
    ("C-c h x" . consult-xref)
@@ -890,8 +895,8 @@
           (concat " on " (propertize (magit-get-current-branch) 'face '(:foreground "#B48EAD")))) "\n$ "))
   :bind
   ("C-x m" . eshell)
-  :init
-  (add-hook 'eshell-mode-hook (lambda () (setq show-trailing-whitespace nil)))
+  :hook
+  (eshell-mode . (lambda () (setq show-trailing-whitespace nil)))
   :config
   (setq eshell-highlight-prompt nil
         eshell-prompt-function 'my-eshell-prompt-function
@@ -949,13 +954,12 @@
         gdb-use-colon-colon-notation t))
 
 (use-package go-eldoc
-  :commands go-eldoc-setup
+  :after go-mode
   :preface
   (defun go-eldoc-setup-hook ()
     (go-eldoc-setup))
-  :init
-  (with-eval-after-load 'go-mode
-    (add-hook 'go-mode-hook #'go-eldoc-setup-hook)))
+  :hook
+  (go-mode . go-eldoc-setup-hook))
 
 (use-package go-mode
   :mode ("\\.go\\'" . go-mode)
@@ -1249,12 +1253,11 @@
      (plantuml . t))))
 
 (use-package org-bullets
-  :commands org-bullets-mode
   :preface
   (defun org-bullets-mode-hook ()
-    (org-bullets-mode +1))
-  :init
-  (add-hook 'org-mode-hook #'org-bullets-mode-hook)
+    (org-bullets-mode))
+  :hook
+  (org-mode . org-bullets-mode-hook)
   :config
   (setq org-bullets-bullet-list '("•")))
 
@@ -1310,12 +1313,12 @@
   (use-package pdf-outline :ensure nil)
   (use-package pdf-history :ensure nil)
   (pdf-tools-install)
-  (add-hook 'pdf-view-mode-hook
-            (lambda ()
-              (pdf-misc-size-indication-minor-mode)
-              (pdf-links-minor-mode)
-              (pdf-isearch-minor-mode)
-              (pdf-outline-minor-mode))))
+  :hook
+  (pdf-view-mode . (lambda ()
+                     (pdf-misc-size-indication-minor-mode)
+                     (pdf-links-minor-mode)
+                     (pdf-isearch-minor-mode)
+                     (pdf-outline-minor-mode))))
 
 (use-package plantuml-mode
   :commands plantuml-mode
@@ -1328,12 +1331,11 @@
   :mode ("\\.qml\\'" . qml-mode))
 
 (use-package rainbow-delimiters
-  :commands rainbow-delimiters-mode
-  :hook ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . rainbow-delimiters-mode)
+  :hook
+  ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . rainbow-delimiters-mode)
   :config
   (use-package color
     :ensure nil
-    :commands color-saturate-name
     :demand t
     :config
     (cl-loop
@@ -1388,6 +1390,7 @@
   (setq shackle-rules
         '(("*Help*" :align t :select t)
           ("*Google Translate*" :align t :select t)
+          ("*Embark Export*" :align t :select t)
           (" *undo-tree*" :align right :size 0.1)
           ((grep-mode compilation-mode) :align t :select t)
           ("*xref*" :popup t :regexp t :align t :select t)
@@ -1461,7 +1464,8 @@
         '((:eval (system-name)) ": "
           (:eval (if (buffer-file-name)
                      (abbreviate-file-name (buffer-file-name)) "%b"))))
-  (add-hook 'post-command-hook #'terminal-title-hook))
+  :hook
+  (post-command . terminal-title-hook))
 
 (use-package tree-sitter
   :diminish "ts"
@@ -1511,14 +1515,15 @@
 (use-package volatile-highlights
   :diminish
   :functions volatile-highlights-mode
-  :init (volatile-highlights-mode))
+  :init
+  (volatile-highlights-mode))
 
 (use-package which-key
   :diminish
   :functions which-key-setup-side-window-right
   :commands which-key-mode
   :config
-  (which-key-mode +1)
+  (which-key-mode)
   (which-key-setup-side-window-right))
 
 (use-package whitespace-cleanup-mode
