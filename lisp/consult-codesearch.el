@@ -5,7 +5,7 @@
 ;; Author: Youngjoo Lee <youngker@gmail.com>
 ;; Version: 0.1.0
 ;; Keywords: tools
-;; Package-Requires: ((emacs "27.1") (consult "0.20"))
+;; Package-Requires: ((emacs "27.1") (codesearch "1") (consult "0.20") (embark 0.18))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -28,24 +28,29 @@
 
 ;;; Code:
 
+(require 'codesearch)
 (require 'consult)
+(require 'embark-consult)
 
-(defcustom consult-codesearch-index ".csearchindex"
-  "Index file for each projects."
-  :type 'string
-  :group 'consult-codesearch)
+(defgroup consult-codesearch nil
+  "Consult interface for codesearch."
+  :prefix "consult-codesearch-"
+  :group 'consult)
 
-(defvar consult-codesearch-indexing-buffer "*consult codesearch indexing*")
-
-(defvar consult-codesearch-args nil)
+(defvar consult-codesearch-args nil
+  "Codesearch arguments.")
 
 (defcustom consult-codesearch-file
   "csearch -l -f"
-  "Find File.")
+  "Codesearch file search command."
+  :type 'string
+  :group 'consult-codesearch)
 
 (defcustom consult-codesearch-pattern
   "csearch -n"
-  "Codesearch.")
+  "Codesearch search command."
+  :type 'string
+  :group 'consult-codesearch)
 
 (defconst consult-codesearch--match-regexp
   "\\`\\(?:\\./\\)?\\([^\n\0]+\\):\\([0-9]+\\)\\([-:\0]\\)"
@@ -68,58 +73,36 @@
                   ,@(and file '("$")))
         :highlight ,hl))))
 
-(defun consult-codesearch--set-index ()
-  (setenv "CSEARCHINDEX"
-          (expand-file-name
-           (let* ((start-dir (expand-file-name default-directory))
-                  (index-dir (locate-dominating-file start-dir
-                                                     consult-codesearch-index)))
-             (if index-dir
-                 (concat index-dir consult-codesearch-index)
-               (error "Can't find csearchindex"))))))
+(defun consult-codesearch--set-index (dir)
+  "Set CSEARCHINDEX variable in DIR."
+  (let* ((search-dir (or dir default-directory))
+         (index-file (codesearch--csearchindex search-dir)))
+    (setenv "CSEARCHINDEX" index-file)))
 
 ;;;###autoload
-(defun consult-codesearch-create-index (dir)
+(defun consult-codesearch-build-index (dir)
+  "Create index file at DIR."
   (interactive "DIndex files in directory: ")
-  (setenv "CSEARCHINDEX"
-          (expand-file-name (concat dir consult-codesearch-index)))
-
-  (let* ((buf consult-codesearch-indexing-buffer)
-         (proc (apply 'start-process "codesearch"
-                      buf "cindex" (list (expand-file-name dir)))))
-    (set-process-filter proc
-                        (lambda (process output)
-                          (with-current-buffer (process-buffer process)
-                            (let ((buffer-read-only nil))
-                              (insert output)))))
-    (set-process-sentinel proc
-                          (lambda (process event)
-                            (with-current-buffer (process-buffer process)
-                              (when (string= event "finished\n")
-                                (let ((buffer-read-only nil))
-                                  (insert "\nIndexing finished"))))))
-    (with-current-buffer buf
-      (local-set-key (kbd "q") 'quit-window)
-      (let ((buffer-read-only nil))
-        (erase-buffer))
-      (setq buffer-read-only t)
-      (pop-to-buffer buf))))
+  (let ((index-file (concat dir codesearch-csearchindex)))
+    (codesearch-build-index (expand-file-name dir) index-file)))
 
 ;;;###autoload
 (defun consult-codesearch (&optional dir initial)
+  "Call the \"csearch\" shell command."
   (interactive "P")
   (let ((initial (thing-at-point 'symbol))
         (consult-codesearch-args consult-codesearch-pattern)
         (consult--grep-match-regexp consult-codesearch--match-regexp)
-        (idx-path (consult-codesearch--set-index)))
+        (index (consult-codesearch--set-index dir)))
     (consult--grep "Codesearch" #'consult-codesearch--builder dir initial)))
 
 ;;;###autoload
 (defun consult-codesearch-file (&optional dir initial)
+  "Call the \"csearch\" shell command for find file."
   (interactive "P")
   (let* ((initial (thing-at-point 'symbol))
          (consult-codesearch-args consult-codesearch-file)
-         (idx-path (consult-codesearch--set-index))
+         (index (consult-codesearch--set-index dir))
          (prompt-dir (consult--directory-prompt "Codesearch Find" dir))
          (default-directory (cdr prompt-dir)))
     (find-file (consult--find (car prompt-dir)

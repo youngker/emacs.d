@@ -803,10 +803,7 @@
    ("C-c h l" . consult-flymake)
    ("C-c h e" . consult-compile-error)
    ("C-c h x" . consult-xref)
-   ("M-g M-g" . consult-goto-line)
-   :map minibuffer-local-map
-   ("C-c h" . consult-history)
-   ("C-c s" . embark-export))
+   ("M-g M-g" . consult-goto-line))
   :custom
   (xref-show-definitions-function 'consult-xref)
   (xref-show-xrefs-function 'consult-xref))
@@ -814,9 +811,12 @@
 (use-package consult-codesearch
   :load-path "lisp"
   :bind
-  ("C-c h f" . consult-codesearch-file)
-  ("C-c h t" . consult-codesearch)
-  ("C-c h I" . consult-codesearch-create-index))
+  (("C-c h f" . consult-codesearch-file)
+   ("C-c h t" . consult-codesearch)
+   ("C-c h I" . consult-codesearch-build-index)
+   :map minibuffer-local-map
+   ("C-c h" . consult-history)
+   ("C-c s" . embark-export)))
 
 (use-package default-text-scale
   :bind
@@ -868,6 +868,11 @@
    ("C-c s h" . eopengrok-find-history)
    ("C-c s c" . eopengrok-find-custom)
    ("C-c s b" . eopengrok-resume)))
+
+(use-package embark-consult
+  :demand t
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package eshell
   :ensure nil
