@@ -5,7 +5,7 @@
 ;; Author: Youngjoo Lee <youngker@gmail.com>
 ;; Version: 0.1.0
 ;; Keywords: tools
-;; Package-Requires: ((emacs "27.1") (codesearch "1") (consult "0.20") (embark 0.18))
+;; Package-Requires: ((emacs "27.1") (codesearch "1") (consult "0.20"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -30,23 +30,22 @@
 
 (require 'codesearch)
 (require 'consult)
-(require 'embark-consult)
 
 (defgroup consult-codesearch nil
   "Consult interface for codesearch."
   :prefix "consult-codesearch-"
   :group 'consult)
 
-(defvar consult-codesearch-args nil
+(defvar consult-codesearch--args nil
   "Codesearch arguments.")
 
-(defcustom consult-codesearch-file
+(defcustom consult-codesearch--find-file
   "csearch -l -f"
   "Codesearch file search command."
   :type 'string
   :group 'consult-codesearch)
 
-(defcustom consult-codesearch-pattern
+(defcustom consult-codesearch--codesearch
   "csearch -n"
   "Codesearch search command."
   :type 'string
@@ -58,19 +57,19 @@
 
 (defun consult-codesearch--builder (input)
   "Build command line given INPUT."
-  (pcase-let* ((cmd (consult--build-args consult-codesearch-args))
+  (pcase-let* ((cmd (consult--build-args consult-codesearch--args))
                (`(,arg . ,opts) (consult--command-split input))
                (flags (append cmd opts))
+               (files-with-matchs (member "-l" flags))
                (ignore-case (member "-i" flags))
-               (file (member "-l" cmd))
-               (`(,re . ,hl) (funcall consult--regexp-compiler arg 'extended ignore-case)))
+               (`(,re . ,hl)
+                (funcall consult--regexp-compiler arg 'extended ignore-case)))
     (when re
       `(:command (,@cmd
                   ,@opts
-                  ,(if file
-                       (concat "(?i)" (consult--join-regexps re 'extended))
-                     (consult--join-regexps re 'extended))
-                  ,@(and file '("$")))
+                  ,(let ((jre (consult--join-regexps re 'extended)))
+                     (if files-with-matchs (concat "(?i)" jre) jre))
+                  ,@(and files-with-matchs '("$")))
         :highlight ,hl))))
 
 (defun consult-codesearch--set-index (dir)
@@ -88,22 +87,24 @@
 
 ;;;###autoload
 (defun consult-codesearch (&optional dir initial)
-  "Call the \"csearch\" shell command."
+  "Search with `codesearch' for files in DIR where the content matches a regexp.
+
+The initial input is given by the INITIAL argument."
   (interactive "P")
   (let ((initial (thing-at-point 'symbol))
-        (consult-codesearch-args consult-codesearch-pattern)
+        (consult-codesearch--args consult-codesearch--codesearch)
         (consult--grep-match-regexp consult-codesearch--match-regexp)
         (index (consult-codesearch--set-index dir)))
     (consult--grep "Codesearch" #'consult-codesearch--builder dir initial)))
 
 ;;;###autoload
-(defun consult-codesearch-file (&optional dir initial)
-  "Call the \"csearch\" shell command for find file."
+(defun consult-codesearch-find-file (&optional dir initial)
+  "Search for files in DIR matching input regexp given INITIAL input."
   (interactive "P")
   (let* ((initial (thing-at-point 'symbol))
-         (consult-codesearch-args consult-codesearch-file)
+         (consult-codesearch--args consult-codesearch--find-file)
          (index (consult-codesearch--set-index dir))
-         (prompt-dir (consult--directory-prompt "Codesearch Find" dir))
+         (prompt-dir (consult--directory-prompt "Codesearch Find File" dir))
          (default-directory (cdr prompt-dir)))
     (find-file (consult--find (car prompt-dir)
                               #'consult-codesearch--builder initial))))
