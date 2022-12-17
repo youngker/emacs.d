@@ -1288,8 +1288,8 @@
 
 (use-package paredit
   :diminish
-  :commands paredit-mode
-  :hook ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . paredit-mode)
+  :hook
+  ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . paredit-mode)
   :config
   (eval-after-load 'paredit
     ;; need a binding that works in the terminal
@@ -1298,7 +1298,9 @@
 (use-package paredit-everywhere
   :diminish
   :hook
-  ((prog-mode css-mode) . paredit-everywhere-mode))
+  (prog-mode . paredit-everywhere-mode)
+  (prog-mode . electric-pair-mode)
+  (paredit-mode . (lambda () (electric-pair-mode 0))))
 
 (use-package pdf-tools
   :disabled t
@@ -1466,6 +1468,9 @@
                      (abbreviate-file-name (buffer-file-name)) "%b"))))
   :hook
   (post-command . terminal-title-hook))
+
+(use-package toml-mode
+  :mode ("\\.toml\\'" . toml-mode))
 
 (use-package tree-sitter
   :diminish "ts"
