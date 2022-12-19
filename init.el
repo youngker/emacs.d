@@ -918,6 +918,15 @@
   :hook
   (prog-mode . eldoc-mode))
 
+(use-package elec-pair
+  :ensure nil
+  :hook
+  (prog-mode . electric-pair-mode)
+  (paredit-mode . (lambda () (electric-pair-mode 0)))
+  :custom
+  (electric-pair-inhibit-predicate
+   (lambda (c) (minibufferp))))
+
 (use-package elisp-slime-nav
   :diminish
   :commands elisp-slime-nav-mode)
@@ -1359,9 +1368,7 @@
 (use-package paredit-everywhere
   :diminish
   :hook
-  (prog-mode . paredit-everywhere-mode)
-  (prog-mode . electric-pair-mode)
-  (paredit-mode . (lambda () (electric-pair-mode 0))))
+  (prog-mode . paredit-everywhere-mode))
 
 (use-package pdf-tools
   :disabled t
