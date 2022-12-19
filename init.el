@@ -871,6 +871,9 @@
    ("C-c h x" . consult-xref)
    ("M-g M-g" . consult-goto-line))
   :custom
+  (consult-async-refresh-delay 0.1)
+  (consult-async-input-throttle 0)
+  (consult-async-input-debounce 0)
   (xref-show-definitions-function 'consult-xref)
   (xref-show-xrefs-function 'consult-xref))
 
