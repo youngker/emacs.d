@@ -512,6 +512,10 @@
    `(neo-vc-user-face ((,class (:foreground ,nord04))))
    `(next-error ((,class (:inherit error))))
    `(nobreak-space ((,class (:foreground ,nord03))))
+   `(orderless-match-face-0 ((,class (:foreground ,nord11))))
+   `(orderless-match-face-1 ((,class (:foreground ,nord12))))
+   `(orderless-match-face-2 ((,class (:foreground ,nord13))))
+   `(orderless-match-face-3 ((,class (:foreground ,nord14))))
    `(org-agenda-date ((,class (:foreground ,nord08 :underline nil))))
    `(org-agenda-date-today ((,class (:foreground ,nord08 :weight normal))))
    `(org-agenda-date-weekend ((,class (:foreground ,nord09))))
@@ -1230,9 +1234,9 @@
 (use-package orderless
   :after vertico
   :custom
-  (completion-styles '(orderless))
+  (completion-styles '(orderless basic))
   (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles . (partial-completion))))))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (use-package org
   :ensure nil
