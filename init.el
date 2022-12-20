@@ -1586,7 +1586,10 @@
   :bind
   (:map vertico-map
    ("C-j" . vertico-insert)
-   ("C-l" . vertico-directory-delete-word)))
+   ("C-l" . vertico-directory-delete-word))
+  :custom
+  (vertico-cycle t)
+  (vertico-resize nil))
 
 (use-package visual-regexp
   :bind
