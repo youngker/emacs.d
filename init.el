@@ -882,7 +882,6 @@
   (xref-show-xrefs-function 'consult-xref))
 
 (use-package consult-codesearch
-  :load-path "lisp"
   :bind
   (("C-c h f" . consult-codesearch-find-file)
    ("C-c h t" . consult-codesearch)
