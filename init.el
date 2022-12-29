@@ -916,7 +916,11 @@
 
 (use-package eglot
   :hook
-  ((c++-mode clojure-mode haskell-mode rust-mode) . eglot-ensure))
+  ((c++-mode
+    clojure-mode
+    haskell-mode
+    nix-mode
+    rust-mode) . eglot-ensure))
 
 (use-package eldoc
   :ensure nil
@@ -1128,6 +1132,9 @@
   :disabled t
   :hook
   (clojure-mode . inf-clojure-minor-mode))
+
+(use-package ksp-mode
+  :mode ("\\.ksp\\'" . ksp-mode))
 
 (use-package lisp-mode
   :defer t
