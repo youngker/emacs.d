@@ -919,6 +919,7 @@
   ((c++-mode
     clojure-mode
     haskell-mode
+    java-mode
     nix-mode
     rust-mode) . eglot-ensure))
 
@@ -942,7 +943,6 @@
   :commands elisp-slime-nav-mode)
 
 (use-package eopengrok
-  :disabled t
   :bind
   (("C-c s i" . eopengrok-create-index)
    ("C-c s I" . eopengrok-create-index-with-enable-projects)
