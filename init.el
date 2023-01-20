@@ -917,11 +917,13 @@
 (use-package eglot
   :hook
   ((c++-mode
+    c-mode
     clojure-mode
     haskell-mode
     java-mode
     nix-mode
-    rust-mode) . eglot-ensure))
+    rust-mode
+    tuareg-mode) . eglot-ensure))
 
 (use-package eldoc
   :ensure nil
@@ -941,6 +943,9 @@
 (use-package elisp-slime-nav
   :diminish
   :commands elisp-slime-nav-mode)
+
+(use-package elogcat
+  :commands elogcat)
 
 (use-package eopengrok
   :bind
@@ -1563,6 +1568,9 @@
 (use-package tree-sitter-langs
   :demand t
   :after tree-sitter)
+
+(use-package tuareg
+  :mode ("\\.ml[ily]?$" . tuareg-mode))
 
 (use-package typescript-mode
   :mode ("\\.ts\\'" "\\.tsx\\'")
