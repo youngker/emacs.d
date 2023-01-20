@@ -919,6 +919,8 @@
   ((c++-mode
     c-mode
     clojure-mode
+    cmake-mode
+    go-mode
     haskell-mode
     java-mode
     nix-mode
