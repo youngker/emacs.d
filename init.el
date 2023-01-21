@@ -1266,8 +1266,8 @@
   (use-package ob-plantuml
     :ensure nil
     :init
-    (setq org-plantuml-jar-path (concat user-emacs-directory
-                                        "lib/plantuml.jar")))
+    (setq org-plantuml-executable-path "plantuml"
+          org-plantuml-exec-mode 'plantuml))
 
   (use-package ox-latex
     :ensure nil
@@ -1420,9 +1420,8 @@
 (use-package plantuml-mode
   :commands plantuml-mode
   :config
-  (setq plantuml-jar-path (concat user-emacs-directory
-                                  "lib/plantuml.jar"))
-  (setq plantuml-default-exec-mode 'jar))
+  (setq plantuml-executable-path "plantuml"
+        plantuml-default-exec-mode 'executable))
 
 (use-package qml-mode
   :mode ("\\.qml\\'" . qml-mode))
