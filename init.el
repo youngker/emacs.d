@@ -794,8 +794,7 @@
 (use-package clojure-mode
   :mode ("\\.clj\\'" "\\.cljs\\'" "\\.cljc\\'")
   :config
-  (use-package cljsbuild-mode)
-  (use-package elein))
+  (setq inferior-lisp-program "lein repl"))
 
 (use-package cmake-mode
   :mode (("CMake[^/\\]*\\.txt\\'" . cmake-mode)
@@ -1263,17 +1262,19 @@
   (use-package org-capture
     :ensure nil
     :commands org-capture)
-  (use-package ox-reveal
-    :defines org-reveal-mathjax
-    :init
-    (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
-    (setq org-reveal-mathjax t))
 
   (use-package ob-plantuml
     :ensure nil
     :init
     (setq org-plantuml-jar-path (concat user-emacs-directory
                                         "lib/plantuml.jar")))
+
+  (use-package ox-latex
+    :ensure nil
+    :init
+    (setq org-latex-compiler "xelatex"
+          org-latex-pdf-process
+          (list "latexmk -pdflatex='xelatex -shell-escape -synctex=1' -pdf -f %f")))
 
   (use-package org-tempo
     :ensure nil
@@ -1368,6 +1369,12 @@
                  "O"
                  "\\begin{onlyenv}%a\\begin{block}{%h}"
                  "\\end{block}\\end{onlyenv}")))
+
+(use-package ox-reveal
+  :defines org-reveal-mathjax
+  :init
+  (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
+  (setq org-reveal-mathjax t))
 
 (use-package page-break-lines
   :diminish
