@@ -1276,6 +1276,14 @@
           org-latex-pdf-process
           (list "latexmk -pdflatex='xelatex -shell-escape -synctex=1' -pdf -f %f")))
 
+  (use-package ox-pandoc)
+
+  (use-package ox-reveal
+    :defines org-reveal-mathjax
+    :init
+    (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
+    (setq org-reveal-mathjax t))
+
   (use-package org-tempo
     :ensure nil
     :init
@@ -1335,6 +1343,7 @@
               (add-hook 'before-save-hook 'org-align-all-tags nil t)))
 
   ;; Org babel
+  (setq org-confirm-babel-evaluate nil)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
@@ -1369,12 +1378,6 @@
                  "O"
                  "\\begin{onlyenv}%a\\begin{block}{%h}"
                  "\\end{block}\\end{onlyenv}")))
-
-(use-package ox-reveal
-  :defines org-reveal-mathjax
-  :init
-  (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
-  (setq org-reveal-mathjax t))
 
 (use-package page-break-lines
   :diminish
