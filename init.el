@@ -1268,13 +1268,31 @@
     :init
     (setq org-plantuml-executable-path "plantuml"
           org-plantuml-exec-mode 'plantuml))
-
+  (use-package engrave-faces)
   (use-package ox-latex
     :ensure nil
     :init
-    (setq org-latex-compiler "xelatex"
+    (setq org-latex-compiler "lualatex"
+          org-latex-src-block-backend 'engraved
           org-latex-pdf-process
-          (list "latexmk -pdflatex='xelatex -shell-escape -synctex=1' -pdf -f %f")))
+          (let
+              ((cmd (concat "lualatex -shell-escape -interaction nonstopmode"
+                            " --synctex=1"
+                            " -output-directory %o %f")))
+            (list cmd
+                  "cd %o; if test -r %b.idx; then makeindex %b.idx; fi"
+                  "cd %o; bibtex %b"
+                  cmd
+                  cmd)))
+    :config
+    (add-to-list 'org-latex-classes
+                 '("extarticle"
+                   "\\documentclass{extarticle} [DEFAULT-PACKAGES]"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
   (use-package ox-pandoc)
 
