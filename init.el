@@ -1457,6 +1457,9 @@
   (setq plantuml-executable-path "plantuml"
         plantuml-default-exec-mode 'executable))
 
+(use-package python-black
+  :hook (python-mode . python-black-on-save-mode-enable-dwim))
+
 (use-package qml-mode
   :mode ("\\.qml\\'" . qml-mode))
 

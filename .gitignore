@@ -2,13 +2,15 @@
 /ac-comphist.dat
 /auto-save-list
 /bookmarks
+/custom.el
+/eln-cache
 /elpa
 /eshell
 /history
 /ido.last
 /place
+/projectile-bookmarks.eld
 /recentf
 /smex-items
+/transient
 /url
-/custom.el
-/projectile-bookmarks.eld
