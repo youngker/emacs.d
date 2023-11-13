@@ -74,6 +74,10 @@
           org-refile-use-outline-path 'file))
 
   (use-package org-bullets
+    :defines
+    (org-bullets-bullet-list)
+    :functions
+    (org-bullets-mode)
     :preface
     (defun org-bullets-mode-hook ()
       (org-bullets-mode))
@@ -85,6 +89,8 @@
   (use-package org-journal
     :mode
     ("journal/[0-9]\\{8\\}$" . org-journal-mode)
+    :defines
+    (org-journal-dir)
     :config
     (setq org-journal-dir (concat org-directory "/journal/")))
 
@@ -131,6 +137,8 @@
                    ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
   (use-package ox-pandoc
+    :defines
+    (org-pandoc-menu-entry)
     :init
     (setq org-pandoc-menu-entry
           '((?b "to beamer-pdf and open." org-pandoc-export-to-beamer-pdf-and-open)
@@ -153,7 +161,9 @@
             (?X "to docx." org-pandoc-export-to-docx))))
 
   (use-package ox-reveal
-    :defines org-reveal-mathjax
+    :defines
+    (org-reveal-mathjax
+     org-reveal-root)
     :init
     (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
     (setq org-reveal-mathjax t))

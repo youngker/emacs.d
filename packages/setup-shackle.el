@@ -3,6 +3,13 @@
 ;;; Code:
 
 (use-package shackle
+  :defines
+  (shackle-rules
+   shackle-default-rule
+   shackle-default-size
+   shackle-inhibit-window-quit-on-same-windows)
+  :functions
+  (shackle-mode)
   :init
   (shackle-mode)
   :config

@@ -4,6 +4,8 @@
 
 (use-package tree-sitter
   :diminish "ts"
+  :functions
+  (global-tree-sitter-mode)
   :init
   (global-tree-sitter-mode)
   :hook

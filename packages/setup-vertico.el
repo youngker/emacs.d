@@ -3,6 +3,10 @@
 ;;; Code:
 
 (use-package vertico
+  :defines
+  (vertico-map)
+  :functions
+  (vertico-mode)
   :init
   (vertico-mode)
   :bind

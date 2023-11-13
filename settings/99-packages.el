@@ -1,8 +1,9 @@
-;;; 99-load.el --- -*- lexical-binding: t; -*-
+;;; 99-packages.el --- -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
 
 ;; https://github.com/alphapapa/unpackaged.el#sort-sexps
+(require 'cl-lib)
 (defun my-sort-sexps (beg end)
   "Sort sexps in region (from BEG to END)."
   (interactive "r")
@@ -52,7 +53,9 @@
   ("C-x o" . ace-window))
 
 (use-package auto-compile
-  :functions (auto-compile-on-load-mode auto-compile-on-save-mode)
+  :functions
+  (auto-compile-on-load-mode
+   auto-compile-on-save-mode)
   :init
   (auto-compile-on-load-mode)
   :config
@@ -66,6 +69,8 @@
   (find-file . (lambda () (auto-revert-mode))))
 
 (use-package avy
+  :functions
+  (avy-setup-default)
   :bind
   ("C-c ;" . avy-goto-char)
   :config
@@ -73,8 +78,23 @@
 
 (use-package company
   :diminish
-  :defines company-dabbrev-downcase
-  :functions global-company-mode
+  :defines
+  (company-dabbrev-downcase
+   company-echo-delay
+   company-idle-delay
+   company-minimum-prefix-length
+   company-require-match
+   company-selection-wrap-around
+   company-tooltip-align-annotations
+   company-tooltip-flip-when-above
+   company-tooltip-limit
+   company-transformers
+   company-active-map)
+  :functions
+  (global-company-mode
+   company-select-previous
+   company-select-next
+   company-complete-common-or-cycle)
   :init
   (global-company-mode)
   :config
@@ -122,6 +142,11 @@
    ("C-M--" . default-text-scale-decrease)))
 
 (use-package diff-hl
+  :defines
+  (diff-hl-side)
+  :functions
+  (global-diff-hl-mode
+   diff-hl-margin-mode)
   :init
   (global-diff-hl-mode)
   :config
@@ -172,7 +197,10 @@
 
 (use-package exec-path-from-shell
   :if (equal system-type 'darwin)
-  :defines exec-path-from-shell-check-startup-files
+  :defines
+  (exec-path-from-shell-check-startup-files)
+  :functions
+  (exec-path-from-shell-initialize)
   :config
   (setq exec-path-from-shell-check-startup-files nil)
   (exec-path-from-shell-initialize))
@@ -190,7 +218,9 @@
   :hook (flymake-mode . flymake-diagnostic-at-point-mode))
 
 (use-package google-translate
-  :defines google-translate-translation-directions-alist
+  :defines
+  (google-translate-translation-directions-alist
+   google-translate-backend-method)
   :bind
   ("C-c t" . google-translate-smooth-translate)
   :preface
@@ -239,6 +269,9 @@
 
 (use-package page-break-lines
   :diminish
+  :functions
+  (global-page-break-lines-mode
+   page-break-lines-mode)
   :init
   (global-page-break-lines-mode)
   :config
@@ -246,6 +279,9 @@
 
 (use-package plantuml-mode
   :commands plantuml-mode
+  :defines
+  (plantuml-executable-path
+   plantuml-default-exec-mode)
   :config
   (setq plantuml-executable-path "plantuml"
         plantuml-default-exec-mode 'executable))
@@ -280,6 +316,7 @@
 
 (use-package server
   :ensure nil
+  :commands server-running-p
   :config
   (unless (server-running-p)
     (server-start)))
@@ -301,6 +338,8 @@
 
 (use-package typescript-mode
   :mode ("\\.ts\\'" "\\.tsx\\'")
+  :defines
+  (typescript-indent-level)
   :init
   (setq typescript-indent-level 2))
 
@@ -327,20 +366,23 @@
 
 (use-package volatile-highlights
   :diminish
-  :functions volatile-highlights-mode
+  :functions
+  (volatile-highlights-mode)
   :init
   (volatile-highlights-mode))
 
 (use-package which-key
   :diminish
-  :functions which-key-setup-side-window-right
   :commands which-key-mode
+  :functions
+  (which-key-setup-side-window-right)
   :config
   (which-key-mode)
   (which-key-setup-side-window-right))
 
 (use-package whitespace-cleanup-mode
-  :functions global-whitespace-cleanup-mode
+  :functions
+  (global-whitespace-cleanup-mode)
   :init
   (global-whitespace-cleanup-mode))
 
@@ -354,5 +396,5 @@
   (dolist (file (directory-files dir t "\\.el$"))
     (load file)))
 
-(provide '99-load)
-;;; 99-load.el ends here
+(provide '99-packages)
+;;; 99-packages.el ends here

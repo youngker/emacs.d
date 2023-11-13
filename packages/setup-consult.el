@@ -4,7 +4,8 @@
 
 (use-package consult
   :after vertico
-  :functions consult-line
+  :functions
+  (consult-line)
   :preface
   (defun consult-occur ()
     (interactive)

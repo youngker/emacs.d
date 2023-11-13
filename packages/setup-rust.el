@@ -9,6 +9,8 @@
 
 (use-package cargo
   :diminish cargo-minor-mode
+  :defines
+  (cargo-minor-mode)
   :bind
   (:map cargo-minor-mode
    (("M-1" . cargo-process-build)

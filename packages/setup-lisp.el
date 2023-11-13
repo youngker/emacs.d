@@ -5,11 +5,14 @@
 (use-package lisp-mode
   :defer t
   :ensure nil
-  :commands (lisp-indent-defform
-             lisp-indent-specform)
-  :hook ((lisp-mode emacs-lisp-mode)
-         . (lambda () (add-hook 'after-save-hook #'check-parens nil t)))
-  :defines calculate-lisp-indent-last-sexp
+  :commands
+  (lisp-indent-defform
+   lisp-indent-specform)
+  :hook
+  ((lisp-mode emacs-lisp-mode)
+   . (lambda () (add-hook 'after-save-hook #'check-parens nil t)))
+  :defines
+  (calculate-lisp-indent-last-sexp)
   :preface
   (defvar elisp-mode-hook-list
     '(emacs-lisp-mode-hook
@@ -20,7 +23,7 @@
     (elisp-slime-nav-mode +1))
 
   (defun redefine-lisp-indent-function (indent-point state)
-    "Redefine 'lisp-indent-function (INDENT-POINT STATE)."
+    "Redefine \\='lisp-indent-function (INDENT-POINT STATE)."
     (let ((normal-indent (current-column))
           (orig-point (point)))
       (goto-char (1+ (elt state 1)))
@@ -90,6 +93,9 @@
   (use-package color
     :ensure nil
     :demand t
+    :commands color-saturate-name
+    :defines
+    (rainbow-delimiters-max-face-count)
     :config
     (cl-loop
      for index from 1 to rainbow-delimiters-max-face-count
@@ -99,13 +105,18 @@
 
 (use-package slime
   :commands slime-mode
+  :defines
+  (inferior-lisp-program
+   slime-contribs)
   :config
   (setq inferior-lisp-program "sbcl" ;;"lx86cl64"
         slime-contribs '(slime-fancy)))
 
 (use-package slime-company
-  :after (slime company)
-  :defines slime-company-competion
+  :after
+  (slime company)
+  :defines
+  (slime-company-competion)
   :init
   (setq slime-company-competion 'fuzzy))
 

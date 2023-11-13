@@ -4,7 +4,11 @@
 
 (use-package yasnippet
   :diminish yas-minor-mode
-  :functions yas-global-mode
+  :defines
+  (yas-verbosity
+   yas-wrap-around-region)
+  :functions
+  (yas-global-mode)
   :init
   (yas-global-mode)
   :bind

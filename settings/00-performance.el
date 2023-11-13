@@ -4,7 +4,7 @@
 
 (setq gc-cons-threshold (* 1024 1024 100))
 
-(setq file-name-handler-alist-original file-name-handler-alist)
+(defvar file-name-handler-alist-original file-name-handler-alist)
 (setq file-name-handler-alist nil)
 
 (add-hook 'emacs-startup-hook

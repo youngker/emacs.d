@@ -4,6 +4,9 @@
 
 (use-package highlight-symbol
   :diminish
+  :defines
+  (highlight-symbol-colors
+   highlight-symbol-foreground-color)
   :bind
   ("C-c ." . highlight-symbol)
   :hook

@@ -1,4 +1,4 @@
-;;; 20-packages.el --- -*- lexical-binding: t; -*-
+;;; 20-config.el --- -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -21,5 +21,5 @@
 (setq use-package-always-ensure t)
 (setq package-enable-at-startup t)
 
-(provide '20-packages)
-;;; 20-packages.el ends here
+(provide '20-config)
+;;; 20-config.el ends here

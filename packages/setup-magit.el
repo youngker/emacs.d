@@ -3,6 +3,8 @@
 ;;; Code:
 
 (use-package magit
+  :defines
+  (magit-completing-read-function)
   :bind
   (("C-x g"   . magit-status)
    ("C-c m b" . magit-blame-addition))

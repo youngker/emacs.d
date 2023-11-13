@@ -4,8 +4,13 @@
 
 (use-package eshell
   :ensure nil
-  :defines (eshell-highlight-prompt eshell-prompt-function eshell-prompt-regexp)
-  :functions (magit-get-current-branch eshell/pwd)
+  :defines
+  (eshell-highlight-prompt
+   eshell-prompt-function
+   eshell-prompt-regexp)
+  :functions
+  (magit-get-current-branch
+   eshell/pwd)
   :preface
   (defun my-eshell-prompt-function ()
     (require 'magit)

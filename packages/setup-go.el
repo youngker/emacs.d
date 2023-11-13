@@ -4,6 +4,12 @@
 
 (use-package go-mode
   :mode ("\\.go\\'" . go-mode)
+  :defines
+  (gofmt-command
+   go-mode-map)
+  :functions
+  (godef-jump
+   gofmt-before-save)
   :preface
   (defun go-mode-setup-hook ()
     (setq tab-width 4)
@@ -19,6 +25,8 @@
 
 (use-package go-eldoc
   :after go-mode
+  :functions
+  (go-eldoc-setup)
   :preface
   (defun go-eldoc-setup-hook ()
     (go-eldoc-setup))

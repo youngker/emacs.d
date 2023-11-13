@@ -4,6 +4,9 @@
 
 (use-package ztree
   :commands ztree-diff
+  :defines
+  (ztree-draw-unicode-lines
+   ztreediff-mode-map)
   :config
   (set-face-attribute
    'ztreep-diff-model-add-face  nil :foreground "#87cefa")

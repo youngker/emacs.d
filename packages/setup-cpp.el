@@ -3,6 +3,9 @@
 ;;; Code:
 
 (use-package google-c-style
+  :functions
+  (google-set-c-style
+   google-make-newline-indent)
   :preface
   (defun c-mode-common-setup-hook ()
     (google-set-c-style)
@@ -33,6 +36,8 @@
 
 (use-package cmake-project
   :diminish
+  :functions
+  (cmake-project-mode)
   :preface
   (defun maybe-cmake-project-hook ()
     (if (file-exists-p "CMakeLists.txt")

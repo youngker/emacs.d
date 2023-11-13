@@ -4,6 +4,8 @@
 
 (use-package clojure-mode
   :mode ("\\.clj\\'" "\\.cljs\\'" "\\.cljc\\'")
+  :defines
+  (inferior-lisp-program)
   :config
   (setq inferior-lisp-program "lein repl"))
 

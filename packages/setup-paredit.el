@@ -4,6 +4,8 @@
 
 (use-package paredit
   :diminish
+  :defines
+  (paredit-mode-map)
   :hook
   ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . paredit-mode)
   :config
