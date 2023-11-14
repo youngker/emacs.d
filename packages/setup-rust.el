@@ -2,11 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-(use-package rust-mode
-  :mode ("\\.rs\\'" . rust-mode)
-  :config
-  (setq electric-indent-mode +1))
-
 (use-package cargo
   :diminish cargo-minor-mode
   :defines
@@ -17,6 +12,11 @@
     ("M-2" . cargo-process-run)))
   :hook
   (rust-mode . cargo-minor-mode))
+
+(use-package rust-mode
+  :mode ("\\.rs\\'" . rust-mode)
+  :config
+  (setq electric-indent-mode +1))
 
 (provide 'setup-rust)
 ;;; setup-rust.el ends here

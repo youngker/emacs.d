@@ -2,6 +2,13 @@
 ;;; Commentary:
 ;;; Code:
 
+(use-package orderless
+  :after vertico
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
 (use-package vertico
   :defines
   (vertico-map)
@@ -16,13 +23,6 @@
   :custom
   (vertico-cycle t)
   (vertico-resize nil))
-
-(use-package orderless
-  :after vertico
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles basic partial-completion)))))
 
 (provide 'setup-vertico)
 ;;; setup-vertico.el ends here

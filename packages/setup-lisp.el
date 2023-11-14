@@ -2,6 +2,17 @@
 ;;; Commentary:
 ;;; Code:
 
+(use-package aggressive-indent
+  :commands aggressive-indent-mode
+  :diminish
+  :hook ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . aggressive-indent-mode)
+  :config
+  (aggressive-indent-mode t))
+
+(use-package elisp-slime-nav
+  :diminish
+  :commands elisp-slime-nav-mode)
+
 (use-package lisp-mode
   :defer t
   :ensure nil
@@ -75,16 +86,9 @@
                      (setq-local lisp-indent-function
                                  #'redefine-lisp-indent-function)))))
 
-(use-package aggressive-indent
-  :commands aggressive-indent-mode
-  :diminish
-  :hook ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . aggressive-indent-mode)
-  :config
-  (aggressive-indent-mode t))
-
-(use-package elisp-slime-nav
-  :diminish
-  :commands elisp-slime-nav-mode)
+(use-package mic-paren
+  :hook
+  ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . paren-activate))
 
 (use-package rainbow-delimiters
   :hook
@@ -119,10 +123,6 @@
   (slime-company-competion)
   :init
   (setq slime-company-competion 'fuzzy))
-
-(use-package mic-paren
-  :hook
-  ((lisp-mode emacs-lisp-mode clojure-mode scheme-mode) . paren-activate))
 
 (provide 'setup-lisp)
 ;;; setup-lisp.el ends here

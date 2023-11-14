@@ -2,33 +2,10 @@
 ;;; Commentary:
 ;;; Code:
 
-(use-package google-c-style
-  :functions
-  (google-set-c-style
-   google-make-newline-indent)
-  :preface
-  (defun c-mode-common-setup-hook ()
-    (google-set-c-style)
-    (google-make-newline-indent)
-    (c-add-style "my-c-style"
-                 '("Google"
-                   (tab-width . 4)
-                   (c-basic-offset . 4)
-                   (indent-tabs-mode . nil)
-                   (c-auto-newline . nil)
-                   (c-electric-flag . t)
-                   (c-offsets-alist . ((access-label . -)
-                                       (case-label . 0)
-                                       (inlambda . 0)
-                                       (statement-case-intro . +)
-                                       (statement-case-open . 0)
-                                       (member-init-intro . +)))))
-    (c-set-style "my-c-style")
-    (local-unset-key (kbd "C-c ."))
-    (flymake-mode +1)
-    (modern-c++-font-lock-mode +1))
-  :hook
-  (c-mode-common . c-mode-common-setup-hook))
+(use-package clang-format
+  :commands clang-format-buffer
+  :bind
+  ("C-c c r" . clang-format-buffer))
 
 (use-package cmake-mode
   :mode (("CMake[^/\\]*\\.txt\\'" . cmake-mode)
@@ -44,16 +21,6 @@
         (cmake-project-mode)))
   :hook
   ((c-mode c++-mode) . maybe-cmake-project-hook))
-
-(use-package clang-format
-  :commands clang-format-buffer
-  :bind
-  ("C-c c r" . clang-format-buffer))
-
-(use-package modern-cpp-font-lock
-  :diminish
-  :hook
-  (c++-mode . modern-c++-font-lock-mode))
 
 (use-package gdb-mi
   :ensure nil
@@ -86,6 +53,39 @@
         gdb-thread-buffer-locations t
         gdb-thread-buffer-verbose-names t
         gdb-use-colon-colon-notation t))
+
+(use-package google-c-style
+  :functions
+  (google-set-c-style
+   google-make-newline-indent)
+  :preface
+  (defun c-mode-common-setup-hook ()
+    (google-set-c-style)
+    (google-make-newline-indent)
+    (c-add-style "my-c-style"
+                 '("Google"
+                   (tab-width . 4)
+                   (c-basic-offset . 4)
+                   (indent-tabs-mode . nil)
+                   (c-auto-newline . nil)
+                   (c-electric-flag . t)
+                   (c-offsets-alist . ((access-label . -)
+                                       (case-label . 0)
+                                       (inlambda . 0)
+                                       (statement-case-intro . +)
+                                       (statement-case-open . 0)
+                                       (member-init-intro . +)))))
+    (c-set-style "my-c-style")
+    (local-unset-key (kbd "C-c ."))
+    (flymake-mode +1)
+    (modern-c++-font-lock-mode +1))
+  :hook
+  (c-mode-common . c-mode-common-setup-hook))
+
+(use-package modern-cpp-font-lock
+  :diminish
+  :hook
+  (c++-mode . modern-c++-font-lock-mode))
 
 (use-package qml-mode
   :mode ("\\.qml\\'" . qml-mode))

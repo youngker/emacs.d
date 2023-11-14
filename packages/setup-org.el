@@ -39,39 +39,13 @@
      (dot . t)
      (plantuml . t)))
 
-  (use-package org-capture
-    :ensure nil
-    :config
-    (setq org-capture-templates
-          (let ((refile-file (concat org-directory "/notes.org")))
-            `(("t" "todo" entry (file ,refile-file)
-               "* TODO %?")
-              ("n" "note" entry (file ,refile-file)
-               "* %?")))))
+  (use-package engrave-faces)
 
   (use-package ob-plantuml
     :ensure nil
     :init
     (setq org-plantuml-executable-path "plantuml"
           org-plantuml-exec-mode 'plantuml))
-
-  (use-package engrave-faces)
-
-  (use-package org-faces
-    :ensure nil
-    :config
-    (setq org-todo-keyword-faces
-          '(("NEXT" :foreground "#5E81AC" :weight bold)
-            ("WAITING" :foreground "#D08770" :weight bold)
-            ("HOLD" :foreground "#BF616A" :weight bold)
-            ("CANCELLED" :foreground "#A3BE8C" :weight bold))))
-
-  ;; Refile setup.
-  (use-package org-refile
-    :ensure nil
-    :config
-    (setq org-refile-targets '((org-agenda-files :level . 1))
-          org-refile-use-outline-path 'file))
 
   (use-package org-bullets
     :defines
@@ -86,6 +60,25 @@
     :config
     (setq org-bullets-bullet-list '("•")))
 
+  (use-package org-capture
+    :ensure nil
+    :config
+    (setq org-capture-templates
+          (let ((refile-file (concat org-directory "/notes.org")))
+            `(("t" "todo" entry (file ,refile-file)
+               "* TODO %?")
+              ("n" "note" entry (file ,refile-file)
+               "* %?")))))
+
+  (use-package org-faces
+    :ensure nil
+    :config
+    (setq org-todo-keyword-faces
+          '(("NEXT" :foreground "#5E81AC" :weight bold)
+            ("WAITING" :foreground "#D08770" :weight bold)
+            ("HOLD" :foreground "#BF616A" :weight bold)
+            ("CANCELLED" :foreground "#A3BE8C" :weight bold))))
+
   (use-package org-journal
     :mode
     ("journal/[0-9]\\{8\\}$" . org-journal-mode)
@@ -93,6 +86,13 @@
     (org-journal-dir)
     :config
     (setq org-journal-dir (concat org-directory "/journal/")))
+
+  ;; Refile setup.
+  (use-package org-refile
+    :ensure nil
+    :config
+    (setq org-refile-targets '((org-agenda-files :level . 1))
+          org-refile-use-outline-path 'file))
 
   (use-package ox-beamer
     :ensure nil

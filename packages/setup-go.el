@@ -2,6 +2,16 @@
 ;;; Commentary:
 ;;; Code:
 
+(use-package go-eldoc
+  :after go-mode
+  :functions
+  (go-eldoc-setup)
+  :preface
+  (defun go-eldoc-setup-hook ()
+    (go-eldoc-setup))
+  :hook
+  (go-mode . go-eldoc-setup-hook))
+
 (use-package go-mode
   :mode ("\\.go\\'" . go-mode)
   :defines
@@ -22,16 +32,6 @@
   (bind-keys :map go-mode-map
     ("M-." . godef-jump)
     ("C-c C-c" . compile)))
-
-(use-package go-eldoc
-  :after go-mode
-  :functions
-  (go-eldoc-setup)
-  :preface
-  (defun go-eldoc-setup-hook ()
-    (go-eldoc-setup))
-  :hook
-  (go-mode . go-eldoc-setup-hook))
 
 (provide 'setup-go)
 ;;; setup-go.el ends here

@@ -4,7 +4,7 @@
 
 ;; https://github.com/alphapapa/unpackaged.el#sort-sexps
 (require 'cl-lib)
-(defun my-sort-sexps (beg end)
+(defun sort-package (beg end)
   "Sort sexps in region (from BEG to END)."
   (interactive "r")
   (cl-flet ((skip-whitespace () (while (looking-at (rx (1+ (or space "\n"))))
