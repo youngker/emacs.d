@@ -3,6 +3,7 @@
 ;;; Code:
 
 (use-package yasnippet
+  :disabled t
   :diminish yas-minor-mode
   :defines
   (yas-verbosity
