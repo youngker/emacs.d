@@ -6,8 +6,9 @@
   :defines
   (tempel-path)
   :bind
-  (("C-<tab>" . tempel-expand))
-  :config)
+  (("C-<tab>" . tempel-expand)
+   :map tempel-map
+   ("TAB" . tempel-next)))
 
 (use-package tempel-collection
   :after tempel)
