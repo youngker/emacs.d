@@ -3,6 +3,7 @@
 ;;; Code:
 
 (use-package eglot
+  :ensure nil
   :hook
   ((c++-mode
     c-mode

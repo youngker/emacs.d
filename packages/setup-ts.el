@@ -2,18 +2,14 @@
 ;;; Commentary:
 ;;; Code:
 
-(use-package tree-sitter
-  :diminish "ts"
+(use-package treesit-auto
+  :defines
+  (treesit-auto-install)
   :functions
-  (global-tree-sitter-mode)
-  :init
-  (global-tree-sitter-mode)
-  :hook
-  (tree-sitter-after-on . tree-sitter-hl-mode))
-
-(use-package tree-sitter-langs
-  :demand t
-  :after tree-sitter)
+  (global-treesit-auto-mode)
+  :config
+  (setq treesit-auto-install 'prompt)
+  (global-treesit-auto-mode))
 
 (provide 'setup-ts)
 ;;; setup-ts.el ends here
