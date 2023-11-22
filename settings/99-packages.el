@@ -386,6 +386,18 @@
   :init
   (global-whitespace-cleanup-mode))
 
+(use-package xclip
+  :functions
+  (xclip-mode)
+  :if (and
+       (not (display-graphic-p))
+       (or
+        (string-equal system-type "darwin")
+        (and (string-equal system-type "gnu/linux")
+             (executable-find "xclip"))))
+  :config
+  (xclip-mode +1))
+
 (use-package xref
   :ensure nil
   :bind
