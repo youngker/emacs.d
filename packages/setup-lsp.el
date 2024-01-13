@@ -5,8 +5,10 @@
 (use-package eglot
   :ensure nil
   :hook
-  ((c++-mode
-    c-mode
+  ((c-mode
+    c-ts-mode
+    c++-mode
+    c++-ts-mode
     clojure-mode
     cmake-mode
     go-mode

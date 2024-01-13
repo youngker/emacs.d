@@ -54,6 +54,21 @@
         gdb-thread-buffer-verbose-names t
         gdb-use-colon-colon-notation t))
 
+(use-package c-ts-mode
+  :ensure nil
+  :preface
+  (defun c-ts-mode-common-setup-hook ()
+    (setq-local c-ts-mode-indent-style "linux"
+                c-ts-mode-indent-offset 4
+                indent-tabs-mode nil))
+  :bind
+  (:map c-ts-mode-map
+   ("C-c ." . nil)
+   :map c++-ts-mode-map
+   ("C-c ." . nil))
+  :hook
+  ((c-ts-mode c++-ts-mode) . c-ts-mode-common-setup-hook))
+
 (use-package google-c-style
   :functions
   (google-set-c-style
