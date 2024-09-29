@@ -46,5 +46,12 @@
   :hook
   (post-command . terminal-title-hook))
 
+(use-package vterm
+  :ensure nil
+  :hook
+  (vterm-mode . (lambda ()
+                  (setq-local global-hl-line-mode nil)
+                  (setq show-trailing-whitespace nil))))
+
 (provide 'setup-terminal)
 ;;; setup-terminal.el ends here
