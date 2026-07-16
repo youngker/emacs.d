@@ -38,6 +38,13 @@
    ("C-c h" . consult-history)
    ("C-c s" . embark-export)))
 
+(use-package embark
+  :bind
+  (("M-." . embark-act)
+   ("M-;" . embark-dwin))
+  :init
+  (setq prefix-help-command #'embark-prefix-help-command))
+
 (use-package embark-consult
   :demand t
   :hook

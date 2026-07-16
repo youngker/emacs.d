@@ -2,6 +2,10 @@
 ;;; Commentary:
 ;;; Code:
 
+(use-package clipetty
+  :hook
+  (after-init . global-clipetty-mode))
+
 (use-package term
   :ensure nil
   :preface
