@@ -24,10 +24,17 @@
                          :host "localhost:11434"
                          :models '(gemma4:latest)))
 
+  (setq lmstudio-backend (gptel-make-openai "LM Studio"
+                           :host "localhost:1234"
+                           :protocol "http"
+                           :models '("local-model")))
+
   (setq gptel-sources (list litellm-backend
-                            ollama-backend))
+                            ollama-backend
+                            lmstudio-backend))
+
   ;;(setq gptel-track-response nil)
-  (setq gptel-backend ollama-backend)
+  (setq gptel-backend lmstudio-backend)
   (setq gptel-model "gemini-3.1-flash-lite"))
 
 (use-package gptel-prompts
@@ -42,6 +49,18 @@
 
 (use-package agent-shell
   :config
+  (agent-shell-toggle-logging)
+  (setq agent-shell-anthropic-authentication
+        (agent-shell-anthropic-make-authentication
+         :api-key (lambda ()
+                    (auth-source-pick-first-password :user "apikey"))))
+  (setq agent-shell-anthropic-claude-environment
+        (agent-shell-make-environment-variables
+         "ANTHROPIC_BASE_URL" (concat "https://" (plist-get (car (auth-source-search :user "apikey" :max 1)) :host))
+         "ANTHROPIC_MODEL" "claude-haiku-4-5"
+         "CLAUDE_MODEL" "claude-haiku-4-5"
+         "CLAUDE_CODE_SUBAGENT_MODEL" "claude-haiku-4-5"
+         "CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY" "1"))
   (setq agent-shell-google-authentication
         (agent-shell-google-make-authentication :login t))
   (setq agent-shell-google-gemini-command
