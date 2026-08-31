@@ -38,10 +38,20 @@
    ("C-c h" . consult-history)
    ("C-c s" . embark-export)))
 
+(use-package consult-tgrep
+  :vc (consult-tgrep :url "https://github.com/youngker/consult-tgrep.el"
+                     :branch "main"
+                     :rev :newest)
+  :bind
+  (("C-c t" . consult-tgrep-menu)
+   :map minibuffer-local-map
+   ("C-c h" . consult-history)
+   ("C-c s" . embark-export)))
+
 (use-package embark
   :bind
-  (("M-." . embark-act)
-   ("M-;" . embark-dwin))
+  (("C-c b ." . embark-act)
+   ("C-c b ;" . embark-dwin))
   :init
   (setq prefix-help-command #'embark-prefix-help-command))
 
