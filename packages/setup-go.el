@@ -14,6 +14,10 @@
 
 (use-package go-mode
   :mode ("\\.go\\'" . go-mode)
+  :bind
+  (:map go-mode-map
+   ("M-." . godef-jump)
+   ("C-c C-c" . compile))
   :defines
   (gofmt-command
    go-mode-map)
@@ -27,11 +31,7 @@
     (setq compile-command "go build -v && go test -v && go vet")
     (add-hook 'before-save-hook #'gofmt-before-save))
   :hook
-  (go-mode . go-mode-setup-hook)
-  :config
-  (bind-keys :map go-mode-map
-    ("M-." . godef-jump)
-    ("C-c C-c" . compile)))
+  (go-mode . go-mode-setup-hook))
 
 (provide 'setup-go)
 ;;; setup-go.el ends here

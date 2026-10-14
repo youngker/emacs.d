@@ -3,6 +3,7 @@
 ;;; Code:
 
 (use-package treesit-auto
+  :disabled t
   :defines
   (treesit-auto-install)
   :functions
